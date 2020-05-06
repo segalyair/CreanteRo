@@ -3,46 +3,21 @@
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import Spinner from "svelte-spinner";
-  import Toast from "./Toast.svelte";
-  let toast;
   const dispatch = createEventDispatcher();
-  let visible = false;
-  let loading = false;
-  let title, actions, data, toastMessage;
-  export function openModal(settings) {
-    title = settings.title;
-    actions = settings.actions;
-    data = settings.data;
-    toastMessage = settings.toastMessage;
+  let visible = false,
+    loading = false,
+    settings;
+  export function open(data) {
+    settings = data;
     visible = true;
   }
-  export function getData() {
-    return data;
+  export function toggleLoading() {
+    loading = !loading;
   }
-  export function setActionActive(value, active) {
-    const action = actions.find(a => a.value === value);
-    if (action) {
-      action.element.disabled = !active;
-    }
-  }
-  function closeModal(completedCallback) {
-    if (loading) {
-      return;
-    }
-    dispatch("close");
+  export function close() {
+    loading = false;
     visible = false;
-    if (completedCallback === true && toastMessage) {
-      toast.create(toastMessage, 3000);
-    }
-  }
-  async function executeAction(callback) {
-    if (callback) {
-      window.getSelection().removeAllRanges();
-      loading = true;
-      await callback();
-      loading = false;
-    }
-    closeModal(!!callback);
+    dispatch("close");
   }
 </script>
 
@@ -78,8 +53,9 @@
   .spinner {
     margin: auto;
   }
-  .slot {
+  .content-slot {
     flex-grow: 1;
+    padding: 20px 0;
   }
   .modal {
     position: relative;
@@ -104,22 +80,18 @@
     cursor: pointer;
     margin-left: 5px;
   }
-  .actions {
+  .actions-slot {
     display: flex;
     justify-content: center;
   }
-  .actions button {
-    margin: 0 6px 0 6px;
-  }
 </style>
 
-<Toast bind:this={toast} />
 {#if visible}
   <div class="transition" transition:fade={{ duration: 200 }}>
     <div
       class="container"
       style="pointer-events:{loading ? 'none' : 'auto'};user-select:{loading ? 'none' : 'auto'}"
-      on:click={closeModal}>
+      on:click={close}>
       <div class="modal" on:click|stopPropagation>
         {#if loading}
           <div transition:fade={{ duration: 200 }}>
@@ -136,26 +108,17 @@
           </div>
         {/if}
         <div class="modal-title">
-          <h2>{title}</h2>
-          <div class="icon-container" on:click={closeModal}>
+          <h2>{settings.title}</h2>
+          <div class="icon-container" on:click={close}>
             <XIcon size="18" />
           </div>
         </div>
-        <div class="slot">
-          <slot />
+        <div class="content-slot">
+          <slot name="content" />
         </div>
-        {#if actions && actions.length > 0}
-          <div class="actions">
-            {#each actions as action}
-              <button
-                bind:this={action.element}
-                disabled={action.disabled}
-                on:click={executeAction(action.callback)}>
-                {action.value}
-              </button>
-            {/each}
-          </div>
-        {/if}
+        <div class="actions-slot">
+          <slot name="actions" />
+        </div>
       </div>
     </div>
   </div>

@@ -3,86 +3,59 @@
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { Utils } from "../../utils.js";
   import Modal from "../../components/common/Modal.svelte";
-  import FormModal from "../../components/common/FormModal.svelte";
-  let addModal, deleteModal;
-  let allItems = [],
-    displayItems = null;
-  let displayingAll = false;
-  let skip = 0;
+  import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
+  let addModal,
+    deleteModal,
+    itemToDelete,
+    allItems = [],
+    displayItems = null,
+    displayingAll = false,
+    skip = 0;
   const take = 6;
   $: canLoadMore = allItems && allItems.length - skip - take > 0;
-  async function handleDelete(item) {
-    deleteModal.openModal({
-      title: `Delete '${item.value}'`,
-      actions: [
-        {
-          value: "Yes",
-          callback: async () => {
-            await FirebaseAPI.delete("items", {
-              id: item.id
-            });
-            if (item.image) {
-              await FirebaseAPI.deleteFile("items", item.id);
-            }
-            //Make sure item was deleted
-            const deletedItem = await FirebaseAPI.findById("items", item.id);
-            if (deletedItem === null) {
-              allItems = allItems.filter(i => i.id !== item.id);
-              displayItems = displayingAll
-                ? displayItems.filter(i => i.id !== item.id)
-                : allItems.slice(skip, skip + take);
-            }
-          }
-        },
-        { value: "No" }
-      ],
-      data: item,
-      toastMessage: "Item was deleted successfully"
+  async function openDeleteModal(item) {
+    itemToDelete = item;
+    deleteModal.open({
+      title: `Delete '${itemToDelete.value}'`
     });
   }
-  async function addItem() {
-    addModal.openModal({
-      title: `Add new item`,
-      fields: [
-        {
-          name: "title",
-          type: "text",
-          label: "Title",
-          required: e => {
-            return e.target.value.length > 0;
-          }
-        },
-        { name: "image", type: "upload", label: "Image", directory: "items" }
-      ],
-      onSubmit: async model => {
-        if (!model.title || model.title.length === 0) return;
-        const guid = Utils.create_UUID();
-        if (model.image) {
-          await FirebaseAPI.uploadFile("items", model.image, guid);
-        }
-        const newItem = await FirebaseAPI.add("items", {
-          id: guid,
-          creationDate: new Date().toISOString(),
-          value: `${model.title}`,
-          image: model.image !== undefined && model.image !== null
-        });
-        if (newItem) {
-          allItems = allItems ? [newItem, ...allItems] : [newItem];
-          if (
-            displayItems &&
-            displayItems.length % take === 0 &&
-            !displayingAll
-          ) {
-            displayItems.pop();
-          }
-          displayItems = [newItem, ...displayItems];
-        }
-      },
-      toastMessage: "Item was added successfully"
+  async function dismissDeleteModal() {
+    deleteModal.close();
+  }
+  async function deleteItem() {
+    deleteModal.toggleLoading();
+    await FirebaseAPI.delete("items", {
+      id: itemToDelete.id
     });
+    if (itemToDelete.image) {
+      await FirebaseAPI.deleteFile("items", itemToDelete.id);
+    }
+    deleteModal.toggleLoading();
+    dismissDeleteModal();
+    //Make sure item was deleted
+    const deletedItem = await FirebaseAPI.findById("items", itemToDelete.id);
+    if (deletedItem === null) {
+      allItems = allItems.filter(i => i.id !== itemToDelete.id);
+      displayItems = displayingAll
+        ? displayItems.filter(i => i.id !== itemToDelete.id)
+        : allItems.slice(skip, skip + take);
+    }
+    itemToDelete = null;
+  }
+  async function openAddModal() {
+    addModal.open({ title: `Add new item` });
+  }
+  async function addModalSubmit(newItem) {
+    if (newItem) {
+      allItems = allItems ? [newItem, ...allItems] : [newItem];
+      if (displayItems && displayItems.length % take === 0 && !displayingAll) {
+        displayItems.pop();
+      }
+      displayItems = [newItem, ...displayItems];
+    }
   }
   async function getItemImage(item) {
-    return await FirebaseAPI.downloadFile("items", item.id);
+    return await FirebaseAPI.downloadFile("sellerProducts", item.id);
   }
   async function loadMore() {
     if (canLoadMore) {
@@ -146,7 +119,7 @@
 </style>
 
 <div class="actions">
-  <button on:click={addItem}>Add Item</button>
+  <button on:click={openAddModal}>Add Item</button>
 </div>
 <div class="container">
   <div class="items">
@@ -165,7 +138,7 @@
             <img src="no-image.png" alt="No image" />
           {/if}
           {item.value}
-          <button on:click={handleDelete(item)}>Remove item</button>
+          <button on:click={openDeleteModal(item)}>Remove item</button>
         </div>
       {/each}
     {/if}
@@ -179,8 +152,16 @@
   </div>
 </div>
 <!-- add modal -->
-<FormModal bind:this={addModal} />
+<SellProductModal
+  bind:this={addModal}
+  on:submit={event => addModalSubmit(event.detail)} />
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
-  {`Are you sure you wish to delete '${deleteModal.getData().value}'`}
+  <div slot="content">
+    Are you sure you wish to delete '{itemToDelete.value}'?
+  </div>
+  <div slot="actions">
+    <button on:click={deleteItem}>Yes</button>
+    <button on:click={dismissDeleteModal}>No</button>
+  </div>
 </Modal>

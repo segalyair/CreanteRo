@@ -50,7 +50,6 @@
       rgba(224, 239, 249, 1) 100%
     ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f2f6f8', endColorstr='#e0eff9',GradientType=0 ); /* IE6-9 */
-
     padding: 8px 0 8px 8px;
   }
   .user {
@@ -82,7 +81,7 @@
 
 <div class="header">
   <div class="routes">
-    <h2>Site Name</h2>
+    <h2>Creante.ro</h2>
     {#each routes.filter(r => r.value) as route}
       {#if route.value !== 'Login' || currentUser.isAnonymous}
         <div class="link">

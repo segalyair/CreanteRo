@@ -40,7 +40,7 @@
 </style>
 
 <Modal bind:this={modal}>
-  <div class="form">
+  <div slot="content" class="form">
     {#each fields as field}
       <label>
         {field.label}
