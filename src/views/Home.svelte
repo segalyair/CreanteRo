@@ -1,29 +1,29 @@
 <script>
   import { onMount } from "svelte";
-  const stripe = Stripe("pk_test_nPcCBzLhDBFUlCGMPJ9wEzP400H19GXYT1");
-  let api = "http://localhost:8600/payments/pay";
-  const amount = 1999,
+  const stripe = Stripe("pk_test_nPcCBzLhDBFUlCGMPJ9wEzP400H19GXYT1"),
+    amount = 1999,
     receiptEmail = "test_mail@test_mail.com",
     currency = "RON",
     description = "Buy Creanta Test";
   // Payment Intents
-  let elements = stripe.elements();
-  let card; // HTML div to mount card
-  let cardElement;
-  let complete = false;
-  let paymentIntent;
-  let clientSecret;
+  let elements = stripe.elements(),
+    api = "http://localhost:8600/payments/pay",
+    card, // HTML div to mount card
+    cardElement,
+    complete = false,
+    paymentIntent,
+    clientSecret;
   // Step 2
   async function createIntent() {
-    const params = {
+    const response = await fetch(api, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify({ amount, receiptEmail, currency, description })
-    };
-    const response = await fetch(api, params);
-    return await response.json();
+    });
+    const clientSecret = await response.text();
+    return clientSecret;
   }
   // Step 3
   async function createCardForm() {
@@ -33,50 +33,47 @@
   }
   // Step 4
   async function submitPayment() {
-    const result = await stripe.handleCardPayment(clientSecret, cardElement, {
-      payment_method_data: {}
-    });
-    paymentIntent = result.paymentIntent;
-    console.log(paymentIntent);
-    if (result.error) {
+    try {
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: {
+            name: "Jenny Rosen"
+          }
+        }
+      });
+      console.log(result);
+    } catch (error) {
       console.error(error);
-      alert("fudge!");
     }
   }
   async function startup() {
-    paymentIntent = await createIntent();
-    clientSecret = paymentIntent.client_secret;
-    console.log(paymentIntent);
+    clientSecret = await createIntent();
     createCardForm();
   }
-  onMount(() => {
-    startup();
+  onMount(async () => {
+    await startup();
   });
 </script>
 
 <style>
-  section {
+  .container {
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
     transition: 0.3s;
-    border-radius: 5px; /* 5px rounded corners */
     width: 500px;
-    padding: 2em;
+    padding: 1em;
     margin: 0 auto;
   }
   .elements {
-    margin: 2em 0;
-    background: rgb(230, 230, 230);
+    margin-bottom: 1em;
     border-radius: 5px;
+    border: 1px solid rgba(0, 0, 0, 0.185);
     padding: 1em;
   }
-  i {
-    font-size: 5em;
-    text-align: center;
-    display: block;
-    font-style: normal;
-  }
   button {
-    background: lightgreen;
+    background: rgb(72, 243, 72);
     border: none;
   }
   button:disabled {
@@ -85,19 +82,12 @@
   }
 </style>
 
-<section>
-
-  <h2>Payment Intents with Stripe Elements</h2>
-
-  <i>⌚</i>
-
+<div class="container">
   <div class="elements" bind:this={card} />
 
-  <button on:click={submitPayment} disabled={!paymentIntent || !complete}>
-    Submit Payment for ${amount / 100}
-  </button>
+  <button on:click={submitPayment} disabled={!complete}>Confirm Payment</button>
 
-</section>
+</div>
 
 <!-- <div class="container">
   <h1 style="font-size:60px">Site-ul tău pentru creanțe, fără condoleanțe.</h1>
