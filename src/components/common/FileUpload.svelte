@@ -1,6 +1,11 @@
 <script>
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
+  export let showPreview = true,
+    displayFileName = true,
+    uploadLabel = "Choose File",
+    multiple = false,
+    type = "img";
   const dispatch = createEventDispatcher();
   let chooseFileButton;
   let uploadInput;
@@ -10,25 +15,30 @@
     chooseFileButton.onclick = () => {
       uploadInput.click();
     };
+    uploadInput.multiple = multiple;
   });
   function fileChange(event) {
     const files = event.target.files;
-    if (files.length !== 0) {
+    if (files.length === 0) {
+      return;
+    }
+    if (type === "img") {
       const file = files[0];
       const maxFileSize = 5; //MB
       const fileSizeInMb = file.size / 1024 / 1024;
       if (fileSizeInMb >= maxFileSize) {
         return;
       }
-      //Making sure its actually an .png, .jpg, .jpeg, .gif or .bmp
       const image = new Image();
       image.onload = () => {
         preparedFile = file;
-        removePreview();
-        image.style.maxWidth = "100%";
-        image.style.maxHeight = "100%";
-        previewContainer.appendChild(image);
-        previewContainer.style.display = "block";
+        if (showPreview) {
+          removePreview();
+          image.style.maxWidth = "100%";
+          image.style.maxHeight = "100%";
+          previewContainer.appendChild(image);
+          previewContainer.style.display = "block";
+        }
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
         const scale = 0.5;
@@ -36,7 +46,7 @@
         canvas.height = image.height * scale;
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
-          dispatch("file", blob);
+          dispatch("file", { file, blob });
         });
       };
       image.onerror = () => {
@@ -44,6 +54,8 @@
       };
       const url = window.URL || window.webkitURL;
       image.src = url.createObjectURL(file);
+    } else {
+      dispatch("file", { files });
     }
   }
   function removePreview() {
@@ -56,11 +68,11 @@
 </script>
 
 <style>
-  .container {
-    padding: 10px;
-  }
   input {
     display: none;
+  }
+  .upload-button {
+    width: 100%;
   }
   .preview-container {
     display: none;
@@ -70,12 +82,18 @@
 </style>
 
 <div class="container">
-  <button bind:this={chooseFileButton}>Choose File</button>
-  <span>{preparedFile ? preparedFile.name : 'No file uploaded'}</span>
+  <button class="upload-button" bind:this={chooseFileButton}>
+    {uploadLabel}
+  </button>
+  {#if displayFileName}
+    <span>{preparedFile ? preparedFile.name : 'No file uploaded'}</span>
+  {/if}
   <input
     type="file"
     bind:this={uploadInput}
     on:change={fileChange}
     accept="image/*" />
-  <div class="preview-container" bind:this={previewContainer} />
+  {#if showPreview}
+    <div class="preview-container" bind:this={previewContainer} />
+  {/if}
 </div>

@@ -1,7 +1,7 @@
 <script>
   import Modal from "../../components/common/Modal.svelte";
-  import Dropdown from "../common/Dropdown.svelte";
   import FileUpload from "../common/FileUpload.svelte";
+  import FileUploadList from "../common/FileUploadList.svelte";
   import { Utils } from "../../utils.js";
   import { createEventDispatcher } from "svelte";
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
@@ -82,6 +82,7 @@
     margin-right: 10px;
     min-width: 200px;
     text-align: right;
+    align-self: flex-start;
   }
   input {
     margin: 0;
@@ -97,6 +98,18 @@
     resize: vertical;
     flex-grow: 1;
     margin: 0;
+  }
+  .radio-buttons {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+  .radio-buttons label {
+    cursor: pointer;
+    margin: 0;
+  }
+  .radio-buttons input {
+    height: 100%;
   }
 </style>
 
@@ -127,14 +140,13 @@
       <input type="checkbox" bind:checked={model.debtGuarantee} />
     </label>
     {#if model.debtGuarantee}
-      <label transition:slide|local>
+      <div class="div-label" transition:slide|local>
         <span class="label-text">
           Guarantee Proof
           <span class="required">*</span>
         </span>
-        <FileUpload
-          on:file={event => (model.debtGuaranteeProof = event.detail)} />
-      </label>
+        <FileUploadList />
+      </div>
     {/if}
     <label>
       <span class="label-text">Details</span>
@@ -145,8 +157,20 @@
         Is the debtor solvent?
         <span class="required">*</span>
       </span>
-      <Dropdown
-        items={[{ value: 'Yes' }, { value: 'No' }, { value: "I don't know" }]} />
+      <div class="radio-buttons">
+        <label>
+          <input type="radio" name="isDebtorSolvent" value="1" checked />
+          Yes
+        </label>
+        <label>
+          <input type="radio" name="isDebtorSolvent" value="2" />
+          No
+        </label>
+        <label>
+          <input type="radio" name="isDebtorSolvent" value="3" />
+          I don't know
+        </label>
+      </div>
     </div>
     <label>
       <span class="label-text">Details</span>
