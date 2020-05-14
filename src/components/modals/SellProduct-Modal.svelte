@@ -15,7 +15,11 @@
       debtGuaranteeProof: null,
       debtGuaranteeDetails: null,
       debtorSolvent: false,
-      debtorSolventDetails: null
+      debtorSolventDetails: null,
+      debtor: null,
+      enforcementProcedure: false,
+      enforcementProcedureDetails: null,
+      canClaimantRequestEnforcement: false
     },
     settings;
   $: {
@@ -62,6 +66,7 @@
     flex-direction: column;
     justify-content: space-evenly;
     width: 500px;
+    padding: 0.5em;
   }
   .required {
     color: red;
@@ -83,12 +88,14 @@
     min-width: 200px;
     text-align: right;
     align-self: flex-start;
+    width: min-content;
   }
   input {
     margin: 0;
     flex-grow: 1;
   }
   input[type="checkbox"] {
+    cursor: pointer;
     flex-grow: 1;
     align-self: center;
     margin: 0;
@@ -108,8 +115,13 @@
     cursor: pointer;
     margin: 0;
   }
+  .radio-buttons label span {
+    user-select: none;
+  }
   .radio-buttons input {
+    cursor: pointer;
     height: 100%;
+    margin-right: 0.2em;
   }
 </style>
 
@@ -131,7 +143,8 @@
         <span class="required">*</span>
       </span>
       <input
-        type="text"
+        type="number"
+        min="1"
         bind:value={model.amountDue}
         on:input={notEmptyRequirement(model.amountDue)} />
     </label>
@@ -159,22 +172,76 @@
       </span>
       <div class="radio-buttons">
         <label>
-          <input type="radio" name="isDebtorSolvent" value="1" checked />
-          Yes
+          <input type="radio" name="isDebtorSolvent" value="1" />
+          <span>Yes</span>
         </label>
         <label>
           <input type="radio" name="isDebtorSolvent" value="2" />
-          No
+          <span>No</span>
         </label>
         <label>
           <input type="radio" name="isDebtorSolvent" value="3" />
-          I don't know
+          <span>I don't know</span>
         </label>
       </div>
     </div>
     <label>
       <span class="label-text">Details</span>
       <textarea bind:value={model.debtorSolventDetails} />
+    </label>
+    <div class="div-label">
+      <span class="label-text">Other documents</span>
+      <FileUploadList />
+    </div>
+    <label>
+      <span class="label-text">
+        Debtor
+        <span class="required">*</span>
+      </span>
+      <textarea bind:value={model.debtor} />
+    </label>
+    <label>
+      <span class="label-text">Is there an enforcement procedure?</span>
+      <input type="checkbox" bind:checked={model.enforcementProcedure} />
+    </label>
+    {#if model.enforcementProcedure}
+      <div transition:slide|local>
+        <label>
+          <span class="label-text">
+            Details
+            <span class="required">*</span>
+          </span>
+          <textarea bind:value={model.enforcementProcedureDetails} />
+        </label>
+      </div>
+    {:else}
+      <div transition:slide|local>
+        <label>
+          <span class="label-text">Can the claimant request enforcement?</span>
+          <input
+            type="checkbox"
+            bind:checked={model.canClaimantRequestEnforcement} />
+        </label>
+      </div>
+      {#if !model.canClaimantRequestEnforcement}
+        <label transition:slide|local>
+          <span class="label-text">
+            Why can't the claimant request enforcement?
+          </span>
+          <input type="checkbox" />
+        </label>
+      {/if}
+    {/if}
+    <label>
+      <span class="label-text">
+        Price
+        <span class="required">*</span>
+      </span>
+      <input
+        type="number"
+        min="1"
+        bind:value={model.price}
+        on:input={notEmptyRequirement(model.amountDue)} />
     </label>
   </div>
   <div slot="actions">

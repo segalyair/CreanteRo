@@ -31,6 +31,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow-y: auto;
     top: 0;
     left: 0;
     margin: 0;
@@ -71,6 +72,7 @@
     padding: 10px;
   }
   .modal-title {
+    height: auto;
     display: flex;
     flex-grow: 1;
     justify-content: space-between;
@@ -80,7 +82,13 @@
     cursor: pointer;
     margin-left: 5px;
   }
+  .content-slot {
+    max-height: 70vh;
+    overflow-y: auto;
+  }
   .actions-slot {
+    padding-top: 0.5em;
+    height: auto;
     display: flex;
     justify-content: center;
   }
@@ -91,8 +99,8 @@
     <div
       class="container"
       style="pointer-events:{loading ? 'none' : 'auto'};user-select:{loading ? 'none' : 'auto'}"
-      on:click={close}>
-      <div class="modal" on:click|stopPropagation>
+      on:mousedown={close}>
+      <div class="modal" on:mousedown|stopPropagation>
         {#if loading}
           <div transition:fade={{ duration: 200 }}>
             <div class="spinner-container">
