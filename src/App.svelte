@@ -2,12 +2,14 @@
   import SvelteHeader from "./components/Svelte-Header.svelte";
   import SvelteFooter from "./components/Svelte-Footer.svelte";
   import Router from "./router/Router.svelte";
+  import { UserService } from "./services/user-service.js";
   import { auth } from "./firebase/firebase";
   let isUserLoaded = false;
   auth.onAuthStateChanged(async user => {
     if (!isUserLoaded && user) {
       isUserLoaded = true;
     }
+    console.log(await UserService.connect());
   });
 </script>
 

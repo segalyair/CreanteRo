@@ -2,6 +2,7 @@
   import { auth } from "../firebase/firebase";
   import page from "page.js";
   import { fade } from "svelte/transition";
+  import { RouteValues } from "../router/routes.js";
   let model = { errors: { email: [], password: [], other: [] } };
   $: isValid =
     model.email &&
@@ -101,9 +102,9 @@
       </div>
     </div>
     <div class="actions">
-      <button disabled={!isValid} on:click={() => handleLogin('create')}>
-        Register
-      </button>
+      <a href={RouteValues.Register}>
+        <button>Register</button>
+      </a>
       <button disabled={!isValid} on:click={() => handleLogin('login')}>
         Login
       </button>

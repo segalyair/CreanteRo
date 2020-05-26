@@ -1,5 +1,5 @@
 <script>
-  import { routes } from "../router/routes.js";
+  import { routes, RouteValues } from "../router/routes.js";
   import { auth } from "../firebase/firebase";
   import { LogOutIcon } from "svelte-feather-icons";
   let currentUser = {};
@@ -81,9 +81,11 @@
 
 <div class="header">
   <div class="routes">
-    <h2>Creante.ro</h2>
+    <h2>
+      <a href="/">Creante.ro</a>
+    </h2>
     {#each routes.filter(r => r.value) as route}
-      {#if route.value !== 'Login' || currentUser.isAnonymous}
+      {#if (route.value === RouteValues.Login && currentUser.isAnonymous) || (route.value === RouteValues.List && !currentUser.isAnonymous)}
         <div class="link">
           <a href={route.href}>{route.value}</a>
         </div>

@@ -16,8 +16,6 @@
         const result = route.guard();
         if (result) {
           $current_route = route;
-        } else {
-          page.redirect("/");
         }
       } else {
         $current_route = route;

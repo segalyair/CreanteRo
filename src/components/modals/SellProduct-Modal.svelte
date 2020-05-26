@@ -222,15 +222,15 @@
             type="checkbox"
             bind:checked={model.canClaimantRequestEnforcement} />
         </label>
+        {#if !model.canClaimantRequestEnforcement}
+          <label transition:slide|local>
+            <span class="label-text">
+              Why can't the claimant request enforcement?
+            </span>
+            <input type="checkbox" />
+          </label>
+        {/if}
       </div>
-      {#if !model.canClaimantRequestEnforcement}
-        <label transition:slide|local>
-          <span class="label-text">
-            Why can't the claimant request enforcement?
-          </span>
-          <input type="checkbox" />
-        </label>
-      {/if}
     {/if}
     <label>
       <span class="label-text">
