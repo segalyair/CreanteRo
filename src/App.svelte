@@ -1,4 +1,5 @@
 <script>
+  import Navbar from "./components/Navbar.svelte";
   import SvelteHeader from "./components/Svelte-Header.svelte";
   import SvelteFooter from "./components/Svelte-Footer.svelte";
   import Router from "./router/Router.svelte";
@@ -42,13 +43,19 @@
     max-height: 100%;
     height: 100%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: space-between;
+  }
+  .router {
+    padding: 10px;
+    flex-grow: 1;
   }
 </style>
 
 <div id="app">
-  <SvelteHeader />
-  <Router />
+  <Navbar />
+  <div class="router">
+    <Router />
+  </div>
   <!-- <SvelteFooter /> -->
 </div>

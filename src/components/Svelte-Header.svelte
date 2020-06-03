@@ -19,9 +19,6 @@
 </script>
 
 <style>
-  h2 {
-    margin-right: 32px;
-  }
   .header {
     margin-bottom: 10px;
     display: flex;
@@ -56,8 +53,8 @@
 </style>
 
 <div class="header">
-  <img src="logo200.png" alt="Bursa de creante" />
-  <div class="routes">
+  <!-- <img src="logo200.png" alt="Bursa de creante" /> -->
+  <!-- <div class="routes">
     {#each routes.filter(r => r.value) as route}
       {#if (route.value === RouteValues.Login && currentUser.isAnonymous) || (route.value === RouteValues.List && !currentUser.isAnonymous)}
         <div class="link">
@@ -65,7 +62,7 @@
         </div>
       {/if}
     {/each}
-  </div>
+  </div> -->
   <div class="user">
     {#if currentUser}
       <span>{currentUser.isAnonymous ? 'User' : currentUser.email}</span>

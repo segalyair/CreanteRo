@@ -4,28 +4,29 @@ import Register from "../views/Register.svelte";
 import List from "../views/List.svelte";
 import NotFound from "../views/NotFound.svelte";
 import { auth } from "../firebase/firebase";
-export class RouteValues {
-    static get Home() { return 'Home' }
-    static get List() { return 'List' }
-    static get Login() { return 'Login' }
-    static get Register() { return 'Register' }
-}
 export const routes = [
-    { href: '/', value: RouteValues.Home, component: Home },
+    { href: '/', value: 'Home', component: Home },
     {
-        href: '/list', value: RouteValues.List, component: List, guard: () => {
-            return !auth.currentUser.isAnonymous
-        }
+        href: '/list', value: 'List', component: List,
+        // guard: () => {
+        //     return !auth.currentUser.isAnonymous
+        // }
     },
     {
-        href: '/login', value: RouteValues.Login, component: Login, guard: () => {
+        href: '/login', value: 'Login', component: Login, guard: () => {
             return auth.currentUser.isAnonymous
         }
     },
     {
-        href: '/register', value: RouteValues.Register, component: Register, guard: () => {
+        href: '/register', value: 'Register', component: Register, guard: () => {
             return auth.currentUser.isAnonymous
         }
     },
     { href: '*', component: NotFound }
 ]
+export class RouteValues {
+    static get Home() { return routes[0] }
+    static get List() { return routes[1] }
+    static get Login() { return routes[2] }
+    static get Register() { return routes[3] }
+}
