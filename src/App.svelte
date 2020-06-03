@@ -50,5 +50,5 @@
 <div id="app">
   <SvelteHeader />
   <Router />
-  <SvelteFooter />
+  <!-- <SvelteFooter /> -->
 </div>
