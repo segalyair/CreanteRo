@@ -8,4 +8,13 @@ export class UserService {
             })
         })
     }
+    static async register(formData) {
+        return await fetch('http://localhost:8600/account/create', {
+            method: 'post',
+            headers: new Headers({
+                'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
+            }),
+            body: formData
+        })
+    }
 }

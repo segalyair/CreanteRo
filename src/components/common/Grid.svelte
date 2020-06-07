@@ -78,8 +78,10 @@
   .container {
     display: flex;
     flex-direction: column;
+    flex: 1 1 0px;
+    height: 100%;
     overflow: auto;
-    height: 83vh;
+    padding: 10px;
   }
   .actions {
     margin-bottom: 10px;
@@ -96,15 +98,19 @@
   }
   .item {
     border: 1px solid lightgray;
+    border-radius: 8px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     width: 100%;
+    height: 75px;
+    padding: 6px;
+    cursor: pointer;
   }
-  .item img {
-    width: 100px;
-    height: 100px;
+  .item:hover {
+    background-color: #ffe17f75;
+    transition: background-color 200ms;
   }
   .load-more-container {
     display: flex;
@@ -118,25 +124,14 @@
   }
 </style>
 
-<div class="actions">
-  <button on:click={openAddModal}>Add Item</button>
-</div>
 <div class="container">
+  <div class="actions">
+    <button on:click={openAddModal}>Add Item</button>
+  </div>
   <div class="items">
     {#if displayItems && displayItems.length > 0}
       {#each displayItems as item}
         <div class="item">
-          {#if item.image}
-            {#await getItemImage(item)}
-              <img src="empty.png" alt="Loading..." />
-            {:then src}
-              <img {src} alt="Item image" />
-            {:catch error}
-              <p style="color: red">{error.message}</p>
-            {/await}
-          {:else}
-            <img src="no-image.png" alt="No image" />
-          {/if}
           {item.value}
           <button on:click={openDeleteModal(item)}>Remove item</button>
         </div>

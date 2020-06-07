@@ -22,6 +22,9 @@
   }
   :global(body) {
     padding: 0 !important;
+    height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
   :global(button) {
     user-select: none;
@@ -39,6 +42,28 @@
   :global(h1) {
     margin: 0;
   }
+  /* width */
+  :global(::-webkit-scrollbar) {
+    width: 10px;
+  }
+
+  /* Track */
+  :global(::-webkit-scrollbar-track) {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  /* Handle */
+  :global(::-webkit-scrollbar-thumb) {
+    background: #888;
+    border-radius: 4px;
+  }
+
+  /* Handle on hover */
+  :global(::-webkit-scrollbar-thumb:hover) {
+    background: #555;
+  }
+
   #app {
     max-height: 100%;
     height: 100%;

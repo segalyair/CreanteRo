@@ -11,6 +11,8 @@
     model = {
       title: null,
       seller: null,
+      owedAmount: null,
+      priceAmount: null,
       debtGuarantee: false,
       debtGuaranteeProof: null,
       debtGuaranteeDetails: null,
@@ -139,14 +141,14 @@
     </label>
     <label>
       <span class="label-text">
-        Amount Due
+        Owed Amount
         <span class="required">*</span>
       </span>
       <input
         type="number"
         min="1"
-        bind:value={model.amountDue}
-        on:input={notEmptyRequirement(model.amountDue)} />
+        bind:value={model.owedAmount}
+        on:input={notEmptyRequirement(model.owedAmount)} />
     </label>
     <label>
       <span class="label-text">Is the debt guaranteed?</span>
@@ -240,8 +242,8 @@
       <input
         type="number"
         min="1"
-        bind:value={model.price}
-        on:input={notEmptyRequirement(model.amountDue)} />
+        bind:value={model.priceAmount}
+        on:input={notEmptyRequirement(model.priceAmount)} />
     </label>
   </div>
   <div slot="actions">

@@ -41,11 +41,14 @@
     text-decoration: none;
     color: #1b6dc1;
   }
+  .route a:visited {
+    color: #1b6dc1;
+  }
   .route:hover {
     background-color: #ffe17f75;
   }
-  .route.active{
-      background-color: #ffe17fd5;
+  .route.active {
+    background-color: #ffe17fd5;
   }
 </style>
 
@@ -58,6 +61,11 @@
       class="route"
       class:active={current_route_value.value === RouteValues.Login.value}>
       <a href={RouteValues.Login.href}>{RouteValues.Login.value}</a>
+    </div>
+    <div
+      class="route"
+      class:active={current_route_value.value === RouteValues.Register.value}>
+      <a href={RouteValues.Register.href}>{RouteValues.Register.value}</a>
     </div>
     <div
       class="route"

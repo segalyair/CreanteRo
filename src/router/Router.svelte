@@ -4,8 +4,7 @@
   import { routes } from "./routes.js";
   import { auth } from "../firebase/firebase";
   import page from "page.js";
-
-  const path = routes.find(r => r.value === location.pathname);
+  const path = routes.find(r => r.href === location.pathname);
   current_route.set(path ? path : routes[routes.length - 1]);
   for (let route of routes) {
     page(route.href, async () => {
