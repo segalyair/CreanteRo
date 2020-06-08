@@ -2,15 +2,19 @@
   import { XIcon } from "svelte-feather-icons";
   import FileUpload from "../common/FileUpload.svelte";
   import { slide } from "svelte/transition";
+  import { createEventDispatcher } from "svelte";
+  const dispatch = createEventDispatcher();
   let files = [];
   $: hasFiles = files && files.length > 0;
   function add(event) {
     files = [...files, ...event.detail.files];
+    dispatch("change", files);
   }
   function remove(i) {
     if (hasFiles) {
       files.splice(i, 1);
       files = files;
+      dispatch("change", files);
     }
   }
 </script>

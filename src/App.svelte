@@ -4,7 +4,8 @@
   import SvelteFooter from "./components/Svelte-Footer.svelte";
   import Router from "./router/Router.svelte";
   import { auth } from "./firebase/firebase";
-  let isUserLoaded = false;   
+  $: isReady = isUserLoaded;
+  let isUserLoaded = false;
   auth.onAuthStateChanged(async user => {
     if (!isUserLoaded && user) {
       isUserLoaded = true;
@@ -75,10 +76,12 @@
   }
 </style>
 
-<div id="app">
-  <Navbar />
-  <div class="router">
-    <Router />
+{#if isReady}
+  <div id="app">
+    <Navbar />
+    <div class="router">
+      <Router />
+    </div>
+    <!-- <SvelteFooter /> -->
   </div>
-  <!-- <SvelteFooter /> -->
-</div>
+{/if}

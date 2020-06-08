@@ -6,6 +6,7 @@
   import { createEventDispatcher } from "svelte";
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { slide } from "svelte/transition";
+  import { MerchantService } from "../../services/merchant-service.js";
   const dispatch = createEventDispatcher();
   let modal,
     model = {
@@ -19,13 +20,13 @@
       debtorSolvent: false,
       debtorSolventDetails: null,
       debtor: null,
-      enforcementProcedure: false,
-      enforcementProcedureDetails: null,
-      canClaimantRequestEnforcement: false
+      isForeclosured: false,
+      isForeclosuredDetails: null,
+      ownerCanRequestForeclosure: false,
+      merchantId: 1
     },
     settings;
-  $: submitEnabled =
-    notEmptyRequirement(model.title) && notEmptyRequirement(model.seller);
+  $: submitEnabled = notEmptyRequirement(model.title);
   export function open(data) {
     modal.open(data);
     settings = data;
@@ -33,18 +34,25 @@
   async function submit() {
     if (!model.title || model.title.length === 0) return;
     modal.toggleLoading();
-    const guid = Utils.create_UUID();
-    if (model.image) {
-      await FirebaseAPI.uploadFile("items", model.image, guid);
+    // const guid = Utils.create_UUID();
+    // if (model.image) {
+    //   await FirebaseAPI.uploadFile("items", model.image, guid);
+    // }
+    // const newItem = await FirebaseAPI.add("items", {
+    //   id: guid,
+    //   creationDate: new Date().toISOString(),
+    //   value: model.title,
+    //   image: model.image !== undefined && model.image !== null
+    // });
+    const formData = new FormData();
+    formData.set("productRaw", JSON.stringify(model));
+    try {
+      await MerchantService.addProduct(formData);
+    } catch (error) {
+      console.log(error);
     }
-    const newItem = await FirebaseAPI.add("items", {
-      id: guid,
-      creationDate: new Date().toISOString(),
-      value: model.title,
-      image: model.image !== undefined && model.image !== null
-    });
     modal.toggleLoading();
-    dispatch("submit", newItem);
+    // dispatch("submit", newItem);
     close();
   }
   function close() {
@@ -157,7 +165,8 @@
           Guarantee Proof
           <span class="required">*</span>
         </span>
-        <FileUploadList />
+        <FileUploadList
+          on:change={files => (model.debtGuaranteeProof = files)} />
       </div>
     {/if}
     <label>
@@ -200,28 +209,28 @@
       <textarea bind:value={model.debtor} />
     </label>
     <label>
-      <span class="label-text">Is there an enforcement procedure?</span>
-      <input type="checkbox" bind:checked={model.enforcementProcedure} />
+      <span class="label-text">Is foreclosured?</span>
+      <input type="checkbox" bind:checked={model.isForeclosured} />
     </label>
-    {#if model.enforcementProcedure}
+    {#if model.isForeclosured}
       <div transition:slide|local>
         <label>
           <span class="label-text">
             Details
             <span class="required">*</span>
           </span>
-          <textarea bind:value={model.enforcementProcedureDetails} />
+          <textarea bind:value={model.isForeclosuredDetails} />
         </label>
       </div>
     {:else}
       <div transition:slide|local>
         <label>
-          <span class="label-text">Can the claimant request enforcement?</span>
+          <span class="label-text">Can the claimant request foreclosure?</span>
           <input
             type="checkbox"
-            bind:checked={model.canClaimantRequestEnforcement} />
+            bind:checked={model.ownerCanRequestForeclosure} />
         </label>
-        {#if !model.canClaimantRequestEnforcement}
+        {#if !model.ownerCanRequestForeclosure}
           <label transition:slide|local>
             <span class="label-text">
               Why can't the claimant request enforcement?

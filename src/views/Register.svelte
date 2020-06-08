@@ -205,6 +205,8 @@
       </span>
       <input type="text" bind:value={model.iban} />
     </label>
-    <button on:click={register} class="register">Register</button>
+    <button disabled={!canRegister} on:click={register} class="register">
+      Register
+    </button>
   </div>
 </div>

@@ -20,7 +20,7 @@
     font-weight: 300;
   }
   span {
-    font-size: 15vw;
+    font-size: 10vw;
   }
 </style>
 
