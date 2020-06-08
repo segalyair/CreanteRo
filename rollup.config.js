@@ -3,8 +3,10 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
-const production = !process.env.ROLLUP_WATCH;
+const production = !process.env.ROLLUP_WATCH,
+	API_URL = process.env.BUILD === 'test' ? "https://invictus1995.ddns.net:60002" : "http://localhost:8600";
 
 export default {
 	input: 'src/main.js',
@@ -24,7 +26,6 @@ export default {
 				css.write('public/build/bundle.css');
 			}
 		}),
-
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -
@@ -46,7 +47,10 @@ export default {
 
 		// If we're building for production (npm run build
 		// instead of npm run dev), minify
-		production && terser()
+		production && terser(),
+		injectProcessEnv({
+			API_URL: API_URL,
+		})
 	],
 	watch: {
 		clearScreen: false

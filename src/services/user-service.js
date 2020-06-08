@@ -1,7 +1,7 @@
 import { auth } from '../firebase/firebase';
 export class UserService {
     static async connect() {
-        return await fetch('http://localhost:8600/account/connect', {
+        return await fetch(`${process.env.API_URL}/account/connect`, {
             method: 'get',
             headers: new Headers({
                 'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
@@ -9,7 +9,7 @@ export class UserService {
         })
     }
     static async register(formData) {
-        return await fetch('http://localhost:8600/account/create', {
+        return await fetch(`${process.env.API_URL}/account/create`, {
             method: 'post',
             headers: new Headers({
                 'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`

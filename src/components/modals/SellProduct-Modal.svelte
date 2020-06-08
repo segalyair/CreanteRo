@@ -24,9 +24,6 @@
       canClaimantRequestEnforcement: false
     },
     settings;
-  $: {
-    console.log(model);
-  }
   $: submitEnabled =
     notEmptyRequirement(model.title) && notEmptyRequirement(model.seller);
   export function open(data) {
