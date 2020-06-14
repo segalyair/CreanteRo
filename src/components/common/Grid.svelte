@@ -4,6 +4,7 @@
   import { Utils } from "../../utils.js";
   import Modal from "../../components/common/Modal.svelte";
   import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
+  import { MarketService } from "../../services/market-service.js";
   let addModal,
     deleteModal,
     itemToDelete,
@@ -65,6 +66,7 @@
     }
   }
   onMount(async () => {
+    console.log(await MarketService.get());
     allItems = await FirebaseAPI.get("items", {
       orderBy: "creationDate"
     });
