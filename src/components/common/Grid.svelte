@@ -4,16 +4,16 @@
   import { Utils } from "../../utils.js";
   import Modal from "../../components/common/Modal.svelte";
   import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
+  import LoadingSpinner from "./LoadingSpinner.svelte";
   import { MarketService } from "../../services/market-service.js";
+  import { fade } from "svelte/transition";
   let addModal,
     deleteModal,
     itemToDelete,
-    allItems = [],
-    displayItems = null,
-    displayingAll = false,
+    items = [],
+    isLoading = true,
     skip = 0;
   const take = 6;
-  $: canLoadMore = allItems && allItems.length - skip - take > 0;
   async function openDeleteModal(item) {
     itemToDelete = item;
     deleteModal.open({
@@ -66,13 +66,16 @@
     }
   }
   onMount(async () => {
-    console.log(await MarketService.get());
-    allItems = await FirebaseAPI.get("items", {
-      orderBy: "creationDate"
-    });
-    if (allItems) {
-      displayItems = allItems.slice(0, take);
-    }
+    const data = await MarketService.get();
+    console.log(data);
+    // allItems = await FirebaseAPI.get("items", {
+    //   orderBy: "creationDate"
+    // });
+    // if (allItems) {
+    //   displayItems = allItems.slice(0, take);
+    // }
+    items = data;
+    isLoading = false;
   });
 </script>
 
@@ -91,12 +94,16 @@
     justify-content: center;
   }
   .items {
+    position: relative;
     height: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
     align-items: flex-start;
     align-content: flex-start;
+  }
+  .no-scroll {
+    overflow: hidden;
   }
   .item {
     border: 1px solid lightgray;
@@ -114,36 +121,40 @@
     background-color: #ffe17f75;
     transition: background-color 200ms;
   }
-  .load-more-container {
+  .no-items {
     display: flex;
     justify-content: center;
+    align-items: center;
+    font-size: 2vw;
     width: 100%;
+    height: 100%;
+    font-weight: 300;
   }
-  .load-more {
-    width: 100px;
-    align-self: flex-end;
-    margin-top: 10px;
+  .no-items span {
+    width: 50%;
+    text-align: center;
   }
 </style>
 
 <div class="container">
-  <div class="actions">
-    <button on:click={openAddModal}>Add Item</button>
-  </div>
+  {#if !isLoading && items}
+    <div transition:fade|local class="actions">
+      <button on:click={openAddModal}>Add Item</button>
+    </div>
+  {/if}
   <div class="items">
-    {#if displayItems && displayItems.length > 0}
-      {#each displayItems as item}
-        <div class="item">
+    {#if items && items.length > 0}
+      {#each items as item}
+        <div transition:fade|local class="item no-scroll">
           {item.value}
           <button on:click={openDeleteModal(item)}>Remove item</button>
         </div>
       {/each}
-    {/if}
-    {#if displayItems === null}Loading...{/if}
-    {#if displayItems && displayItems.length === 0}No items.{/if}
-    {#if canLoadMore && !displayingAll}
-      <div class="load-more-container">
-        <button class="load-more" on:click={loadMore}>Load more</button>
+    {:else if isLoading}
+      <LoadingSpinner {isLoading} />
+    {:else if !isLoading && (!items || items.length === 0)}
+      <div transition:fade|local class="no-items no-scroll">
+        <span>In acest moment nu exista o creanta listata</span>
       </div>
     {/if}
   </div>

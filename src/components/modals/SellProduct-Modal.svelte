@@ -46,13 +46,19 @@
     // });
     const formData = new FormData();
     formData.set("productRaw", JSON.stringify(model));
+    if (model.debtGuaranteeProof && model.debtGuaranteeProof.length > 0) {
+      for (let i = 0; i < model.debtGuaranteeProof.length; i++) {
+        formData.append("files[]", model.debtGuaranteeProof[i]);
+      }
+    }
     try {
-      await MerchantService.addProduct(formData);
+      const newProduct = await MerchantService.addProduct(formData);
+      console.log(newProduct);
+      dispatch("submit", newProduct);
     } catch (error) {
       console.log(error);
     }
     modal.toggleLoading();
-    // dispatch("submit", newItem);
     close();
   }
   function close() {
@@ -166,7 +172,7 @@
           <span class="required">*</span>
         </span>
         <FileUploadList
-          on:change={files => (model.debtGuaranteeProof = files)} />
+          on:change={e => (model.debtGuaranteeProof = e.detail)} />
       </div>
     {/if}
     <label>

@@ -1,12 +1,14 @@
-import { auth } from '../firebase/firebase';
-export class MerchantService {
+import { BaseService } from './base-service'
+export class MerchantService extends BaseService {
     static async addProduct(formData) {
-        return await fetch(`${process.env.API_URL}/merchant/add`, {
-            method: 'post',
-            headers: new Headers({
-                'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
-            }),
-            body: formData
-        })
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/merchant/add`, {
+                method: 'post',
+                body: formData
+            })
+        }
+        catch (error) {
+            throw error
+        }
     }
 }

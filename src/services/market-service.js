@@ -1,11 +1,11 @@
-import { auth } from '../firebase/firebase';
-export class MarketService {
+import { BaseService } from './base-service'
+export class MarketService extends BaseService {
     static async get() {
-        return await fetch(`${process.env.API_URL}/market/get`, {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
-            })
-        })
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/market/get`, { method: 'get' })
+        }
+        catch (error) {
+            throw error
+        }
     }
 }

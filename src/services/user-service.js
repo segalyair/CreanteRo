@@ -1,20 +1,22 @@
-import { auth } from '../firebase/firebase';
-export class UserService {
+import { BaseService } from './base-service'
+export class UserService extends BaseService {
     static async connect() {
-        return await fetch(`${process.env.API_URL}/account/connect`, {
-            method: 'get',
-            headers: new Headers({
-                'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
-            })
-        })
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/account/connect`, { method: 'get' })
+        }
+        catch (error) {
+            throw error
+        }
     }
     static async register(formData) {
-        return await fetch(`${process.env.API_URL}/account/create`, {
-            method: 'post',
-            headers: new Headers({
-                'Authorization': `Bearer ${await auth.currentUser.getIdToken()}`
-            }),
-            body: formData
-        })
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/account/create`, {
+                method: 'post',
+                body: formData
+            })
+        }
+        catch (error) {
+            throw error
+        }
     }
 }

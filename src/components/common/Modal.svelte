@@ -2,20 +2,20 @@
   import { XIcon } from "svelte-feather-icons";
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
-  import Spinner from "svelte-spinner";
+  import LoadingSpinner from "./LoadingSpinner.svelte";
   const dispatch = createEventDispatcher();
   let visible = false,
-    loading = false,
+    isLoading = false,
     settings;
   export function open(data) {
     settings = data;
     visible = true;
   }
   export function toggleLoading() {
-    loading = !loading;
+    isLoading = !isLoading;
   }
   export function close() {
-    loading = false;
+    isLoading = false;
     visible = false;
     dispatch("close");
   }
@@ -40,19 +40,6 @@
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.3);
-  }
-  .spinner-container {
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.05);
-  }
-  .spinner {
-    margin: auto;
   }
   .content-slot {
     flex-grow: 1;
@@ -98,22 +85,11 @@
   <div class="transition" transition:fade={{ duration: 200 }}>
     <div
       class="container"
-      style="pointer-events:{loading ? 'none' : 'auto'};user-select:{loading ? 'none' : 'auto'}"
+      style="pointer-events:{isLoading ? 'none' : 'auto'};user-select:{isLoading ? 'none' : 'auto'}"
       on:mousedown={close}>
       <div class="modal" on:mousedown|stopPropagation>
-        {#if loading}
-          <div transition:fade={{ duration: 200 }}>
-            <div class="spinner-container">
-              <div class="spinner">
-                <Spinner
-                  size="85"
-                  speed="650"
-                  color="#ff3e00"
-                  thickness="3"
-                  gap="40" />
-              </div>
-            </div>
-          </div>
+        {#if isLoading}
+          <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
         {/if}
         <div class="modal-title">
           <h2>{settings.title}</h2>
