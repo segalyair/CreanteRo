@@ -10,17 +10,17 @@ export const routes = [
     {
         href: '/list', value: 'List', component: List,
         guard: () => {
-            return !auth.currentUser.isAnonymous
+            return auth.currentUser && !auth.currentUser.isAnonymous
         }
     },
     {
         href: '/login', value: 'Login', component: Login, guard: () => {
-            return auth.currentUser.isAnonymous
+            return auth.currentUser && auth.currentUser.isAnonymous
         }
     },
     {
         href: '/register', value: 'Register', component: Register, guard: () => {
-            return auth.currentUser.isAnonymous
+            return auth.currentUser && auth.currentUser.isAnonymous
         }
     },
     { href: '/forbidden', value: 'Forbidden', component: Forbidden },

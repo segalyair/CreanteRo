@@ -1,3 +1,6 @@
+import page from "page.js";
+import { routes } from "./router/routes.js";
+import { current_route } from "./store.js";
 export class Utils {
   static create_UUID() {
     var dt = new Date().getTime();
@@ -17,5 +20,9 @@ export class Utils {
     const t1 = performance.now();
     const totalMs = (t1 - t0).toFixed(4)
     console.log(`Call to '${name}' took ${totalMs}ms`);
+  }
+  static redirect(route) {
+    page.redirect(route);
+    current_route.set(routes.find(r => r.href === route));
   }
 }

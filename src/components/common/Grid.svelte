@@ -67,7 +67,6 @@
   }
   onMount(async () => {
     const data = await MarketService.get();
-    console.log(data);
     // allItems = await FirebaseAPI.get("items", {
     //   orderBy: "creationDate"
     // });

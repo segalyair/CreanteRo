@@ -1,6 +1,7 @@
 <script>
   import { getContext, setContext, afterUpdate } from "svelte";
   import { current_route } from "../store.js";
+  import { Utils } from "../utils.js";
   import { routes } from "./routes.js";
   import { auth } from "../firebase/firebase";
   import page from "page.js";
@@ -14,7 +15,7 @@
       if (!route.guard || route.guard()) {
         current_route.set(route);
       } else {
-        page.redirect("/forbidden");
+        Utils.redirect("/forbidden");
       }
     });
   }

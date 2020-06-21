@@ -1,11 +1,35 @@
 <script>
-  import { routes } from "../router/routes.js";
   import { getContext } from "svelte";
   import page from "page.js";
+  import { routes } from "../router/routes.js";
   import { current_route } from "../store.js";
-  let current_route_value = {};
+  import { Utils } from "../utils.js";
+  import { auth } from "../firebase/firebase";
+
+  let currentUser,
+    currentRoutes = [],
+    current_route_value = {};
   const unsubscribe = current_route.subscribe(value => {
     current_route_value = value;
+  });
+  async function signOut() {
+    await auth.signOut();
+    await auth.signInAnonymously();
+    Utils.redirect("/login");
+  }
+  auth.onAuthStateChanged(user => {
+    if (user) {
+      currentUser = user;
+      currentRoutes = routes.filter(
+        r =>
+          !["/", "*", "/forbidden"].includes(r.href) && (!r.guard || r.guard())
+      );
+    }
+  });
+  window.addEventListener("hashchange", () => {
+    currentRoutes = routes.filter(
+      r => !["/", "*", "/forbidden"].includes(r.href) && (!r.guard || r.guard())
+    );
   });
 </script>
 
@@ -57,14 +81,17 @@
     <img class="logo" src="logo200.png" alt="Bursa de creante" />
   </a>
   <div class="routes">
-    {#each routes.filter(r => !['/', '*', '/forbidden'].includes(r.href)) as route}
-      {#if !route.guard || route.guard()}
-        <div
-          class="route"
-          class:active={current_route_value.value === route.value}>
-          <a href={route.href}>{route.value}</a>
-        </div>
-      {/if}
+    {#each currentRoutes as route}
+      <div
+        class="route"
+        class:active={current_route_value.value === route.value}>
+        <a href={route.href}>{route.value}</a>
+      </div>
     {/each}
+    {#if currentUser && !currentUser.isAnonymous}
+      <div class="route">
+        <a href="javascript:void(0)" on:click={signOut}>Sign Out</a>
+      </div>
+    {/if}
   </div>
 </div>

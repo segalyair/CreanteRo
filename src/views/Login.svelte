@@ -1,8 +1,7 @@
 <script>
   import { auth } from "../firebase/firebase";
-  import page from "page.js";
   import { fade } from "svelte/transition";
-  // import { RouteValues } from "../router/routes.js";
+  import { Utils } from "../utils.js";
   let model = { errors: { email: [], password: [], other: [] } };
   $: isValid =
     model.email &&
@@ -17,7 +16,7 @@
       type === "create"
         ? await auth.createUserWithEmailAndPassword(model.email, model.password)
         : await auth.signInWithEmailAndPassword(model.email, model.password);
-      page.redirect("/");
+      Utils.redirect("/list");
     } catch (error) {
       switch (error.code) {
         case "auth/invalid-email":
