@@ -11,13 +11,10 @@
       if (!auth.currentUser) {
         await auth.signInAnonymously();
       }
-      if (route.guard) {
-        const result = route.guard();
-        if (result) {
-          current_route.set(route);
-        }
-      } else {
+      if (!route.guard || route.guard()) {
         current_route.set(route);
+      } else {
+        page.redirect("/forbidden");
       }
     });
   }

@@ -1,5 +1,5 @@
 <script>
-  import { RouteValues } from "../router/routes.js";
+  import { routes } from "../router/routes.js";
   import { getContext } from "svelte";
   import page from "page.js";
   import { current_route } from "../store.js";
@@ -53,24 +53,18 @@
 </style>
 
 <div class="navbar">
-  <a href={RouteValues.Home.href}>
+  <a href={routes.find(r => r.value === 'Home').href}>
     <img class="logo" src="logo200.png" alt="Bursa de creante" />
   </a>
   <div class="routes">
-    <div
-      class="route"
-      class:active={current_route_value.value === RouteValues.Login.value}>
-      <a href={RouteValues.Login.href}>{RouteValues.Login.value}</a>
-    </div>
-    <div
-      class="route"
-      class:active={current_route_value.value === RouteValues.Register.value}>
-      <a href={RouteValues.Register.href}>{RouteValues.Register.value}</a>
-    </div>
-    <div
-      class="route"
-      class:active={current_route_value.value === RouteValues.List.value}>
-      <a href={RouteValues.List.href}>{RouteValues.List.value}</a>
-    </div>
+    {#each routes.filter(r => !['/', '*', '/forbidden'].includes(r.href)) as route}
+      {#if !route.guard || route.guard()}
+        <div
+          class="route"
+          class:active={current_route_value.value === route.value}>
+          <a href={route.href}>{route.value}</a>
+        </div>
+      {/if}
+    {/each}
   </div>
 </div>

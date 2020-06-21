@@ -6,6 +6,7 @@
   import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { MarketService } from "../../services/market-service.js";
+  import { MerchantService } from "../../services/merchant-service.js";
   import { fade } from "svelte/transition";
   let addModal,
     deleteModal,
@@ -25,21 +26,20 @@
   }
   async function deleteItem() {
     deleteModal.toggleLoading();
-    await FirebaseAPI.delete("items", {
-      id: itemToDelete.id
-    });
-    if (itemToDelete.image) {
-      await FirebaseAPI.deleteFile("items", itemToDelete.id);
-    }
+
+    // await FirebaseAPI.delete("items", {
+    //   id: itemToDelete.id
+    // });
+    // if (itemToDelete.image) {
+    //   await FirebaseAPI.deleteFile("items", itemToDelete.id);
+    // }
+    await MerchantService.deleteProduct(itemToDelete.id);
     deleteModal.toggleLoading();
     dismissDeleteModal();
     //Make sure item was deleted
     const deletedItem = await FirebaseAPI.findById("items", itemToDelete.id);
     if (deletedItem === null) {
-      allItems = allItems.filter(i => i.id !== itemToDelete.id);
-      displayItems = displayingAll
-        ? displayItems.filter(i => i.id !== itemToDelete.id)
-        : allItems.slice(skip, skip + take);
+      items = items.filter(i => i.id !== itemToDelete.id);
     }
     itemToDelete = null;
   }

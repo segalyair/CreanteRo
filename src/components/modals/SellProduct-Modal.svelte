@@ -45,12 +45,18 @@
     //   image: model.image !== undefined && model.image !== null
     // });
     const formData = new FormData();
-    formData.set("productRaw", JSON.stringify(model));
     if (model.debtGuaranteeProof && model.debtGuaranteeProof.length > 0) {
       for (let i = 0; i < model.debtGuaranteeProof.length; i++) {
         formData.append("files[]", model.debtGuaranteeProof[i]);
       }
     }
+    model.debtGuaranteeProof = null;
+    formData.set(
+      "productRaw",
+      JSON.stringify(model, (key, value) => {
+        if (value !== null) return value;
+      })
+    );
     try {
       const newProduct = await MerchantService.addProduct(formData);
       console.log(newProduct);

@@ -1,5 +1,7 @@
 <script>
   import { UserService } from "../services/user-service.js";
+  import { auth } from "../firebase/firebase";
+  import page from "page.js";
   let model = {
     email: null,
     customerType: null,
@@ -28,7 +30,13 @@
   async function register() {
     const formData = new FormData();
     formData.set("userRaw", JSON.stringify(model));
-    await UserService.register(formData);
+    try {
+      const user = await UserService.register(formData);
+      if (user) {
+        await auth.signInWithEmailAndPassword(model.email, model.password);
+        page.redirect("/list");
+      }
+    } catch (error) {}
   }
 </script>
 

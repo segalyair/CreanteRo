@@ -3,14 +3,15 @@ import Login from "../views/Login.svelte";
 import Register from "../views/Register.svelte";
 import List from "../views/List.svelte";
 import NotFound from "../views/NotFound.svelte";
+import Forbidden from "../views/Forbidden.svelte";
 import { auth } from "../firebase/firebase";
 export const routes = [
     { href: '/', value: 'Home', component: Home },
     {
         href: '/list', value: 'List', component: List,
-        // guard: () => {
-        //     return !auth.currentUser.isAnonymous
-        // }
+        guard: () => {
+            return !auth.currentUser.isAnonymous
+        }
     },
     {
         href: '/login', value: 'Login', component: Login, guard: () => {
@@ -22,6 +23,7 @@ export const routes = [
             return auth.currentUser.isAnonymous
         }
     },
+    { href: '/forbidden', value: 'Forbidden', component: Forbidden },
     { href: '*', component: NotFound }
 ]
 export class RouteValues {

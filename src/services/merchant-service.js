@@ -11,4 +11,14 @@ export class MerchantService extends BaseService {
             throw error
         }
     }
+    static async deleteProduct(id) {
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/merchant/delete?productId=${id}`, {
+                method: 'delete'
+            })
+        }
+        catch (error) {
+            throw error
+        }
+    }
 }
