@@ -2,34 +2,58 @@
   import { UserService } from "../services/user-service.js";
   import { auth } from "../firebase/firebase";
   import { Utils } from "../utils.js";
+  import { slide } from "svelte/transition";
   let model = {
-    email: null,
-    customerType: null,
-    password: null,
-    confirmPassword: null,
-    firstName: null,
-    lastName: null,
-    phone: null,
-    address: null,
-    iban: null,
-    country: null,
-    city: null,
-    sector: null,
-    street: null,
-    streetNr: null,
-    postalCode: null,
-    block: null,
-    floor: null,
-    apartmentNr: null,
-    isTutorialDone: false
-  };
-  $: passwordConfirmed = model.password === model.confirmPassword;
+      email: {},
+      customerType: {},
+      password: {},
+      confirmPassword: {},
+      firstName: {},
+      lastName: {},
+      phone: {},
+      address: {},
+      bank: {},
+      iban: {},
+      country: {},
+      city: {},
+      sector: {},
+      street: {},
+      streetNr: {},
+      postalCode: {},
+      block: {},
+      floor: {},
+      apartmentNr: {},
+      isTutorialDone: false
+    },
+    idCardModel = {
+      cnp: {},
+      series: {},
+      nr: {},
+      identityIssuer: {},
+      expiryDate: {}
+    };
+  const cnpRegex = new RegExp(
+      /\b[1-8]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(0[1-9]|[1-4]\d|5[0-2]|99)\d{4}\b/
+    ),
+    ibanRegex = new RegExp(/^RO\d{2}[A-Z]{4}[0-9A-Z]{16}$/);
+  $: passwordConfirmed =
+    model.password && model.password.value === model.confirmPassword.value;
+  $: ibanIsValid = ibanRegex.test(model.iban.value);
+  $: cnpIsValid = cnpRegex.test(idCardModel.cnp.value);
   $: canRegister =
-    !Object.keys(model).find(k => model[k] === null) && passwordConfirmed;
-
+    !Object.keys(model).find(k => !model[k] || !model[k].value) &&
+    passwordConfirmed &&
+    cnpIsValid;
+  // &&
+  // ibanIsValid;
   async function register() {
-    const formData = new FormData();
-    formData.set("userRaw", JSON.stringify(model));
+    const formData = new FormData(),
+      userRaw = {};
+    for (const [key, value] of Object.entries(model)) {
+      userRaw[key] = value.value;
+    }
+    formData.set("userRaw", JSON.stringify(userRaw));
+    formData.set("identityCardRaw", JSON.stringify(idCardModel));
     try {
       const user = await UserService.register(formData);
       if (user) {
@@ -44,18 +68,37 @@
   h2 {
     margin-bottom: 20px;
   }
+  label {
+    display: flex;
+    margin-bottom: 10px;
+  }
   .label {
-    display: inline-block;
     min-width: 200px;
     text-align: right;
     user-select: none;
+    margin-right: 20px;
   }
   input[type="text"],
   input[type="number"],
   input[type="email"],
   input[type="password"] {
     width: 300px;
+    margin: 0;
   }
+
+  .input-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .error {
+    border: 1px red solid;
+  }
+  .error-message {
+    color: red;
+    font-size: 14px;
+  }
+
   .container {
     padding: 0 10px;
     display: flex;
@@ -89,91 +132,91 @@
         First Name
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.firstName} />
+      <input type="text" bind:value={model.firstName.value} />
     </label>
     <label>
       <span class="label">
         Last Name
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.lastName} />
+      <input type="text" bind:value={model.lastName.value} />
     </label>
     <label>
       <span class="label">
         Address
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.address} />
+      <input type="text" bind:value={model.address.value} />
     </label>
     <label>
       <span class="label">
         Phone
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.phone} />
+      <input type="text" bind:value={model.phone.value} />
     </label>
     <label>
       <span class="label">
         Country
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.country} />
+      <input type="text" bind:value={model.country.value} />
     </label>
     <label>
       <span class="label">
         City
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.city} />
+      <input type="text" bind:value={model.city.value} />
     </label>
     <label>
       <span class="label">
         Sector
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.sector} />
+      <input type="text" bind:value={model.sector.value} />
     </label>
     <label>
       <span class="label">
         Street
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.street} />
+      <input type="text" bind:value={model.street.value} />
     </label>
     <label>
       <span class="label">
         Street Number
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.streetNr} />
+      <input type="text" bind:value={model.streetNr.value} />
     </label>
     <label>
       <span class="label">
         Postal Code
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.postalCode} />
+      <input type="text" bind:value={model.postalCode.value} />
     </label>
     <label>
       <span class="label">
         Block
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.block} />
+      <input type="text" bind:value={model.block.value} />
     </label>
     <label>
       <span class="label">
         Floor
         <span class="required">*</span>
       </span>
-      <input type="number" bind:value={model.floor} />
+      <input type="number" bind:value={model.floor.value} />
     </label>
     <label>
       <span class="label">
         Apartment Number
         <span class="required">*</span>
       </span>
-      <input type="number" bind:value={model.apartmentNr} />
+      <input type="number" bind:value={model.apartmentNr.value} />
     </label>
   </div>
   <div class="sub-container">
@@ -183,35 +226,73 @@
         Email
         <span class="required">*</span>
       </span>
-      <input type="email" bind:value={model.email} />
+      <input type="email" bind:value={model.email.value} />
     </label>
     <label>
       <span class="label">
         Password
         <span class="required">*</span>
       </span>
-      <input type="password" bind:value={model.password} />
+      <input type="password" bind:value={model.password.value} />
     </label>
     <label>
       <span class="label">
         Confirm Password
         <span class="required">*</span>
       </span>
-      <input type="password" bind:value={model.confirmPassword} />
+      <input type="password" bind:value={model.confirmPassword.value} />
     </label>
     <label>
       <span class="label">
         Customer Type
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.customerType} />
+      <input type="text" bind:value={model.customerType.value} />
+    </label>
+    <label>
+      <span class="label">
+        Bank
+        <span class="required">*</span>
+      </span>
+      <input type="text" bind:value={model.bank.value} />
     </label>
     <label>
       <span class="label">
         IBAN
         <span class="required">*</span>
       </span>
-      <input type="text" bind:value={model.iban} />
+      <div class="input-container">
+        <input
+          type="text"
+          bind:value={model.iban.value}
+          on:input={e => (model.iban.dirty = true)}
+          on:blur={e => (model.iban.blurred = model.iban.dirty)}
+          class:error={!ibanIsValid && model.iban.dirty && model.iban.blurred} />
+        {#if !ibanIsValid && model.iban.dirty && model.iban.blurred}
+          <div transition:slide|local>
+            <span class="error-message">Invalid IBAN</span>
+          </div>
+        {/if}
+      </div>
+    </label>
+    <label>
+      <span class="label">
+        CNP
+        <span class="required">*</span>
+      </span>
+      <div class="input-container">
+        <input
+          type="text"
+          bind:value={idCardModel.cnp.value}
+          on:input={e => (idCardModel.cnp.dirty = true)}
+          on:blur={e => (idCardModel.cnp.blurred = idCardModel.cnp.dirty)}
+          class:error={!cnpIsValid && idCardModel.cnp.dirty && idCardModel.cnp.blurred} />
+        {#if !cnpIsValid && idCardModel.cnp.dirty && idCardModel.cnp.blurred}
+          <div transition:slide|local>
+            <span class="error-message">Invalid CNP</span>
+          </div>
+        {/if}
+      </div>
     </label>
     <button disabled={!canRegister} on:click={register} class="register">
       Register

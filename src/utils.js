@@ -1,6 +1,4 @@
 import page from "page.js";
-import { routes } from "./router/routes.js";
-import { current_route } from "./store.js";
 export class Utils {
   static create_UUID() {
     var dt = new Date().getTime();
@@ -23,6 +21,5 @@ export class Utils {
   }
   static redirect(route) {
     page.redirect(route);
-    current_route.set(routes.find(r => r.href === route));
   }
 }
