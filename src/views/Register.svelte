@@ -14,15 +14,15 @@
       address: {},
       bank: {},
       iban: {},
-      country: {},
-      city: {},
-      sector: {},
-      street: {},
-      streetNr: {},
-      postalCode: {},
-      block: {},
-      floor: {},
-      apartmentNr: {},
+      // country: {},
+      // city: {},
+      // sector: {},
+      // street: {},
+      // streetNr: {},
+      // postalCode: {},
+      // block: {},
+      // floor: {},
+      // apartmentNr: {},
       isTutorialDone: false
     },
     idCardModel = {
@@ -65,6 +65,23 @@
 </script>
 
 <style>
+  .register-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .fill-gap {
+    flex-grow: 1;
+  }
+  .container {
+    padding: 0 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
   h2 {
     margin-bottom: 20px;
   }
@@ -79,7 +96,7 @@
     margin-right: 20px;
   }
   input[type="text"],
-  input[type="number"],
+  textarea,
   input[type="email"],
   input[type="password"] {
     width: 300px;
@@ -91,6 +108,11 @@
     flex-direction: column;
   }
 
+  textarea {
+    resize: vertical;
+    height: 150px;
+  }
+
   .error {
     border: 1px red solid;
   }
@@ -99,63 +121,63 @@
     font-size: 14px;
   }
 
-  .container {
-    padding: 0 10px;
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    height: 100%;
-  }
   .sub-container {
     display: flex;
     flex-direction: column;
+    align-items: center;
     flex-grow: 1;
     min-width: 300px;
+    height: 100%;
   }
   .required {
     color: red;
     font-size: 22px;
   }
-  .register {
-    margin-top: auto;
+  .action-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+  }
+  .register-button {
     width: 200px;
-    align-self: center;
+    height: 50px;
   }
 </style>
 
-<div class="container">
-  <div class="sub-container">
-    <h2>Personal Data</h2>
-    <label>
-      <span class="label">
-        First Name
-        <span class="required">*</span>
-      </span>
-      <input type="text" bind:value={model.firstName.value} />
-    </label>
-    <label>
-      <span class="label">
-        Last Name
-        <span class="required">*</span>
-      </span>
-      <input type="text" bind:value={model.lastName.value} />
-    </label>
-    <label>
-      <span class="label">
-        Address
-        <span class="required">*</span>
-      </span>
-      <input type="text" bind:value={model.address.value} />
-    </label>
-    <label>
-      <span class="label">
-        Phone
-        <span class="required">*</span>
-      </span>
-      <input type="text" bind:value={model.phone.value} />
-    </label>
-    <label>
+<div class="register-container">
+  <div class="fill-gap" />
+  <div class="container">
+    <div class="sub-container">
+      <h2>Personal Data</h2>
+      <label>
+        <span class="label">
+          First Name
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.firstName.value} />
+      </label>
+      <label>
+        <span class="label">
+          Last Name
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.lastName.value} />
+      </label>
+      <label>
+        <span class="label">
+          Address
+          <span class="required">*</span>
+        </span>
+        <textarea type="text" bind:value={model.address.value} />
+      </label>
+      <label>
+        <span class="label">
+          Phone
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.phone.value} />
+      </label>
+      <!-- <label>
       <span class="label">
         Country
         <span class="required">*</span>
@@ -217,84 +239,87 @@
         <span class="required">*</span>
       </span>
       <input type="number" bind:value={model.apartmentNr.value} />
-    </label>
+    </label> -->
+    </div>
+    <div class="sub-container">
+      <h2>Account Data</h2>
+      <label>
+        <span class="label">
+          Email
+          <span class="required">*</span>
+        </span>
+        <input type="email" bind:value={model.email.value} />
+      </label>
+      <label>
+        <span class="label">
+          Password
+          <span class="required">*</span>
+        </span>
+        <input type="password" bind:value={model.password.value} />
+      </label>
+      <label>
+        <span class="label">
+          Confirm Password
+          <span class="required">*</span>
+        </span>
+        <input type="password" bind:value={model.confirmPassword.value} />
+      </label>
+      <label>
+        <span class="label">
+          Customer Type
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.customerType.value} />
+      </label>
+      <label>
+        <span class="label">
+          Bank
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.bank.value} />
+      </label>
+      <label>
+        <span class="label">
+          IBAN
+          <span class="required">*</span>
+        </span>
+        <div class="input-container">
+          <input
+            type="text"
+            bind:value={model.iban.value}
+            on:input={e => (model.iban.dirty = true)}
+            on:blur={e => (model.iban.blurred = model.iban.dirty)}
+            class:error={!ibanIsValid && model.iban.dirty && model.iban.blurred} />
+          {#if !ibanIsValid && model.iban.dirty && model.iban.blurred}
+            <div transition:slide|local>
+              <span class="error-message">Invalid IBAN</span>
+            </div>
+          {/if}
+        </div>
+      </label>
+      <label>
+        <span class="label">
+          CNP
+          <span class="required">*</span>
+        </span>
+        <div class="input-container">
+          <input
+            type="text"
+            bind:value={idCardModel.cnp.value}
+            on:input={e => (idCardModel.cnp.dirty = true)}
+            on:blur={e => (idCardModel.cnp.blurred = idCardModel.cnp.dirty)}
+            class:error={!cnpIsValid && idCardModel.cnp.dirty && idCardModel.cnp.blurred} />
+          {#if !cnpIsValid && idCardModel.cnp.dirty && idCardModel.cnp.blurred}
+            <div transition:slide|local>
+              <span class="error-message">Invalid CNP</span>
+            </div>
+          {/if}
+        </div>
+      </label>
+    </div>
   </div>
-  <div class="sub-container">
-    <h2>Account Data</h2>
-    <label>
-      <span class="label">
-        Email
-        <span class="required">*</span>
-      </span>
-      <input type="email" bind:value={model.email.value} />
-    </label>
-    <label>
-      <span class="label">
-        Password
-        <span class="required">*</span>
-      </span>
-      <input type="password" bind:value={model.password.value} />
-    </label>
-    <label>
-      <span class="label">
-        Confirm Password
-        <span class="required">*</span>
-      </span>
-      <input type="password" bind:value={model.confirmPassword.value} />
-    </label>
-    <label>
-      <span class="label">
-        Customer Type
-        <span class="required">*</span>
-      </span>
-      <input type="text" bind:value={model.customerType.value} />
-    </label>
-    <label>
-      <span class="label">
-        Bank
-        <span class="required">*</span>
-      </span>
-      <input type="text" bind:value={model.bank.value} />
-    </label>
-    <label>
-      <span class="label">
-        IBAN
-        <span class="required">*</span>
-      </span>
-      <div class="input-container">
-        <input
-          type="text"
-          bind:value={model.iban.value}
-          on:input={e => (model.iban.dirty = true)}
-          on:blur={e => (model.iban.blurred = model.iban.dirty)}
-          class:error={!ibanIsValid && model.iban.dirty && model.iban.blurred} />
-        {#if !ibanIsValid && model.iban.dirty && model.iban.blurred}
-          <div transition:slide|local>
-            <span class="error-message">Invalid IBAN</span>
-          </div>
-        {/if}
-      </div>
-    </label>
-    <label>
-      <span class="label">
-        CNP
-        <span class="required">*</span>
-      </span>
-      <div class="input-container">
-        <input
-          type="text"
-          bind:value={idCardModel.cnp.value}
-          on:input={e => (idCardModel.cnp.dirty = true)}
-          on:blur={e => (idCardModel.cnp.blurred = idCardModel.cnp.dirty)}
-          class:error={!cnpIsValid && idCardModel.cnp.dirty && idCardModel.cnp.blurred} />
-        {#if !cnpIsValid && idCardModel.cnp.dirty && idCardModel.cnp.blurred}
-          <div transition:slide|local>
-            <span class="error-message">Invalid CNP</span>
-          </div>
-        {/if}
-      </div>
-    </label>
-    <button disabled={!canRegister} on:click={register} class="register">
+  <div class="action-container">
+    <button disabled={!canRegister} on:click={register} class="register-button">
       Register
     </button>
   </div>

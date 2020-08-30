@@ -1,6 +1,11 @@
 <script>
   import Grid from "../components/common/Grid.svelte";
   import ProductPreview from "../components/ProductPreview.svelte";
+  import { selected_product } from "../store.js";
+  let selected_product_value = null;
+  const unsubscribe = selected_product.subscribe(value => {
+    selected_product_value = value;
+  });
 </script>
 
 <style>
@@ -15,5 +20,7 @@
 
 <div class="container">
   <Grid />
-  <ProductPreview />
+  {#if selected_product_value !== null}
+    <ProductPreview />
+  {/if}
 </div>

@@ -6,7 +6,7 @@ export class BaseService {
                 await auth.signInAnonymously()
             }
             const token = await auth.currentUser.getIdToken();
-            console.log(token)
+            // console.log(token)
             options.headers = new Headers({
                 'Authorization': `Bearer ${token}`
             })

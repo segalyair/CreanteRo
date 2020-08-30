@@ -8,11 +8,13 @@
   import { MarketService } from "../../services/market-service.js";
   import { MerchantService } from "../../services/merchant-service.js";
   import { fade } from "svelte/transition";
+    import { selected_product } from "../../store.js";
   let addModal,
     deleteModal,
     itemToDelete,
     items = [],
     isLoading = true,
+    hasLoadingError = false,
     skip = 0;
   const take = 6;
   async function openDeleteModal(item) {
@@ -23,6 +25,9 @@
   }
   async function dismissDeleteModal() {
     deleteModal.close();
+  }
+  function selectItem(item){
+    selected_product.set(item);
   }
   async function deleteItem() {
     deleteModal.toggleLoading();
@@ -65,16 +70,25 @@
       displayingAll = allItems.length === displayItems.length;
     }
   }
+  async function loadItems() {
+    isLoading = true;
+    hasLoadingError = false;
+    try {
+      items = await MarketService.get();
+    } catch (error) {
+      items = [];
+      hasLoadingError = true;
+    }
+    isLoading = false;
+  }
   onMount(async () => {
-    const data = await MarketService.get();
+    loadItems();
     // allItems = await FirebaseAPI.get("items", {
     //   orderBy: "creationDate"
     // });
     // if (allItems) {
     //   displayItems = allItems.slice(0, take);
     // }
-    items = data;
-    isLoading = false;
   });
 </script>
 
@@ -122,6 +136,7 @@
   }
   .no-items {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     font-size: 2vw;
@@ -133,10 +148,14 @@
     width: 50%;
     text-align: center;
   }
+  .loading-error button {
+    margin-top: 10px;
+    font-size: 1rem;
+  }
 </style>
 
 <div class="container">
-  {#if !isLoading && items}
+  {#if !isLoading && !hasLoadingError && items}
     <div transition:fade|local class="actions">
       <button on:click={openAddModal}>Add Item</button>
     </div>
@@ -144,13 +163,18 @@
   <div class="items">
     {#if items && items.length > 0}
       {#each items as item}
-        <div transition:fade|local class="item no-scroll">
+        <div on:click={selectItem(item)} transition:fade|local class="item no-scroll">
           {item.value}
           <button on:click={openDeleteModal(item)}>Remove item</button>
         </div>
       {/each}
     {:else if isLoading}
       <LoadingSpinner {isLoading} />
+    {:else if hasLoadingError}
+      <div in:fade|local class="no-items no-scroll loading-error">
+        <span>A aparut o eroare</span>
+        <button on:click={loadItems}>Try Again</button>
+      </div>
     {:else if !isLoading && (!items || items.length === 0)}
       <div transition:fade|local class="no-items no-scroll">
         <span>In acest moment nu exista o creanta listata</span>
