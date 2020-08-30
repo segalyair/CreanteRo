@@ -47,10 +47,14 @@
     max-height: 100%;
   }
   .routes {
+    display: flex;
+    flex-direction: column;
     margin-top: 1vh;
+    margin-bottom: 1vh;
+    height: 100%;
   }
   .route {
-    margin: 1vw 0;
+    margin: 0.2vw 0;
     padding: 0 1vh;
     text-align: center;
     font-size: 1.4vw;
@@ -60,6 +64,9 @@
     outline: none;
     user-select: none;
     transition: background-color 200ms;
+  }
+  .fill-gap {
+    flex-grow: 1;
   }
   .route a:hover {
     text-decoration: none;
@@ -88,6 +95,7 @@
         <a href={route.href}>{route.value}</a>
       </div>
     {/each}
+    <div class="fill-gap" />
     {#if currentUser && !currentUser.isAnonymous}
       <div class="route">
         <a href="javascript:void(0)" on:click={signOut}>Sign Out</a>
