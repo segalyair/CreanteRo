@@ -4,11 +4,17 @@
   import SvelteFooter from "./components/Svelte-Footer.svelte";
   import Router from "./router/Router.svelte";
   import { auth } from "./firebase/firebase";
+  import { UserService } from "./services/user-service.js";
+  import { current_user } from "./store.js";
   $: isReady = isUserLoaded;
   let isUserLoaded = false;
   auth.onAuthStateChanged(async user => {
     if (!isUserLoaded && user) {
       isUserLoaded = true;
+      if (!user.isAnonymous) {
+        current_user.set(await UserService.getById(user.uid));
+        console.log($current_user)
+      }
     }
   });
 </script>

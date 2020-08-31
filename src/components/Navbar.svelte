@@ -7,11 +7,7 @@
   import { auth } from "../firebase/firebase";
 
   let currentUser,
-    currentRoutes = [],
-    current_route_value = {};
-  const unsubscribe = current_route.subscribe(value => {
-    current_route_value = value;
-  });
+    currentRoutes = []
   async function signOut() {
     await auth.signOut();
     await auth.signInAnonymously();
@@ -91,7 +87,7 @@
     {#each currentRoutes as route}
       <div
         class="route"
-        class:active={current_route_value.value === route.value}>
+        class:active={$current_route.value === route.value}>
         <a href={route.href}>{route.value}</a>
       </div>
     {/each}
