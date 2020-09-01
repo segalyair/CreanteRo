@@ -1,12 +1,21 @@
 <script>
   import { onMount } from "svelte";
+  import {
+    ChevronRightIcon,
+    ChevronsRightIcon,
+    ChevronLeftIcon,
+    ChevronsLeftIcon
+  } from "svelte-feather-icons";
   import { RepresentativeService } from "../../services/representative-service.js";
   import Modal from "../../components/common/Modal.svelte";
   import RepresentativeModal from "../../components/modals/Representative-Modal.svelte";
   let deleteModal,
     representativeModal,
     representativeToDelete = null,
-    representatives = [{ name: "aha", type: "Physical" }];
+    representatives = [{ name: "aha", type: "Physical" }],
+    goToPage = false,
+    currentPage = 1,
+    maxPage = 20;
   function toggleRepresentativeModal(rep) {
     let title = rep ? "Edit representative" : "Add new representative";
     representativeModal.open({ title });
@@ -23,6 +32,17 @@
   }
   function deleteRepresentative() {
     deleteModal.close();
+  }
+  function changePage(e) {
+    if (e.key === "Enter") {
+      //change page code goes here
+      currentPage = Math.min(maxPage, Math.max(1, Number(e.target.value)));
+      toggleGoToPage();
+    }
+  }
+  function toggleGoToPage(e) {
+    if (e !== undefined && e.type !== "click") return;
+    goToPage = !goToPage;
   }
   onMount(async () => {
     // representatives = await RepresentativeService.get();
@@ -45,28 +65,103 @@
   td button {
     width: 70px;
   }
+  .td-paginator {
+    padding: 0;
+  }
+  .paginator {
+    font-size: 0.75rem;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .paginator span {
+    margin: 0 2px;
+  }
+  .currentPage:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: lightblue;
+  }
+  .icon-container {
+    cursor: pointer;
+    margin-left: 5px;
+  }
+  input[type="number"] {
+    margin: 0;
+    width: 40px;
+    height: 25px;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 </style>
 
 <div>
   <div>
-    <button on:click={() => toggleRepresentativeModal(null)}>Add Representative</button>
+    <button on:click={() => toggleRepresentativeModal(null)}>
+      Add Representative
+    </button>
   </div>
   <table>
-    <tr>
-      <th>Name</th>
-      <th>Type</th>
-      <th>Actions</th>
-    </tr>
-    {#each representatives as rep}
+    <thead>
       <tr>
-        <td>{rep.name}</td>
-        <td>{rep.type}</td>
-        <td>
-          <button on:click={() => toggleRepresentativeModal(rep)}>Edit</button>
-          <button on:click={() => toggleDeleteModal(rep)}>Delete</button>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {#each representatives as rep}
+        <tr>
+          <td>{rep.name}</td>
+          <td>{rep.type}</td>
+          <td>
+            <button on:click={() => toggleRepresentativeModal(rep)}>
+              Edit
+            </button>
+            <button on:click={() => toggleDeleteModal(rep)}>Delete</button>
+          </td>
+        </tr>
+      {/each}
+    </tbody>
+    <tfoot>
+      <tr>
+        <td class="td-paginator" colspan="100%">
+          <div class="paginator">
+            <div class="icon-container" on:click={toggleGoToPage}>
+              <ChevronsLeftIcon size="18" />
+            </div>
+            <div class="icon-container" on:click={toggleGoToPage}>
+              <ChevronLeftIcon size="18" />
+            </div>
+            <span>Page</span>
+            {#if !goToPage}
+              <span class="currentPage" on:click={toggleGoToPage}>
+                {currentPage}
+              </span>
+            {:else}
+              <input
+                on:keydown={changePage}
+                on:blur={toggleGoToPage}
+                type="number"
+                min="1"
+                max={maxPage}
+                autofocus />
+            {/if}
+            <span>out of {maxPage}</span>
+            <div class="icon-container" on:click={toggleGoToPage}>
+              <ChevronRightIcon size="18" />
+            </div>
+            <div class="icon-container" on:click={toggleGoToPage}>
+              <ChevronsRightIcon size="18" />
+            </div>
+          </div>
         </td>
       </tr>
-    {/each}
+    </tfoot>
   </table>
 </div>
 <Modal bind:this={deleteModal}>
