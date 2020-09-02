@@ -12,7 +12,11 @@
   let deleteModal,
     representativeModal,
     representativeToDelete = null,
-    representatives = [{ name: "aha", type: "Physical" }],
+    types = { "0": "Physical", "1": "Juridical" },
+    representatives = [
+      { firstname: "First Name", lastname: "Last Name", type: "0" },
+      { name: "Company Name is Nice", type: "1" }
+    ],
     goToPage = false,
     currentPage = 1,
     maxPage = 20;
@@ -33,7 +37,12 @@
   function deleteRepresentative() {
     deleteModal.close();
   }
-  function changePage(e) {
+  function changePage(e, page) {
+    e.preventDefault();
+    e.stopPropagation();
+    currentPage = Math.min(maxPage, Math.max(1, Number(page)));
+  }
+  function submitGoToPage(e) {
     if (e.key === "Enter") {
       //change page code goes here
       currentPage = Math.min(maxPage, Math.max(1, Number(e.target.value)));
@@ -52,6 +61,7 @@
 <style>
   table {
     border-collapse: collapse;
+    user-select: none;
   }
   th,
   td {
@@ -78,6 +88,8 @@
   .paginator span {
     margin: 0 2px;
   }
+
+  .icon-container:hover,
   .currentPage:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -86,6 +98,12 @@
   .icon-container {
     cursor: pointer;
     margin-left: 5px;
+    display: flex;
+  }
+  .icon-container.disabled {
+    color: lightgray !important;
+    cursor: initial;
+    pointer-events: none;
   }
   input[type="number"] {
     margin: 0;
@@ -116,8 +134,8 @@
     <tbody>
       {#each representatives as rep}
         <tr>
-          <td>{rep.name}</td>
-          <td>{rep.type}</td>
+          <td>{rep.name || `${rep.firstname} ${rep.lastname}`}</td>
+          <td>{types[rep.type]}</td>
           <td>
             <button on:click={() => toggleRepresentativeModal(rep)}>
               Edit
@@ -131,10 +149,16 @@
       <tr>
         <td class="td-paginator" colspan="100%">
           <div class="paginator">
-            <div class="icon-container" on:click={toggleGoToPage}>
+            <div
+              class="icon-container"
+              class:disabled={currentPage <= 1}
+              on:click={e => changePage(e, 1)}>
               <ChevronsLeftIcon size="18" />
             </div>
-            <div class="icon-container" on:click={toggleGoToPage}>
+            <div
+              class="icon-container"
+              class:disabled={currentPage <= 1}
+              on:click={e => changePage(e, currentPage - 1)}>
               <ChevronLeftIcon size="18" />
             </div>
             <span>Page</span>
@@ -144,18 +168,24 @@
               </span>
             {:else}
               <input
-                on:keydown={changePage}
-                on:blur={toggleGoToPage}
+                on:keydown={submitGoToPage}
+                on:blur={() => (goToPage = false)}
                 type="number"
                 min="1"
                 max={maxPage}
                 autofocus />
             {/if}
             <span>out of {maxPage}</span>
-            <div class="icon-container" on:click={toggleGoToPage}>
+            <div
+              class="icon-container"
+              class:disabled={currentPage >= maxPage}
+              on:click={e => changePage(e, currentPage + 1)}>
               <ChevronRightIcon size="18" />
             </div>
-            <div class="icon-container" on:click={toggleGoToPage}>
+            <div
+              class="icon-container"
+              class:disabled={currentPage >= maxPage}
+              on:click={e => changePage(e, maxPage)}>
               <ChevronsRightIcon size="18" />
             </div>
           </div>

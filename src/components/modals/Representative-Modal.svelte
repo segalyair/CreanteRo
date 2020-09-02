@@ -10,7 +10,25 @@
   const dispatch = createEventDispatcher();
   let modal,
     model = {
-      type: null
+      type: '0',
+      userId: null,
+      //physical
+      firstname: null,
+      lastname: null,
+      card: {
+        id: null,
+        userId: null,
+        physicalEntityId: null,
+        cnp: null,
+        series: null,
+        nr: null,
+        issuer: null,
+        expiryDate: null
+      },
+      //juridical
+      name: null,
+      cui: null,
+      recom: null
     },
     settings;
   $: submitEnabled = notEmptyRequirement(model.title);
@@ -114,7 +132,7 @@
   }
   .radio-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     flex-grow: 1;
   }
   .radio-buttons label {
@@ -140,15 +158,73 @@
       </span>
       <div class="radio-buttons">
         <label>
-          <input type="radio" name="type" value="0" />
+          <input
+            type="radio"
+            name="type"
+            bind:group={model.type}
+            value="0"
+            checked />
           <span>Physical</span>
         </label>
         <label>
-          <input type="radio" name="type" value="1" />
+          <input type="radio" name="type" bind:group={model.type} value="1" />
           <span>Juridical</span>
         </label>
       </div>
     </div>
+    {#if model.type === '0'}
+      <label>
+        <span class="label-text">
+          First Name
+          <span class="required">*</span>
+        </span>
+        <input
+          type="text"
+          bind:value={model.firstname}
+          on:input={notEmptyRequirement(model.firstname)} />
+      </label>
+      <label>
+        <span class="label-text">
+          Last Name
+          <span class="required">*</span>
+        </span>
+        <input
+          type="text"
+          bind:value={model.lastname}
+          on:input={notEmptyRequirement(model.lastname)} />
+      </label>
+    {:else}
+      <label>
+        <span class="label-text">
+          Name
+          <span class="required">*</span>
+        </span>
+        <input
+          type="text"
+          bind:value={model.name}
+          on:input={notEmptyRequirement(model.name)} />
+      </label>
+      <label>
+        <span class="label-text">
+          CUI
+          <span class="required">*</span>
+        </span>
+        <input
+          type="text"
+          bind:value={model.cui}
+          on:input={notEmptyRequirement(model.cui)} />
+      </label>
+      <label>
+        <span class="label-text">
+          RECOM
+          <span class="required">*</span>
+        </span>
+        <input
+          type="text"
+          bind:value={model.cui}
+          on:input={notEmptyRequirement(model.recom)} />
+      </label>
+    {/if}
   </div>
   <div slot="actions">
     <button disabled={!submitEnabled} on:click={submit}>Submit</button>
