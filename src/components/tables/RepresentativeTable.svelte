@@ -14,21 +14,32 @@
     representativeToDelete = null,
     types = { "0": "Physical", "1": "Juridical" },
     representatives = [
-      { firstname: "First Name", lastname: "Last Name", type: "0" },
-      { name: "Company Name is Nice", type: "1" }
+      {
+        type: "0",
+        firstname: "First Name",
+        lastname: "Last Name",
+        card: {
+          cnp: "2901111015799",
+          series: "PX",
+          nr: "000000",
+          issuer: "S.P.C.L.E.P.",
+          expiryDate: "11.11.1990"
+        }
+      },
+      { type: "1", name: "Company Name is Nice" }
     ],
     goToPage = false,
     currentPage = 1,
     maxPage = 20;
   function toggleRepresentativeModal(rep) {
     let title = rep ? "Edit representative" : "Add new representative";
-    representativeModal.open({ title });
+    representativeModal.open({ title, rep });
   }
   function toggleDeleteModal(rep) {
     representativeToDelete = rep;
     if (rep !== null) {
       deleteModal.open({
-        title: `Delete '${rep.name}'`
+        title: `Delete '${rep.name || rep.firstname + ' ' + rep.lastname}'`
       });
     } else {
       deleteModal.close();
@@ -196,7 +207,7 @@
 </div>
 <Modal bind:this={deleteModal}>
   <div slot="content">
-    Are you sure you wish to delete '{representativeToDelete.name}'?
+    Are you sure you wish to delete '{representativeToDelete.name || representativeToDelete.firstname + ' ' + representativeToDelete.lastname}'?
   </div>
   <div slot="actions">
     <button on:click={deleteRepresentative}>Yes</button>

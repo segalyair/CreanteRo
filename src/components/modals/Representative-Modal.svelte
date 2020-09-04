@@ -8,74 +8,61 @@
   import { slide } from "svelte/transition";
   import { MerchantService } from "../../services/merchant-service.js";
   const dispatch = createEventDispatcher();
-  let modal,
-    model = {
-      type: '0',
+  const modelTemplate = {
+    type: "0",
+    userId: null,
+    //physical
+    firstname: null,
+    lastname: null,
+    card: {
+      id: null,
       userId: null,
-      //physical
-      firstname: null,
-      lastname: null,
-      card: {
-        id: null,
-        userId: null,
-        physicalEntityId: null,
-        cnp: null,
-        series: null,
-        nr: null,
-        issuer: null,
-        expiryDate: null
-      },
-      //juridical
-      name: null,
-      cui: null,
-      recom: null
+      physicalEntityId: null,
+      cnp: null,
+      series: null,
+      nr: null,
+      issuer: null,
+      expiryDate: null
     },
-    settings;
-  $: submitEnabled = notEmptyRequirement(model.title);
+    //juridical
+    name: null,
+    cui: null,
+    recom: null
+  };
+  let modal,
+    model = modelTemplate,
+    settings,
+    cardIgnoreFields = ["id", "userId", "physicalEntityId"];
+  $: ignoreFields =
+    model.type === "0"
+      ? ["userId", "name", "cui", "recom"]
+      : ["userId", "firstname", "lastname", "card"];
+  $: submitEnabled =
+    Object.keys(modelTemplate).find(
+      k => !ignoreFields.includes(k) && (!model[k] || model[k].length <= 0)
+    ) === undefined &&
+    (model.type === "1" ||
+      Object.keys(model.card).find(
+        k =>
+          !cardIgnoreFields.includes(k) &&
+          (!model.card[k] || model.card[k].length <= 0)
+      ) === undefined);
   export function open(data) {
     modal.open(data);
+    if (data.rep) {
+      model = data.rep;
+    }
     settings = data;
   }
   async function submit() {
-    if (!model.title || model.title.length === 0) return;
-    modal.toggleLoading();
-    // const guid = Utils.create_UUID();
-    // if (model.image) {
-    //   await FirebaseAPI.uploadFile("items", model.image, guid);
-    // }
-    // const newItem = await FirebaseAPI.add("items", {
-    //   id: guid,
-    //   creationDate: new Date().toISOString(),
-    //   value: model.title,
-    //   image: model.image !== undefined && model.image !== null
-    // });
-    const formData = new FormData();
-    if (model.debtGuaranteeProof && model.debtGuaranteeProof.length > 0) {
-      for (let i = 0; i < model.debtGuaranteeProof.length; i++) {
-        formData.append("files[]", model.debtGuaranteeProof[i]);
-      }
-    }
-    model.debtGuaranteeProof = null;
-    formData.set(
-      "productRaw",
-      JSON.stringify(model, (key, value) => {
-        if (value !== null) return value;
-      })
-    );
-    try {
-      const newProduct = await MerchantService.addProduct(formData);
-      console.log(newProduct);
-      dispatch("submit", newProduct);
-    } catch (error) {
-      console.log(error);
-    }
-    modal.toggleLoading();
     close();
   }
-  function close() {
-    modal.close();
+  function close(fromModal) {
+    if (!fromModal) {
+      modal.close();
+    }
     Utils.afterDOMRender(() => {
-      model = {};
+      model = modelTemplate;
     });
     dispatch("close");
   }
@@ -149,7 +136,7 @@
   }
 </style>
 
-<Modal bind:this={modal}>
+<Modal bind:this={modal} on:close={() => close(true)}>
   <div slot="content" class="form">
     <div class="div-label">
       <span class="label-text">
@@ -178,20 +165,49 @@
           First Name
           <span class="required">*</span>
         </span>
-        <input
-          type="text"
-          bind:value={model.firstname}
-          on:input={notEmptyRequirement(model.firstname)} />
+        <input type="text" bind:value={model.firstname} />
       </label>
       <label>
         <span class="label-text">
           Last Name
           <span class="required">*</span>
         </span>
-        <input
-          type="text"
-          bind:value={model.lastname}
-          on:input={notEmptyRequirement(model.lastname)} />
+        <input type="text" bind:value={model.lastname} />
+      </label>
+      <label>
+        <span class="label-text">
+          CNP
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.card.cnp} />
+      </label>
+      <label>
+        <span class="label-text">
+          Series
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.card.series} />
+      </label>
+      <label>
+        <span class="label-text">
+          Nr
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.card.nr} />
+      </label>
+      <label>
+        <span class="label-text">
+          Issuer
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.card.issuer} />
+      </label>
+      <label>
+        <span class="label-text">
+          Expiry Date
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={model.card.expiryDate} />
       </label>
     {:else}
       <label>
@@ -199,35 +215,26 @@
           Name
           <span class="required">*</span>
         </span>
-        <input
-          type="text"
-          bind:value={model.name}
-          on:input={notEmptyRequirement(model.name)} />
+        <input type="text" bind:value={model.name} />
       </label>
       <label>
         <span class="label-text">
           CUI
           <span class="required">*</span>
         </span>
-        <input
-          type="text"
-          bind:value={model.cui}
-          on:input={notEmptyRequirement(model.cui)} />
+        <input type="text" bind:value={model.cui} />
       </label>
       <label>
         <span class="label-text">
           RECOM
           <span class="required">*</span>
         </span>
-        <input
-          type="text"
-          bind:value={model.cui}
-          on:input={notEmptyRequirement(model.recom)} />
+        <input type="text" bind:value={model.recom} />
       </label>
     {/if}
   </div>
   <div slot="actions">
     <button disabled={!submitEnabled} on:click={submit}>Submit</button>
-    <button on:click={close}>Cancel</button>
+    <button on:click={() => close(false)}>Cancel</button>
   </div>
 </Modal>
