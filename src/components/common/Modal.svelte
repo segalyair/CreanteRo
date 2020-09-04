@@ -89,7 +89,7 @@
       on:mousedown={close}>
       <div class="modal" on:mousedown|stopPropagation>
         {#if isLoading}
-          <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
+          <LoadingSpinner size={100} {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
         {/if}
         <div class="modal-title">
           <h2>{settings.title}</h2>

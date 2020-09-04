@@ -6,11 +6,12 @@
   import { createEventDispatcher } from "svelte";
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { slide } from "svelte/transition";
-  import { MerchantService } from "../../services/merchant-service.js";
+  import { RepresentativeService } from "../../services/representative-service.js";
   const dispatch = createEventDispatcher();
   const modelTemplate = {
     type: "0",
     userId: null,
+    address: null,
     //physical
     firstname: null,
     lastname: null,
@@ -38,15 +39,8 @@
       ? ["userId", "name", "cui", "recom"]
       : ["userId", "firstname", "lastname", "card"];
   $: submitEnabled =
-    Object.keys(modelTemplate).find(
-      k => !ignoreFields.includes(k) && (!model[k] || model[k].length <= 0)
-    ) === undefined &&
-    (model.type === "1" ||
-      Object.keys(model.card).find(
-        k =>
-          !cardIgnoreFields.includes(k) &&
-          (!model.card[k] || model.card[k].length <= 0)
-      ) === undefined);
+    anyFieldEmpty(model, modelTemplate, ignoreFields) &&
+    (model.type === "1" || anyFieldEmpty(model.card, null, cardIgnoreFields));
   export function open(data) {
     modal.open(data);
     if (data.rep) {
@@ -54,7 +48,23 @@
     }
     settings = data;
   }
+  function anyFieldEmpty(obj, template, ignoreKeys) {
+    return (
+      Object.keys(template || obj).find(
+        k => !ignoreKeys.includes(k) && (!obj[k] || obj[k].length <= 0)
+      ) === undefined
+    );
+  }
   async function submit() {
+    if (!submitEnabled) return;
+    const formData = new FormData(),
+      repRaw = JSON.stringify({
+        type: Number(model.type),
+        rawEntity: JSON.stringify(model)
+      });
+    console.log(repRaw);
+    formData.set("repRaw", repRaw);
+    await RepresentativeService.add(formData);
     close();
   }
   function close(fromModal) {
@@ -65,9 +75,6 @@
       model = modelTemplate;
     });
     dispatch("close");
-  }
-  function notEmptyRequirement(value) {
-    return value && value.length > 0;
   }
 </script>
 
@@ -232,6 +239,13 @@
         <input type="text" bind:value={model.recom} />
       </label>
     {/if}
+    <label>
+      <span class="label-text">
+        Address
+        <span class="required">*</span>
+      </span>
+      <textarea bind:value={model.address} />
+    </label>
   </div>
   <div slot="actions">
     <button disabled={!submitEnabled} on:click={submit}>Submit</button>

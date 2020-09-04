@@ -9,13 +9,17 @@
   import { RepresentativeService } from "../../services/representative-service.js";
   import Modal from "../../components/common/Modal.svelte";
   import RepresentativeModal from "../../components/modals/Representative-Modal.svelte";
-  let deleteModal,
+  import Toast from "../../components/common/Toast.svelte";
+  let toast,
+    deleteModal,
     representativeModal,
     representativeToDelete = null,
     types = { "0": "Physical", "1": "Juridical" },
     representatives = [
       {
+        id: 0,
         type: "0",
+        address: "Casa Blanca",
         firstname: "First Name",
         lastname: "Last Name",
         card: {
@@ -26,7 +30,7 @@
           expiryDate: "11.11.1990"
         }
       },
-      { type: "1", name: "Company Name is Nice" }
+      { id: 1, type: "1", address: "Casa Blanca 2", name: "Company Name is Nice" }
     ],
     goToPage = false,
     currentPage = 1,
@@ -39,13 +43,21 @@
     representativeToDelete = rep;
     if (rep !== null) {
       deleteModal.open({
-        title: `Delete '${rep.name || rep.firstname + ' ' + rep.lastname}'`
+        title: `Delete '${rep.name || rep.firstname + " " + rep.lastname}'`
       });
     } else {
       deleteModal.close();
     }
   }
-  function deleteRepresentative() {
+  async function deleteRepresentative() {
+    deleteModal.toggleLoading();
+    try {
+      await RepresentativeService.delete(representativeToDelete.id);
+      toast.create("Representative succesfully deleted", 2000);
+    } catch (error) {
+      toast.create("Failed to delete representative", 3000, "#e46464");
+    }
+    deleteModal.toggleLoading();
     deleteModal.close();
   }
   function changePage(e, page) {
@@ -215,3 +227,4 @@
   </div>
 </Modal>
 <RepresentativeModal bind:this={representativeModal} />
+<Toast bind:this={toast} />

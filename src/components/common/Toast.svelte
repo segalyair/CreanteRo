@@ -12,10 +12,12 @@
       }
     }, 200);
   }
-  export function create(message, duration) {
+  export function create(message, duration, color) {
     const newToast = template.cloneNode(true);
     newToast.classList.add(index++);
     newToast.style.display = "flex";
+    const green = "#7ae464";
+    newToast.style.backgroundColor = color || green;
     const icon = newToast.getElementsByClassName("icon-container")[0];
     const msg = newToast.getElementsByClassName("message")[0];
     msg.innerHTML = message;
@@ -44,7 +46,7 @@
     max-width: 300px;
     height: 30px;
     padding: 12px;
-    background-color: rgb(122, 228, 100);
+    background-color: #7ae464;
     border-radius: 4px;
     display: none;
     justify-content: space-between;
