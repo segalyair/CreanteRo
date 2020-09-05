@@ -17,7 +17,7 @@
     types = { "0": "Physical", "1": "Juridical" },
     representatives = [
       {
-        id: 0,
+        id: 1,
         type: "0",
         address: "Casa Blanca",
         firstname: "First Name",
@@ -27,10 +27,22 @@
           series: "PX",
           nr: "000000",
           issuer: "S.P.C.L.E.P.",
-          expiryDate: "11.11.1990"
+          expiryDate: "1990-10-10"
         }
       },
-      { id: 1, type: "1", address: "Casa Blanca 2", name: "Company Name is Nice" }
+      {
+        id: 2,
+        type: "1",
+        address: "Casa Blanca 2",
+        name: "Company Name is Nice",
+        card: {
+          cnp: null,
+          series: null,
+          nr: null,
+          issuer: null,
+          expiryDate: null
+        }
+      }
     ],
     goToPage = false,
     currentPage = 1,
@@ -50,13 +62,22 @@
     }
   }
   async function deleteRepresentative() {
+    const errorToastColor = "#e46464";
+    let failed = false;
     deleteModal.toggleLoading();
     try {
-      await RepresentativeService.delete(representativeToDelete.id);
-      toast.create("Representative succesfully deleted", 2000);
+      const result = await RepresentativeService.delete(
+        representativeToDelete.id
+      );
+      failed = result.status !== 200;
     } catch (error) {
-      toast.create("Failed to delete representative", 3000, "#e46464");
+      failed = true;
     }
+    toast.create(
+      failed ? "Failed to delete representative" : "Representative deleted",
+      3000,
+      failed ? errorToastColor : null
+    );
     deleteModal.toggleLoading();
     deleteModal.close();
   }

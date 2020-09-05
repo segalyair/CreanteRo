@@ -9,6 +9,7 @@
   import { RepresentativeService } from "../../services/representative-service.js";
   const dispatch = createEventDispatcher();
   const modelTemplate = {
+    id: null,
     type: "0",
     userId: null,
     address: null,
@@ -62,9 +63,13 @@
         type: Number(model.type),
         rawEntity: JSON.stringify(model)
       });
-    console.log(repRaw);
+
     formData.set("repRaw", repRaw);
-    await RepresentativeService.add(formData);
+    if (model.id) {
+      await RepresentativeService.add(formData);
+    } else {
+      await RepresentativeService.update(formData);
+    }
     close();
   }
   function close(fromModal) {
@@ -214,7 +219,7 @@
           Expiry Date
           <span class="required">*</span>
         </span>
-        <input type="text" bind:value={model.card.expiryDate} />
+        <input type="date" bind:value={model.card.expiryDate} />
       </label>
     {:else}
       <label>
