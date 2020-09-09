@@ -40,20 +40,24 @@
     model.password && model.password.value === model.confirmPassword.value;
   $: ibanIsValid = ibanRegex.test(model.iban.value);
   $: cnpIsValid = cnpRegex.test(idCardModel.cnp.value);
-  $: canRegister =
-    !Object.keys(model).find(k => !model[k] || !model[k].value) &&
-    passwordConfirmed &&
-    cnpIsValid;
+  $: canRegister = true;
+  // !Object.keys(model).find(k => !model[k] || !model[k].value) &&
+  // passwordConfirmed &&
+  // cnpIsValid;
   // &&
   // ibanIsValid;
   async function register() {
     const formData = new FormData(),
-      userRaw = {};
+      userRaw = {},
+      identityCardRaw = {};
     for (const [key, value] of Object.entries(model)) {
       userRaw[key] = value.value;
     }
+    for (const [key, value] of Object.entries(idCardModel)) {
+      identityCardRaw[key] = value.value;
+    }
     formData.set("userRaw", JSON.stringify(userRaw));
-    formData.set("identityCardRaw", JSON.stringify(idCardModel));
+    formData.set("identityCardRaw", JSON.stringify(identityCardRaw));
     try {
       const user = await UserService.register(formData);
       if (user) {
