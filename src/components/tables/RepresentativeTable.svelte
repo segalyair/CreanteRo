@@ -117,11 +117,10 @@
     border-collapse: collapse;
     user-select: none;
     width: 30vw;
-    height: 40vh;
   }
   th,
   td {
-    /* padding: 10px; */
+    padding: 10px;
     text-align: center;
     border: 1px solid #ddd;
   }
@@ -174,6 +173,7 @@
   .no-representatives {
     font-size: 1.5rem;
     font-weight: 100;
+    padding: 30px;
   }
 </style>
 
@@ -195,13 +195,21 @@
       {#if representatives && representatives.length > 0}
         {#each representatives as rep}
           <tr>
-            <td>{rep.name || `${rep.firstname} ${rep.lastname}`}</td>
-            <td>{types[rep.type]}</td>
             <td>
-              <button on:click={() => toggleRepresentativeModal(rep)}>
-                Edit
-              </button>
-              <button on:click={() => toggleDeleteModal(rep)}>Delete</button>
+              <div class="td-content">
+                {rep.name || `${rep.firstname} ${rep.lastname}`}
+              </div>
+            </td>
+            <td>
+              <div class="td-content">{types[rep.type]}</div>
+            </td>
+            <td>
+              <div class="td-content">
+                <button on:click={() => toggleRepresentativeModal(rep)}>
+                  Edit
+                </button>
+                <button on:click={() => toggleDeleteModal(rep)}>Delete</button>
+              </div>
             </td>
           </tr>
         {/each}
@@ -212,18 +220,6 @@
           </td>
         </tr>
       {/if}
-      <tr>
-        <td colspan="100%" />
-      </tr>
-      <tr>
-        <td colspan="100%" />
-      </tr>
-      <tr>
-        <td colspan="100%" />
-      </tr>
-      <tr>
-        <td colspan="100%" />
-      </tr>
     </tbody>
     <tfoot>
       <tr>
