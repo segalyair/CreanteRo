@@ -10,6 +10,7 @@
   import Modal from "../../components/common/Modal.svelte";
   import RepresentativeModal from "../../components/modals/Representative-Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";
+  import { current_user } from "../../store.js";
   let toast,
     deleteModal,
     representativeModal,
@@ -98,7 +99,16 @@
     goToPage = !goToPage;
   }
   onMount(async () => {
-    // representatives = await RepresentativeService.get();
+    try {
+      representatives = await RepresentativeService.get(
+        $current_user.userId,
+        0,
+        6
+      );
+    } catch (error) {
+      representatives = [];
+      console.log(error);
+    }
   });
 </script>
 
@@ -106,10 +116,12 @@
   table {
     border-collapse: collapse;
     user-select: none;
+    width: 30vw;
+    height: 40vh;
   }
   th,
   td {
-    padding: 10px;
+    /* padding: 10px; */
     text-align: center;
     border: 1px solid #ddd;
   }
@@ -159,6 +171,10 @@
     -webkit-appearance: none;
     margin: 0;
   }
+  .no-representatives {
+    font-size: 1.5rem;
+    font-weight: 100;
+  }
 </style>
 
 <div>
@@ -176,18 +192,38 @@
       </tr>
     </thead>
     <tbody>
-      {#each representatives as rep}
+      {#if representatives && representatives.length > 0}
+        {#each representatives as rep}
+          <tr>
+            <td>{rep.name || `${rep.firstname} ${rep.lastname}`}</td>
+            <td>{types[rep.type]}</td>
+            <td>
+              <button on:click={() => toggleRepresentativeModal(rep)}>
+                Edit
+              </button>
+              <button on:click={() => toggleDeleteModal(rep)}>Delete</button>
+            </td>
+          </tr>
+        {/each}
+      {:else}
         <tr>
-          <td>{rep.name || `${rep.firstname} ${rep.lastname}`}</td>
-          <td>{types[rep.type]}</td>
-          <td>
-            <button on:click={() => toggleRepresentativeModal(rep)}>
-              Edit
-            </button>
-            <button on:click={() => toggleDeleteModal(rep)}>Delete</button>
+          <td colspan="100%">
+            <div class="no-representatives">No representatives found</div>
           </td>
         </tr>
-      {/each}
+      {/if}
+      <tr>
+        <td colspan="100%" />
+      </tr>
+      <tr>
+        <td colspan="100%" />
+      </tr>
+      <tr>
+        <td colspan="100%" />
+      </tr>
+      <tr>
+        <td colspan="100%" />
+      </tr>
     </tbody>
     <tfoot>
       <tr>
