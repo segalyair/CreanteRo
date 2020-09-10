@@ -37,7 +37,7 @@ export class RepresentativeService extends BaseService {
     }
     static async delete(repId) {
         try {
-            return await this.sendFetch(`${process.env.API_URL}/rep/delete?repId=${repId}`, { method: 'post' })
+            return await this.sendFetch(`${process.env.API_URL}/rep/delete?repId=${repId}`, { method: 'delete' })
         }
         catch (error) {
             throw error
