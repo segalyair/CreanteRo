@@ -16,35 +16,35 @@
     representativeModal,
     representativeToDelete = null,
     types = { "0": "Physical", "1": "Juridical" },
-    representatives = [
-      {
-        id: 1,
-        type: "0",
-        address: "Casa Blanca",
-        firstname: "First Name",
-        lastname: "Last Name",
-        card: {
-          cnp: "2901111015799",
-          series: "PX",
-          nr: "000000",
-          issuer: "S.P.C.L.E.P.",
-          expiryDate: "1990-10-10"
-        }
-      },
-      {
-        id: 2,
-        type: "1",
-        address: "Casa Blanca 2",
-        name: "Company Name is Nice",
-        card: {
-          cnp: null,
-          series: null,
-          nr: null,
-          issuer: null,
-          expiryDate: null
-        }
-      }
-    ],
+    representatives = null, //[
+    // {
+    //   id: 1,
+    //   type: "0",
+    //   address: "Casa Blanca",
+    //   firstname: "First Name",
+    //   lastname: "Last Name",
+    //   card: {
+    //     cnp: "2901111015799",
+    //     series: "PX",
+    //     nr: "000000",
+    //     issuer: "S.P.C.L.E.P.",
+    //     expiryDate: "1990-10-10"
+    //   }
+    // },
+    // {
+    //   id: 2,
+    //   type: "1",
+    //   address: "Casa Blanca 2",
+    //   name: "Company Name is Nice",
+    //   card: {
+    //     cnp: null,
+    //     series: null,
+    //     nr: null,
+    //     issuer: null,
+    //     expiryDate: null
+    //   }
+    // }
+    //]
     goToPage = false,
     currentPage = 1,
     maxPage = 20;
@@ -100,11 +100,7 @@
   }
   onMount(async () => {
     try {
-      representatives = await RepresentativeService.get(
-        $current_user.userId,
-        0,
-        6
-      );
+      representatives = await RepresentativeService.get($current_user.id, 0, 6);
     } catch (error) {
       representatives = [];
       console.log(error);
@@ -192,7 +188,13 @@
       </tr>
     </thead>
     <tbody>
-      {#if representatives && representatives.length > 0}
+      {#if !representatives}
+        <tr>
+          <td colspan="100%">
+            <div class="no-representatives">Loading representatives</div>
+          </td>
+        </tr>
+      {:else if representatives.length > 0}
         {#each representatives as rep}
           <tr>
             <td>

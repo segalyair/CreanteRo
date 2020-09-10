@@ -10,11 +10,10 @@
   let isUserLoaded = false;
   auth.onAuthStateChanged(async user => {
     if (!isUserLoaded && user) {
-      isUserLoaded = true;
       if (!user.isAnonymous) {
         current_user.set(await UserService.getById(user.uid));
-        console.log($current_user)
       }
+      isUserLoaded = true;
     }
   });
 </script>

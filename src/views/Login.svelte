@@ -2,6 +2,8 @@
   import { auth } from "../firebase/firebase";
   import { fade } from "svelte/transition";
   import { Utils } from "../utils.js";
+  import { current_user } from "../store.js";
+  import { UserService } from "../services/user-service.js";
   let model = { errors: { email: [], password: [], other: [] } };
   $: isValid =
     model.email &&
@@ -13,9 +15,14 @@
     if (!isValid) return;
     model.errors = { email: [], password: [], other: [] };
     try {
-      type === "create"
-        ? await auth.createUserWithEmailAndPassword(model.email, model.password)
-        : await auth.signInWithEmailAndPassword(model.email, model.password);
+      const userCredential =
+        type === "create"
+          ? await auth.createUserWithEmailAndPassword(
+              model.email,
+              model.password
+            )
+          : await auth.signInWithEmailAndPassword(model.email, model.password);
+      current_user.set(await UserService.getById(userCredential.user.uid));
       Utils.redirect("/list");
     } catch (error) {
       switch (error.code) {

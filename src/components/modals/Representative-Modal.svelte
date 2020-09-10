@@ -7,9 +7,10 @@
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { slide } from "svelte/transition";
   import { RepresentativeService } from "../../services/representative-service.js";
+  import { current_user } from "../../store.js";
   const dispatch = createEventDispatcher();
   const modelTemplate = {
-    id: null,
+    id: 0,
     type: "0",
     userId: null,
     address: null,
@@ -17,9 +18,9 @@
     firstname: null,
     lastname: null,
     card: {
-      id: null,
+      id: 0,
       userId: null,
-      physicalEntityId: null,
+      physicalEntityId: 0,
       cnp: null,
       series: null,
       nr: null,
@@ -37,8 +38,8 @@
     cardIgnoreFields = ["id", "userId", "physicalEntityId"];
   $: ignoreFields =
     model.type === "0"
-      ? ["userId", "name", "cui", "recom"]
-      : ["userId", "firstname", "lastname", "card"];
+      ? ["id", "userId", "name", "cui", "recom"]
+      : ["id", "userId", "firstname", "lastname", "card"];
   $: submitEnabled =
     anyFieldEmpty(model, modelTemplate, ignoreFields) &&
     (model.type === "1" || anyFieldEmpty(model.card, null, cardIgnoreFields));
@@ -58,14 +59,15 @@
   }
   async function submit() {
     if (!submitEnabled) return;
+    model.userId = $current_user.id;
     const formData = new FormData(),
       repRaw = JSON.stringify({
         type: Number(model.type),
+        userId: $current_user.id,
         rawEntity: JSON.stringify(model)
       });
-
     formData.set("repRaw", repRaw);
-    if (model.id) {
+    if (!model.id) {
       await RepresentativeService.add(formData);
     } else {
       await RepresentativeService.update(formData);

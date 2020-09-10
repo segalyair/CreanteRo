@@ -3,6 +3,7 @@
   import { auth } from "../firebase/firebase";
   import { Utils } from "../utils.js";
   import { slide } from "svelte/transition";
+  import FileUpload from "../components/common/FileUpload.svelte";
   let model = {
       email: {},
       customerType: {},
@@ -12,8 +13,9 @@
       lastName: {},
       phone: {},
       address: {},
-      bank: {},
+      bankName: {},
       iban: {},
+      photo: {},
       // country: {},
       // city: {},
       // sector: {},
@@ -29,7 +31,7 @@
       cnp: {},
       series: {},
       nr: {},
-      identityIssuer: {},
+      issuer: {},
       expiryDate: {}
     };
   const cnpRegex = new RegExp(
@@ -54,14 +56,26 @@
       userRaw[key] = value.value;
     }
     for (const [key, value] of Object.entries(idCardModel)) {
-      identityCardRaw[key] = value.value;
+      if (key === "nr") {
+        identityCardRaw[key] = value.value.toString();
+      } else {
+        identityCardRaw[key] = value.value;
+      }
     }
     formData.set("userRaw", JSON.stringify(userRaw));
     formData.set("identityCardRaw", JSON.stringify(identityCardRaw));
+    formData.set(
+      "bankAccountRaw",
+      JSON.stringify({
+        iban: userRaw.iban,
+        bankName: userRaw.bankName
+      })
+    );
+    formData.append("photo", userRaw.photo.blob);
     try {
       const user = await UserService.register(formData);
       if (user) {
-        await auth.signInWithEmailAndPassword(model.email, model.password);
+        await auth.signInWithEmailAndPassword(model.email.value, model.password.value);
         Utils.redirect("/list");
       }
     } catch (error) {}
@@ -280,7 +294,7 @@
           Bank
           <span class="required">*</span>
         </span>
-        <input type="text" bind:value={model.bank.value} />
+        <input type="text" bind:value={model.bankName.value} />
       </label>
       <label>
         <span class="label">
@@ -319,6 +333,41 @@
             </div>
           {/if}
         </div>
+      </label>
+      <label>
+        <span class="label">
+          Series
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={idCardModel.series.value} />
+      </label>
+      <label>
+        <span class="label">
+          Nr
+          <span class="required">*</span>
+        </span>
+        <input type="number" bind:value={idCardModel.nr.value} />
+      </label>
+      <label>
+        <span class="label">
+          Issuer
+          <span class="required">*</span>
+        </span>
+        <input type="text" bind:value={idCardModel.issuer.value} />
+      </label>
+      <label>
+        <span class="label">
+          Expiry Date
+          <span class="required">*</span>
+        </span>
+        <input type="date" bind:value={idCardModel.expiryDate.value} />
+      </label>
+      <label>
+        <span class="label">
+          Photo
+          <span class="required">*</span>
+        </span>
+        <FileUpload on:file={e => (model.photo.value = e.detail)} />
       </label>
     </div>
   </div>
