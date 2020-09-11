@@ -15,7 +15,7 @@
     deleteModal,
     representativeModal,
     representativeToDelete = null,
-    types = { "0": "Physical", "1": "Juridical" },
+    types = ["Physical", "Juridical"],
     representatives = null, //[
     // {
     //   id: 1,
@@ -81,6 +81,9 @@
     );
     deleteModal.toggleLoading();
     deleteModal.close();
+    if (!failed) {
+      refreshList();
+    }
   }
   function changePage(e, page) {
     e.preventDefault();
@@ -98,13 +101,16 @@
     if (e !== undefined && e.type !== "click") return;
     goToPage = !goToPage;
   }
-  onMount(async () => {
+  async function refreshList() {
     try {
       representatives = await RepresentativeService.get($current_user.id, 0, 6);
     } catch (error) {
       representatives = [];
       console.log(error);
     }
+  }
+  onMount(() => {
+    refreshList();
   });
 </script>
 
@@ -281,5 +287,5 @@
     <button on:click={() => toggleDeleteModal(null)}>No</button>
   </div>
 </Modal>
-<RepresentativeModal bind:this={representativeModal} />
+<RepresentativeModal bind:this={representativeModal} on:submit={refreshList} />
 <Toast bind:this={toast} />

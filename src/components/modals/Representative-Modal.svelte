@@ -72,6 +72,7 @@
     } else {
       await RepresentativeService.update(formData);
     }
+    dispatch("submit");
     close();
   }
   function close(fromModal) {
