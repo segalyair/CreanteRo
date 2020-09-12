@@ -1,5 +1,13 @@
 import { BaseService } from './base-service'
 export class RepresentativeService extends BaseService {
+    static async count(userId) {
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/rep/count?userId=${userId}`, { method: 'get' })
+        }
+        catch (error) {
+            throw error
+        }
+    }
     static async get(userId, skip, take) {
         let url = `${process.env.API_URL}/rep/get?userId=${userId}`
         if (skip) {

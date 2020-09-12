@@ -11,6 +11,7 @@
   import RepresentativeModal from "../../components/modals/Representative-Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";
   import { current_user } from "../../store.js";
+  const take = 6;
   let toast,
     deleteModal,
     representativeModal,
@@ -47,7 +48,9 @@
     //]
     goToPage = false,
     currentPage = 1,
-    maxPage = 20;
+    maxPage = 20,
+    skip = 0,
+    totalReps = 0;
   function toggleRepresentativeModal(rep) {
     let title = rep ? "Edit representative" : "Add new representative";
     representativeModal.open({ title, rep });
@@ -64,36 +67,39 @@
   }
   async function deleteRepresentative() {
     const errorToastColor = "#e46464";
-    let failed = false;
+    let result = false;
     deleteModal.toggleLoading();
     try {
-      const result = await RepresentativeService.delete(
-        representativeToDelete.id
-      );
-      failed = result.status !== 200;
+      result = await RepresentativeService.delete(representativeToDelete.id);
     } catch (error) {
-      failed = true;
+      result = true;
     }
     toast.create(
-      failed ? "Failed to delete representative" : "Representative deleted",
+      result ? "Representative deleted" : "Failed to delete representative",
       3000,
-      failed ? errorToastColor : null
+      result ? null : errorToastColor
     );
     deleteModal.toggleLoading();
     deleteModal.close();
-    if (!failed) {
+    if (result) {
+      refreshCount();
       refreshList();
     }
+  }
+  function submitRepresentative() {
+    refreshList();
+    refreshCount();
   }
   function changePage(e, page) {
     e.preventDefault();
     e.stopPropagation();
     currentPage = Math.min(maxPage, Math.max(1, Number(page)));
+    skip = (currentPage - 1) * take;
+    refreshList();
   }
   function submitGoToPage(e) {
     if (e.key === "Enter") {
-      //change page code goes here
-      currentPage = Math.min(maxPage, Math.max(1, Number(e.target.value)));
+      changePage(e, e.target.value);
       toggleGoToPage();
     }
   }
@@ -103,14 +109,24 @@
   }
   async function refreshList() {
     try {
-      representatives = await RepresentativeService.get($current_user.id, 0, 6);
+      representatives = await RepresentativeService.get(
+        $current_user.id,
+        skip,
+        take
+      );
     } catch (error) {
       representatives = [];
       console.log(error);
     }
   }
+  async function refreshCount() {
+    totalReps = await RepresentativeService.count($current_user.id);
+    maxPage = Math.ceil((totalReps + 1) / 6);
+    currentPage = Math.min(currentPage, maxPage);
+  }
   onMount(() => {
     refreshList();
+    refreshCount();
   });
 </script>
 
@@ -287,5 +303,7 @@
     <button on:click={() => toggleDeleteModal(null)}>No</button>
   </div>
 </Modal>
-<RepresentativeModal bind:this={representativeModal} on:submit={refreshList} />
+<RepresentativeModal
+  bind:this={representativeModal}
+  on:submit={submitRepresentative} />
 <Toast bind:this={toast} />

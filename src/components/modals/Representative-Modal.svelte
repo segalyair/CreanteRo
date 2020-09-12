@@ -23,8 +23,8 @@
       physicalEntityId: 0,
       cnp: null,
       series: null,
-      nr: null,
-      issuer: null,
+      number: null,
+      identityIssuer: null,
       expiryDate: null
     },
     //juridical
@@ -47,6 +47,8 @@
     modal.open(data);
     if (data.rep) {
       model = data.rep;
+    } else {
+      model = modelTemplate;
     }
     settings = data;
   }
@@ -205,17 +207,17 @@
       </label>
       <label>
         <span class="label-text">
-          Nr
+          Number
           <span class="required">*</span>
         </span>
-        <input type="text" bind:value={model.card.nr} />
+        <input type="text" bind:value={model.card.number} />
       </label>
       <label>
         <span class="label-text">
           Issuer
           <span class="required">*</span>
         </span>
-        <input type="text" bind:value={model.card.issuer} />
+        <input type="text" bind:value={model.card.identityIssuer} />
       </label>
       <label>
         <span class="label-text">
