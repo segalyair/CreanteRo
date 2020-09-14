@@ -2,6 +2,7 @@
   import Modal from "../../components/common/Modal.svelte";
   import FileUpload from "../common/FileUpload.svelte";
   import FileUploadList from "../common/FileUploadList.svelte";
+  import RepresentativeTable from "../../components/tables/RepresentativeTable.svelte";
   import { Utils } from "../../utils.js";
   import { createEventDispatcher } from "svelte";
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
@@ -84,7 +85,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 500px;
+    width: 45vw;
     padding: 0.5em;
   }
   .required {
@@ -104,10 +105,9 @@
   }
   .label-text {
     margin-right: 10px;
-    min-width: 200px;
+    width: 10vw;
     text-align: right;
     align-self: flex-start;
-    width: min-content;
   }
   input {
     margin: 0;
@@ -156,6 +156,10 @@
         bind:value={model.title}
         on:input={notEmptyRequirement(model.title)} />
     </label>
+    <div class="div-label">
+      <span class="label-text">Representative</span>
+      <RepresentativeTable />
+    </div>
     <label>
       <span class="label-text">
         Owed Amount

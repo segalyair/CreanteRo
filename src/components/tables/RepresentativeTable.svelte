@@ -53,6 +53,12 @@
     totalReps = 0;
   function toggleRepresentativeModal(rep) {
     let title = rep ? "Edit representative" : "Add new representative";
+    if (rep) {
+      rep.type = rep.kind.toString();
+      if (rep.card) {
+        rep.card.expiryDate = rep.card.expiryDate.split("T")[0];
+      }
+    }
     representativeModal.open({ title, rep });
   }
   function toggleDeleteModal(rep) {
@@ -131,10 +137,13 @@
 </script>
 
 <style>
+  .container {
+    flex-grow: 1;
+  }
   table {
     border-collapse: collapse;
     user-select: none;
-    width: 30vw;
+    width: 100%;
   }
   th,
   td {
@@ -195,7 +204,7 @@
   }
 </style>
 
-<div>
+<div class="container">
   <div>
     <button on:click={() => toggleRepresentativeModal(null)}>
       Add Representative
@@ -225,7 +234,7 @@
               </div>
             </td>
             <td>
-              <div class="td-content">{types[rep.type]}</div>
+              <div class="td-content">{types[rep.kind]}</div>
             </td>
             <td>
               <div class="td-content">

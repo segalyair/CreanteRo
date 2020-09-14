@@ -9,9 +9,9 @@
   current_route.set(path ? path : routes[routes.length - 1]);
   for (let route of routes) {
     page(route.href, async () => {
-      if (!auth.currentUser) {
-        await auth.signInAnonymously();
-      }
+      // if (!auth.currentUser) {
+      //   await auth.signInAnonymously();
+      // }
       if (!route.guard || route.guard()) {
         current_route.set(route);
       } else {

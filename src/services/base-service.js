@@ -2,9 +2,9 @@ import { auth } from '../firebase/firebase';
 export class BaseService {
     static async sendFetch(url, options) {
         try {
-            if (!auth.currentUser) {
-                await auth.signInAnonymously()
-            }
+            // if (!auth.currentUser) {
+            //     await auth.signInAnonymously()
+            // }
             const token = await auth.currentUser.getIdToken();
             // console.log(token)
             options.headers = new Headers({

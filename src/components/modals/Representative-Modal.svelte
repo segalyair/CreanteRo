@@ -92,8 +92,8 @@
   .form {
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
-    width: 500px;
+    width: 30vw;
+    height: 45vh;
     padding: 0.5em;
   }
   .required {
@@ -113,10 +113,9 @@
   }
   .label-text {
     margin-right: 10px;
-    min-width: 200px;
+    width: 10vw;
     text-align: right;
     align-self: flex-start;
-    width: min-content;
   }
   input {
     margin: 0;

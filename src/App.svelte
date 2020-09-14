@@ -2,6 +2,7 @@
   import Navbar from "./components/Navbar.svelte";
   import SvelteHeader from "./components/Svelte-Header.svelte";
   import SvelteFooter from "./components/Svelte-Footer.svelte";
+  import LoadingSpinner from "./Components/Common/LoadingSpinner.svelte";
   import Router from "./router/Router.svelte";
   import { auth } from "./firebase/firebase";
   import { UserService } from "./services/user-service.js";
@@ -9,12 +10,19 @@
   $: isReady = isUserLoaded;
   let isUserLoaded = false;
   auth.onAuthStateChanged(async user => {
-    if (!isUserLoaded && user) {
-      if (!user.isAnonymous) {
-        current_user.set(await UserService.getById(user.uid));
+    if (isUserLoaded) return;
+    if (user && !user.isAnonymous) {
+      try {
+        const currentUser = await UserService.getById(user.uid);
+        current_user.set(currentUser);
+      } catch (error) {
+        //User doesn't exist in db
+        await auth.signInAnonymously();
       }
-      isUserLoaded = true;
+    } else if (!user) {
+      await auth.signInAnonymously();
     }
+    isUserLoaded = true;
   });
 </script>
 
@@ -89,4 +97,6 @@
     </div>
     <!-- <SvelteFooter /> -->
   </div>
+{:else}
+  <LoadingSpinner isLoading={true} />
 {/if}
