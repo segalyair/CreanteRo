@@ -2,14 +2,15 @@
   import { getContext } from "svelte";
   import page from "page.js";
   import { routes } from "../router/routes.js";
-  import { current_route } from "../store.js";
+  import { current_route, current_user } from "../store.js";
   import { Utils } from "../utils.js";
   import { auth } from "../firebase/firebase";
 
   let currentUser,
-    currentRoutes = []
+    currentRoutes = [];
   async function signOut() {
     await auth.signOut();
+    current_user.set(null);
     await auth.signInAnonymously();
     Utils.redirect("/login");
   }
@@ -73,6 +74,7 @@
   }
   .route:hover {
     background-color: #ffe17f75;
+    text-decoration: none;
   }
   .route.active {
     background-color: #ffe17fd5;
@@ -85,16 +87,17 @@
   </a>
   <div class="routes">
     {#each currentRoutes as route}
-      <div
+      <a
         class="route"
-        class:active={$current_route.value === route.value}>
-        <a href={route.href}>{route.value}</a>
-      </div>
+        class:active={$current_route.value === route.value}
+        href={route.href}>
+        {route.value}
+      </a>
     {/each}
     <div class="fill-gap" />
     {#if currentUser && !currentUser.isAnonymous}
-      <div class="route">
-        <a href="javascript:void(0)" on:click={signOut}>Sign Out</a>
+      <div class="route" on:click={signOut}>
+        <a href="javascript:void(0)">Sign Out</a>
       </div>
     {/if}
   </div>

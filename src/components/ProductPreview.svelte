@@ -5,6 +5,7 @@
 <style>
   .container {
     flex: 1 1 0px;
+    height: 100%;
     padding: 10px;
     border: 1px solid lightgray;
     border-radius: 8px;

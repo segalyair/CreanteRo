@@ -8,7 +8,7 @@
   import { MarketService } from "../../services/market-service.js";
   import { MerchantService } from "../../services/merchant-service.js";
   import { fade } from "svelte/transition";
-    import { selected_product } from "../../store.js";
+  import { selected_product, current_user } from "../../store.js";
   let addModal,
     deleteModal,
     itemToDelete,
@@ -20,14 +20,16 @@
   async function openDeleteModal(item) {
     itemToDelete = item;
     deleteModal.open({
-      title: `Delete '${itemToDelete.value}'`
+      title: `Delete '${itemToDelete.title}'`
     });
   }
   async function dismissDeleteModal() {
     deleteModal.close();
   }
-  function selectItem(item){
-    selected_product.set(item);
+  function selectItem(item) {
+    selected_product.set(
+      $selected_product && $selected_product.id === item.id ? null : item
+    );
   }
   async function deleteItem() {
     deleteModal.toggleLoading();
@@ -53,7 +55,7 @@
   }
   async function addModalSubmit(newItem) {
     if (newItem) {
-      allItems = allItems ? [newItem, ...allItems] : [newItem];
+      items = items ? [newItem, ...items] : [newItem];
       if (displayItems && displayItems.length % take === 0 && !displayingAll) {
         displayItems.pop();
       }
@@ -66,8 +68,8 @@
   async function loadMore() {
     if (canLoadMore) {
       skip += take;
-      displayItems = displayItems.concat(allItems.slice(skip, skip + take));
-      displayingAll = allItems.length === displayItems.length;
+      displayItems = displayItems.concat(items.slice(skip, skip + take));
+      displayingAll = items.length === displayItems.length;
     }
   }
   async function loadItems() {
@@ -83,11 +85,11 @@
   }
   onMount(async () => {
     loadItems();
-    // allItems = await FirebaseAPI.get("items", {
+    // items = await FirebaseAPI.get("items", {
     //   orderBy: "creationDate"
     // });
-    // if (allItems) {
-    //   displayItems = allItems.slice(0, take);
+    // if (items) {
+    //   displayItems = items.slice(0, take);
     // }
   });
 </script>
@@ -131,7 +133,7 @@
     cursor: pointer;
   }
   .item:hover {
-    background-color: #ffe17f75;
+    background-color: rgba(173, 216, 230, 0.2);
     transition: background-color 200ms;
   }
   .no-items {
@@ -163,9 +165,14 @@
   <div class="items">
     {#if items && items.length > 0}
       {#each items as item}
-        <div on:click={selectItem(item)} transition:fade|local class="item no-scroll">
-          {item.value}
-          <button on:click={openDeleteModal(item)}>Remove item</button>
+        <div
+          on:click={selectItem(item)}
+          transition:fade|local
+          class="item no-scroll">
+          {item.title}
+          {#if $current_user.id === item.merchantId}
+            <button on:click={openDeleteModal(item)}>Remove item</button>
+          {/if}
         </div>
       {/each}
     {:else if isLoading}
@@ -189,7 +196,7 @@
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
   <div slot="content">
-    Are you sure you wish to delete '{itemToDelete.value}'?
+    Are you sure you wish to delete '{itemToDelete.title}'?
   </div>
   <div slot="actions">
     <button on:click={deleteItem}>Yes</button>

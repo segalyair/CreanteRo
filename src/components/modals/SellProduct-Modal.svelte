@@ -8,23 +8,27 @@
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { slide } from "svelte/transition";
   import { MerchantService } from "../../services/merchant-service.js";
+  import { current_user } from "../../store.js";
   const dispatch = createEventDispatcher();
   let modal,
     model = {
       title: null,
       seller: null,
-      owedAmount: null,
+      bookValueAmount: null,
       priceAmount: null,
-      debtGuarantee: false,
+      isGuaranteed: false,
       debtGuaranteeProof: null,
-      debtGuaranteeDetails: null,
+      guaranteeDetails: null,
       debtorSolvent: false,
-      debtorSolventDetails: null,
+      debtorSolvencyDetails: null,
       debtor: null,
       isForeclosured: false,
-      isForeclosuredDetails: null,
+      foreclosureDetails: null,
       ownerCanRequestForeclosure: false,
-      merchantId: 1
+      reasonCannotObtainForeclosure: null,
+      isForeclosureContested: false,
+      reasonForeclosureNotContested: null,
+      merchantId: $current_user.id
     },
     settings;
   $: submitEnabled = notEmptyRequirement(model.title);
@@ -158,7 +162,7 @@
     </label>
     <div class="div-label">
       <span class="label-text">Representative</span>
-      <RepresentativeTable />
+      <RepresentativeTable selectable={true} />
     </div>
     <label>
       <span class="label-text">
@@ -168,14 +172,14 @@
       <input
         type="number"
         min="1"
-        bind:value={model.owedAmount}
-        on:input={notEmptyRequirement(model.owedAmount)} />
+        bind:value={model.bookValueAmount}
+        on:input={notEmptyRequirement(model.bookValueAmount)} />
     </label>
     <label>
       <span class="label-text">Is the debt guaranteed?</span>
-      <input type="checkbox" bind:checked={model.debtGuarantee} />
+      <input type="checkbox" bind:checked={model.isGuaranteed} />
     </label>
-    {#if model.debtGuarantee}
+    {#if model.isGuaranteed}
       <div class="div-label" transition:slide|local>
         <span class="label-text">
           Guarantee Proof
@@ -187,7 +191,7 @@
     {/if}
     <label>
       <span class="label-text">Details</span>
-      <textarea bind:value={model.debtGuaranteeDetails} />
+      <textarea bind:value={model.guaranteeDetails} />
     </label>
     <div class="div-label">
       <span class="label-text">
@@ -211,7 +215,7 @@
     </div>
     <label>
       <span class="label-text">Details</span>
-      <textarea bind:value={model.debtorSolventDetails} />
+      <textarea bind:value={model.debtorSolvencyDetails} />
     </label>
     <div class="div-label">
       <span class="label-text">Other documents</span>
@@ -235,7 +239,7 @@
             Details
             <span class="required">*</span>
           </span>
-          <textarea bind:value={model.isForeclosuredDetails} />
+          <textarea bind:value={model.foreclosureDetails} />
         </label>
       </div>
     {:else}

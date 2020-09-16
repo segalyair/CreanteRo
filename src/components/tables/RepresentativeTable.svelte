@@ -1,5 +1,5 @@
 <script>
-  import { onMount } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
   import {
     ChevronRightIcon,
     ChevronsRightIcon,
@@ -11,47 +11,24 @@
   import RepresentativeModal from "../../components/modals/Representative-Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";
   import { current_user } from "../../store.js";
-  const take = 6;
+  export let selectable = false;
+  const take = 6,
+    dispatch = createEventDispatcher();
   let toast,
     deleteModal,
     representativeModal,
     representativeToDelete = null,
     types = ["Physical", "Juridical"],
-    representatives = null, //[
-    // {
-    //   id: 1,
-    //   type: "0",
-    //   address: "Casa Blanca",
-    //   firstname: "First Name",
-    //   lastname: "Last Name",
-    //   card: {
-    //     cnp: "2901111015799",
-    //     series: "PX",
-    //     nr: "000000",
-    //     issuer: "S.P.C.L.E.P.",
-    //     expiryDate: "1990-10-10"
-    //   }
-    // },
-    // {
-    //   id: 2,
-    //   type: "1",
-    //   address: "Casa Blanca 2",
-    //   name: "Company Name is Nice",
-    //   card: {
-    //     cnp: null,
-    //     series: null,
-    //     nr: null,
-    //     issuer: null,
-    //     expiryDate: null
-    //   }
-    // }
-    //]
+    representatives = null,
+    selectedRep = null,
     goToPage = false,
     currentPage = 1,
     maxPage = 20,
     skip = 0,
     totalReps = 0;
-  function toggleRepresentativeModal(rep) {
+  function toggleRepresentativeModal(e, rep) {
+    e.preventDefault();
+    e.stopPropagation();
     let title = rep ? "Edit representative" : "Add new representative";
     if (rep) {
       rep.type = rep.kind.toString();
@@ -61,7 +38,9 @@
     }
     representativeModal.open({ title, rep });
   }
-  function toggleDeleteModal(rep) {
+  function toggleDeleteModal(e, rep) {
+    e.preventDefault();
+    e.stopPropagation();
     representativeToDelete = rep;
     if (rep !== null) {
       deleteModal.open({
@@ -112,6 +91,11 @@
   function toggleGoToPage(e) {
     if (e !== undefined && e.type !== "click") return;
     goToPage = !goToPage;
+  }
+  function selectRow(rep) {
+    if (!selectable) return;
+    selectedRep = selectedRep && selectedRep.id === rep.id ? null : rep;
+    dispatch("select", { selectedRep });
   }
   async function refreshList() {
     try {
@@ -202,11 +186,20 @@
     font-weight: 100;
     padding: 30px;
   }
+  .selectable:hover:not(.selected) {
+    background-color: rgba(173, 216, 230, 0.2);
+    transition: background-color 200ms;
+    cursor: pointer;
+  }
+  .selected {
+    background-color: rgba(173, 216, 230, 0.4);
+    cursor: pointer;
+  }
 </style>
 
 <div class="container">
   <div>
-    <button on:click={() => toggleRepresentativeModal(null)}>
+    <button on:click={e => toggleRepresentativeModal(e, null)}>
       Add Representative
     </button>
   </div>
@@ -227,7 +220,10 @@
         </tr>
       {:else if representatives.length > 0}
         {#each representatives as rep}
-          <tr>
+          <tr
+            class:selectable
+            class:selected={selectedRep && selectedRep.id === rep.id}
+            on:click={() => selectRow(rep)}>
             <td>
               <div class="td-content">
                 {rep.name || `${rep.firstname} ${rep.lastname}`}
@@ -238,10 +234,12 @@
             </td>
             <td>
               <div class="td-content">
-                <button on:click={() => toggleRepresentativeModal(rep)}>
+                <button on:click={e => toggleRepresentativeModal(e, rep)}>
                   Edit
                 </button>
-                <button on:click={() => toggleDeleteModal(rep)}>Delete</button>
+                <button on:click={e => toggleDeleteModal(e, rep)}>
+                  Delete
+                </button>
               </div>
             </td>
           </tr>
