@@ -124,6 +124,10 @@
   .container {
     flex-grow: 1;
   }
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+  }
   table {
     border-collapse: collapse;
     user-select: none;
@@ -198,7 +202,7 @@
 </style>
 
 <div class="container">
-  <div>
+  <div class="actions">
     <button on:click={e => toggleRepresentativeModal(e, null)}>
       Add Representative
     </button>

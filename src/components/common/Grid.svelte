@@ -132,9 +132,15 @@
     padding: 6px;
     cursor: pointer;
   }
-  .item:hover {
+  .item.selected {
+    background-color: rgba(173, 216, 230, 0.4);
+    transition: background-color 200ms;
+    cursor: pointer;
+  }
+  .item:hover:not(.selected) {
     background-color: rgba(173, 216, 230, 0.2);
     transition: background-color 200ms;
+    cursor: pointer;
   }
   .no-items {
     display: flex;
@@ -168,7 +174,8 @@
         <div
           on:click={selectItem(item)}
           transition:fade|local
-          class="item no-scroll">
+          class="item no-scroll"
+          class:selected={$selected_product && $selected_product.id === item.id}>
           {item.title}
           {#if $current_user.id === item.merchantId}
             <button on:click={openDeleteModal(item)}>Remove item</button>
