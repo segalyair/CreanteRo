@@ -16,7 +16,6 @@
     clientSecret;
   // Step 2
   async function createIntent() {
-    debugger;
     const response = await fetch(api, {
       method: "POST",
       headers: {

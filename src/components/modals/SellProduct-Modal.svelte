@@ -12,27 +12,9 @@
   import { current_user } from "../../store.js";
   const dispatch = createEventDispatcher();
   let modal,
-    model = {
-      title: null,
-      seller: null,
-      bookValueAmount: null,
-      priceAmount: null,
-      isGuaranteed: false,
-      debtGuaranteeProof: null,
-      guaranteeDetails: null,
-      debtorSolvent: false,
-      debtorSolvencyDetails: null,
-      debtor: null,
-      isForeclosured: false,
-      foreclosureDetails: null,
-      ownerCanRequestForeclosure: false,
-      reasonCannotObtainForeclosure: null,
-      isForeclosureContested: false,
-      reasonForeclosureNotContested: null,
-      merchantId: $current_user.id
-    },
+    submitEnabled = true,
+    model,
     settings;
-  $: submitEnabled = notEmptyRequirement(model.title);
   export function open(data) {
     modal.open(data);
     settings = data;
@@ -55,13 +37,12 @@
       for (let i = 0; i < model.debtGuaranteeProof.length; i++) {
         formData.append("files[]", model.debtGuaranteeProof[i]);
       }
-    }
+    } 
     model.debtGuaranteeProof = null;
+    model.isDebtorSolvent = Number(model.isDebtorSolvent);
     formData.set(
       "productRaw",
-      JSON.stringify(model, (key, value) => {
-        if (value !== null) return value;
-      })
+      JSON.stringify(model)
     );
     try {
       const newProduct = await MerchantService.addProduct(formData);
@@ -97,7 +78,7 @@
 
 <Modal bind:this={modal}>
   <div slot="content" class="form">
-    <SellProductForm {model} />
+    <SellProductForm bind:model />
   </div>
   <div slot="actions">
     <button disabled={!submitEnabled} on:click={submit}>Submit</button>

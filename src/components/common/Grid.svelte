@@ -140,6 +140,21 @@
     padding: 6px;
     cursor: pointer;
   }
+  .item-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .item-column {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin: 0 10px;
+  }
+  .item-column-header {
+    font-size: 12px;
+  }
   .item.selected {
     background-color: rgba(173, 216, 230, 0.4);
     transition: background-color 200ms;
@@ -184,7 +199,24 @@
           transition:fade|local
           class="item no-scroll"
           class:selected={$selected_product && $selected_product.id === item.id}>
-          {item.title}
+          <div class="item-content">
+            <div class="item-column">
+              <span>{item.title}</span>
+            </div>
+            <div class="item-column">
+              <span class="item-column-header">Vanzator</span>
+              <span>PlaceHolder Nume</span>
+            </div>
+            <div class="item-column">
+              <span class="item-column-header">Suma datorata</span>
+              <span>{item.bookValueAmount} RON</span>
+            </div>
+            <div class="item-column">
+              <span class="item-column-header">Pret</span>
+              <span>{item.priceAmount} RON</span>
+            </div>
+          </div>
+
           {#if $current_user.id === item.merchantId}
             <button on:click={openDeleteModal(item)}>Remove</button>
           {:else}

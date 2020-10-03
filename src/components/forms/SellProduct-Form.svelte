@@ -35,8 +35,21 @@
   .container {
     flex-grow: 1;
   }
-  .container.preview {
-    pointer-events: none;
+  .preview-container {
+    height: 100%;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+  }
+  .preview-container .label-text {
+    width: 100%;
+    text-align: left;
+    padding: 6px;
+    font-size: 18px;
+  }
+  .value {
+    text-align: right;
   }
   .required {
     color: red;
@@ -94,125 +107,205 @@
   }
 </style>
 
-<div class="container" class:preview>
-  <label>
-    <span class="label-text">
-      Title
-      <span class="required">*</span>
-    </span>
-    <input
-      type="text"
-      bind:value={model.title}
-      on:input={notEmptyRequirement(model.title)} />
-  </label>
-  <div class="div-label">
-    <span class="label-text">Representative</span>
-    <RepresentativeTable selectable={true} />
-  </div>
-  <label>
-    <span class="label-text">
-      Owed Amount
-      <span class="required">*</span>
-    </span>
-    <input
-      type="number"
-      min="1"
-      bind:value={model.bookValueAmount}
-      on:input={notEmptyRequirement(model.bookValueAmount)} />
-  </label>
-  <label>
-    <span class="label-text">Is the debt guaranteed?</span>
-    <input type="checkbox" bind:checked={model.isGuaranteed} />
-  </label>
-  {#if model.isGuaranteed}
-    <div class="div-label" transition:slide|local>
+{#if !preview}
+  <div class="container">
+    <label>
       <span class="label-text">
-        Guarantee Proof
+        Title
         <span class="required">*</span>
       </span>
-      <FileUploadList on:change={e => (model.debtGuaranteeProof = e.detail)} />
+      <input
+        type="text"
+        bind:value={model.title}
+        on:input={notEmptyRequirement(model.title)} />
+    </label>
+    <div class="div-label">
+      <span class="label-text">Representative</span>
+      <RepresentativeTable selectable={true} />
     </div>
-  {/if}
-  <label>
-    <span class="label-text">Details</span>
-    <textarea bind:value={model.guaranteeDetails} />
-  </label>
-  <div class="div-label">
-    <span class="label-text">
-      Is the debtor solvent?
-      <span class="required">*</span>
-    </span>
-    <div class="radio-buttons">
-      <label>
-        <input type="radio" name="isDebtorSolvent" value="0" bind:group={model.isDebtorSolvent} />
-        <span>Yes</span>
-      </label>
-      <label>
-        <input type="radio" name="isDebtorSolvent" value="1" bind:group={model.isDebtorSolvent} />
-        <span>No</span>
-      </label>
-      <label>
-        <input type="radio" name="isDebtorSolvent" value="2" bind:group={model.isDebtorSolvent} />
-        <span>I don't know</span>
-      </label>
-    </div>
-  </div>
-  <label>
-    <span class="label-text">Details</span>
-    <textarea bind:value={model.debtorSolvencyDetails} />
-  </label>
-  <div class="div-label">
-    <span class="label-text">Other documents</span>
-    <FileUploadList />
-  </div>
-  <label>
-    <span class="label-text">
-      Debtor
-      <span class="required">*</span>
-    </span>
-    <textarea bind:value={model.debtor} />
-  </label>
-  <label>
-    <span class="label-text">Is foreclosured?</span>
-    <input type="checkbox" bind:checked={model.isForeclosured} />
-  </label>
-  {#if model.isForeclosured}
-    <div transition:slide|local>
-      <label>
+    <label>
+      <span class="label-text">
+        Owed Amount
+        <span class="required">*</span>
+      </span>
+      <input
+        type="number"
+        min="1"
+        bind:value={model.bookValueAmount}
+        on:input={notEmptyRequirement(model.bookValueAmount)} />
+    </label>
+    <label>
+      <span class="label-text">Is the debt guaranteed?</span>
+      <input type="checkbox" bind:checked={model.isGuaranteed} />
+    </label>
+    {#if model.isGuaranteed}
+      <div class="div-label" transition:slide|local>
         <span class="label-text">
-          Details
+          Guarantee Proof
           <span class="required">*</span>
         </span>
-        <textarea bind:value={model.foreclosureDetails} />
-      </label>
+        <FileUploadList
+          on:change={e => (model.debtGuaranteeProof = e.detail)} />
+      </div>
+    {/if}
+    <label>
+      <span class="label-text">Details</span>
+      <textarea bind:value={model.guaranteeDetails} />
+    </label>
+    <div class="div-label">
+      <span class="label-text">
+        Is the debtor solvent?
+        <span class="required">*</span>
+      </span>
+      <div class="radio-buttons">
+        <label>
+          <input
+            type="radio"
+            name="isDebtorSolvent"
+            value="0"
+            bind:group={model.isDebtorSolvent} />
+          <span>Yes</span>
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="isDebtorSolvent"
+            value="1"
+            bind:group={model.isDebtorSolvent} />
+          <span>No</span>
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="isDebtorSolvent"
+            value="2"
+            bind:group={model.isDebtorSolvent} />
+          <span>I don't know</span>
+        </label>
+      </div>
     </div>
-  {:else}
-    <div transition:slide|local>
-      <label>
-        <span class="label-text">Can the claimant request foreclosure?</span>
-        <input
-          type="checkbox"
-          bind:checked={model.ownerCanRequestForeclosure} />
-      </label>
-      {#if !model.ownerCanRequestForeclosure}
-        <label transition:slide|local>
+    <label>
+      <span class="label-text">Details</span>
+      <textarea bind:value={model.debtorSolvencyDetails} />
+    </label>
+    <div class="div-label">
+      <span class="label-text">Other documents</span>
+      <FileUploadList />
+    </div>
+    <label>
+      <span class="label-text">
+        Debtor
+        <span class="required">*</span>
+      </span>
+      <textarea bind:value={model.debtor} />
+    </label>
+    <label>
+      <span class="label-text">Is foreclosured?</span>
+      <input type="checkbox" bind:checked={model.isForeclosured} />
+    </label>
+    {#if model.isForeclosured}
+      <div transition:slide|local>
+        <label>
+          <span class="label-text">
+            Details
+            <span class="required">*</span>
+          </span>
+          <textarea bind:value={model.foreclosureDetails} />
+        </label>
+      </div>
+    {:else}
+      <div transition:slide|local>
+        <label>
+          <span class="label-text">Can the claimant request foreclosure?</span>
+          <input
+            type="checkbox"
+            bind:checked={model.ownerCanRequestForeclosure} />
+        </label>
+        {#if !model.ownerCanRequestForeclosure}
+          <label transition:slide|local>
+            <span class="label-text">
+              Why can't the claimant request enforcement?
+            </span>
+            <input type="checkbox" />
+          </label>
+        {/if}
+      </div>
+    {/if}
+    <label>
+      <span class="label-text">
+        Price
+        <span class="required">*</span>
+      </span>
+      <input
+        type="number"
+        min="1"
+        bind:value={model.priceAmount}
+        on:input={notEmptyRequirement(model.priceAmount)} />
+    </label>
+  </div>
+{:else}
+  <div class="preview-container">
+    <span class="label-text">Title: {model.title}</span>
+    <!-- <div class="div-label">
+      <span class="label-text">Representative</span>
+      <RepresentativeTable selectable={true} />
+    </div> -->
+    <span class="label-text">
+      Owed Amount:
+      <span class="value">{model.bookValueAmount}</span>
+    </span>
+    <span class="label-text">
+      Is the debt guaranteed:
+      <span class="value">{model.isGuaranteed ? 'Yes' : 'No'}</span>
+    </span>
+    {#if model.isGuaranteed}
+      <span class="label-text">Guarantee Proof</span>
+    {/if}
+    <span class="label-text">
+      Details:
+      <span class="value">{model.guaranteeDetails}</span>
+    </span>
+    <span class="label-text">
+      Is the debtor solvent:
+      <span class="value">{model.isDebtorSolvent}</span>
+    </span>
+    <span class="label-text">
+      Details:
+      <span class="value">{model.debtorSolvencyDetails}</span>
+    </span>
+    <span class="label-text">Other documents</span>
+    <span class="label-text">
+      Debtor:
+      <span class="value">{model.debtor}</span>
+    </span>
+    <span class="label-text">
+      Is foreclosured:
+      <span class="value">{model.isForeclosured ? 'Yes' : 'No'}</span>
+    </span>
+    {#if model.isForeclosured}
+      <span class="label-text">
+        Details:
+        <span class="value">{model.foreclosureDetails}</span>
+      </span>
+    {:else}
+      <span class="label-text">
+        Can the claimant request foreclosure:
+        <span class="value">
+          {model.ownerCanRequestForeclosure ? 'Yes' : 'No'}
+        </span>
+      </span>
+      <!-- {#if !model.ownerCanRequestForeclosure}
+        <label>
           <span class="label-text">
             Why can't the claimant request enforcement?
           </span>
           <input type="checkbox" />
         </label>
-      {/if}
-    </div>
-  {/if}
-  <label>
+      {/if} -->
+    {/if}
     <span class="label-text">
-      Price
-      <span class="required">*</span>
+      Price:
+      <span class="value">{model.priceAmount}</span>
     </span>
-    <input
-      type="number"
-      min="1"
-      bind:value={model.priceAmount}
-      on:input={notEmptyRequirement(model.priceAmount)} />
-  </label>
-</div>
+  </div>
+{/if}
