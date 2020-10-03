@@ -4,6 +4,7 @@
   import { Utils } from "../../utils.js";
   import Modal from "../../components/common/Modal.svelte";
   import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
+  import IssueBuyModal from "../../components/modals/IssueBuy-Modal.svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { MarketService } from "../../services/market-service.js";
   import { MerchantService } from "../../services/merchant-service.js";
@@ -11,12 +12,19 @@
   import { selected_product, current_user } from "../../store.js";
   let addModal,
     deleteModal,
+    buyModal,
     itemToDelete,
     items = [],
     isLoading = true,
     hasLoadingError = false,
     skip = 0;
   const take = 6;
+  async function openIssueBuyModal(item) {
+    buyModal.open({
+      title: `Buy '${item.title}'`,
+      product: item
+    });
+  }
   async function openDeleteModal(item) {
     itemToDelete = item;
     deleteModal.open({
@@ -178,7 +186,9 @@
           class:selected={$selected_product && $selected_product.id === item.id}>
           {item.title}
           {#if $current_user.id === item.merchantId}
-            <button on:click={openDeleteModal(item)}>Remove item</button>
+            <button on:click={openDeleteModal(item)}>Remove</button>
+          {:else}
+            <button on:click={openIssueBuyModal(item)}>Buy</button>
           {/if}
         </div>
       {/each}
@@ -200,6 +210,7 @@
 <SellProductModal
   bind:this={addModal}
   on:submit={event => addModalSubmit(event.detail)} />
+<IssueBuyModal bind:this={buyModal} />
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
   <div slot="content">

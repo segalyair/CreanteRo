@@ -13,7 +13,7 @@ export class MerchantService extends BaseService {
     }
     static async deleteProduct(id) {
         try {
-            return await this.sendFetch(`${process.env.API_URL}/merchant/delete?productId=${id}`, {
+            return await this.sendFetch(`${process.env.API_URL}/merchant/delete?id=${id}`, {
                 method: 'delete'
             })
         }
