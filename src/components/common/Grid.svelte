@@ -155,6 +155,9 @@
   .item-column-header {
     font-size: 12px;
   }
+  .item-action {
+    min-width: 6vw;
+  }
   .item.selected {
     background-color: rgba(173, 216, 230, 0.4);
     transition: background-color 200ms;
@@ -218,9 +221,13 @@
           </div>
 
           {#if $current_user.id === item.merchantId}
-            <button on:click={openDeleteModal(item)}>Remove</button>
+            <button class="item-action" on:click={openDeleteModal(item)}>
+              Remove
+            </button>
           {:else}
-            <button on:click={openIssueBuyModal(item)}>Buy</button>
+            <button class="item-action" on:click={openIssueBuyModal(item)}>
+              Buy
+            </button>
           {/if}
         </div>
       {/each}
