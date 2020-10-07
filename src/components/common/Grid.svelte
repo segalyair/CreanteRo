@@ -148,6 +148,7 @@
   .item-column {
     display: flex;
     flex-direction: column;
+    width: 25%;
     justify-content: center;
     text-align: center;
     margin: 0 10px;
@@ -220,7 +221,7 @@
             </div>
           </div>
 
-          {#if $current_user.id === item.merchantId}
+          {#if $current_user && $current_user.id === item.merchantId}
             <button class="item-action" on:click={openDeleteModal(item)}>
               Remove
             </button>

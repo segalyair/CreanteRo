@@ -251,45 +251,46 @@
       <RepresentativeTable selectable={true} />
     </div> -->
     <span class="label-text">
-      Owed Amount:
+      <!-- <span class="label">Owed Amount:</span> -->
+      <span class="tag">Owed Amount:</span>
       <span class="value">{model.bookValueAmount}</span>
     </span>
     <span class="label-text">
-      Is the debt guaranteed:
+      <span class="tag">Is the debt guaranteed:</span>
       <span class="value">{model.isGuaranteed ? 'Yes' : 'No'}</span>
     </span>
     {#if model.isGuaranteed}
-      <span class="label-text">Guarantee Proof</span>
+      <span class="label-text"><span class="tag">Guarantee Proof</span></span>
     {/if}
     <span class="label-text">
-      Details:
+      <span class="tag">Details:</span>
       <span class="value">{model.guaranteeDetails}</span>
     </span>
     <span class="label-text">
-      Is the debtor solvent:
+      <span class="tag">Is the debtor solvent:</span>
       <span class="value">{model.isDebtorSolvent}</span>
     </span>
     <span class="label-text">
-      Details:
+      <span class="tag">Details:</span>
       <span class="value">{model.debtorSolvencyDetails}</span>
     </span>
-    <span class="label-text">Other documents</span>
+    <span class="label-text"><span class="tag">Other documents</span></span>
     <span class="label-text">
-      Debtor:
+      <span class="tag">Debtor:</span>
       <span class="value">{model.debtor}</span>
     </span>
     <span class="label-text">
-      Is foreclosured:
+      <span class="tag">Is foreclosured:</span>
       <span class="value">{model.isForeclosured ? 'Yes' : 'No'}</span>
     </span>
     {#if model.isForeclosured}
       <span class="label-text">
-        Details:
+        <span class="tag">Details:</span>
         <span class="value">{model.foreclosureDetails}</span>
       </span>
     {:else}
       <span class="label-text">
-        Can the claimant request foreclosure:
+        <span class="tag">Can the claimant request foreclosure:</span>
         <span class="value">
           {model.ownerCanRequestForeclosure ? 'Yes' : 'No'}
         </span>
@@ -304,7 +305,7 @@
       {/if} -->
     {/if}
     <span class="label-text">
-      Price:
+      <span class="tag">Price:</span>
       <span class="value">{model.priceAmount}</span>
     </span>
   </div>

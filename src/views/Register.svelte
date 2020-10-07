@@ -3,6 +3,7 @@
   import { auth } from "../firebase/firebase";
   import { Utils } from "../utils.js";
   import { slide } from "svelte/transition";
+  import { current_user } from "../store.js";
   import FileUpload from "../components/common/FileUpload.svelte";
   let model = {
       email: {},
@@ -75,7 +76,12 @@
     try {
       const user = await UserService.register(formData);
       if (user) {
-        await auth.signInWithEmailAndPassword(model.email.value, model.password.value);
+        const userCredential = await auth.signInWithEmailAndPassword(
+          model.email.value,
+          model.password.value
+        );
+        current_user.set(await UserService.getById(userCredential.user.uid));
+        console.log($current_user);
         Utils.redirect("/list");
       }
     } catch (error) {}
