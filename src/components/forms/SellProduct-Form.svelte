@@ -47,9 +47,15 @@
     text-align: left;
     padding: 6px;
     font-size: 18px;
+    display: flex;
+  }
+  .tag {
+    text-align: right;
+    width: 200px;
   }
   .value {
-    text-align: right;
+    flex-grow: 1;
+    text-align: center;
   }
   .required {
     color: red;
@@ -245,7 +251,10 @@
   </div>
 {:else}
   <div class="preview-container">
-    <span class="label-text">Title: {model.title}</span>
+    <span class="label-text">
+      <span class="tag">Title:</span>
+      <span class="value">{model.title}</span>
+    </span>
     <!-- <div class="div-label">
       <span class="label-text">Representative</span>
       <RepresentativeTable selectable={true} />
@@ -260,7 +269,9 @@
       <span class="value">{model.isGuaranteed ? 'Yes' : 'No'}</span>
     </span>
     {#if model.isGuaranteed}
-      <span class="label-text"><span class="tag">Guarantee Proof</span></span>
+      <span class="label-text">
+        <span class="tag">Guarantee Proof</span>
+      </span>
     {/if}
     <span class="label-text">
       <span class="tag">Details:</span>
@@ -274,7 +285,9 @@
       <span class="tag">Details:</span>
       <span class="value">{model.debtorSolvencyDetails}</span>
     </span>
-    <span class="label-text"><span class="tag">Other documents</span></span>
+    <span class="label-text">
+      <span class="tag">Other documents</span>
+    </span>
     <span class="label-text">
       <span class="tag">Debtor:</span>
       <span class="value">{model.debtor}</span>

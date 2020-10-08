@@ -21,16 +21,12 @@
   }
   async function submit() {
     if (!submitEnabled) return;
-    const formData = new FormData();
-    formData.set(
-      "buyParamsRaw",
-      JSON.stringify({
-        buyerId: $current_user.id,
-        buyerRepId: selectedRep.id,
-        productId: settings.product.id
-      })
-    );
-    const result = await MarketService.issueBuy(formData);
+    const buyParams = {
+      buyerId: $current_user.id,
+      buyerRepId: selectedRep.id,
+      productId: settings.product.id
+    };
+    const result = await MarketService.issueBuy(buyParams);
     dispatch("submit");
     close();
   }
@@ -45,7 +41,7 @@
     <RepresentativeTable
       selectable={true}
       on:select={e => (selectedRep = e.detail.selectedRep)} />
-    Other purchase stuff goes here (conditions, Stripe, signature etc.)
+    <!-- Other purchase stuff goes here (conditions, Stripe, signature etc.) -->
   </div>
   <div slot="actions">
     <button disabled={!submitEnabled} on:click={submit}>Buy</button>

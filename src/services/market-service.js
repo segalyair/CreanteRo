@@ -8,11 +8,15 @@ export class MarketService extends BaseService {
             throw error
         }
     }
-    static async issueBuy(formData) {
+    static async issueBuy(buyParams) {
         try {
             return await this.sendFetch(`${process.env.API_URL}/market/issue-buy`, {
-                method: 'post',
-                body: formData
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(buyParams)
             })
         }
         catch (error) {

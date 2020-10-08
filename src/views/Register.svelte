@@ -81,7 +81,6 @@
           model.password.value
         );
         current_user.set(await UserService.getById(userCredential.user.uid));
-        console.log($current_user);
         Utils.redirect("/list");
       }
     } catch (error) {}
