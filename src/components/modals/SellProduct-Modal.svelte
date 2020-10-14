@@ -2,7 +2,7 @@
   import Modal from "../../components/common/Modal.svelte";
   import FileUpload from "../common/FileUpload.svelte";
   import FileUploadList from "../common/FileUploadList.svelte";
-  import RepresentativeTable from "../../components/tables/RepresentativeTable.svelte";
+  import EntityTable from "../../components/tables/EntityTable.svelte";
   import SellProductForm from "../forms/SellProduct-Form.svelte";
   import { Utils } from "../../utils.js";
   import { createEventDispatcher } from "svelte";
@@ -32,18 +32,21 @@
     //   value: model.title,
     //   image: model.image !== undefined && model.image !== null
     // });
+
     const formData = new FormData();
     if (model.debtGuaranteeProof && model.debtGuaranteeProof.length > 0) {
       for (let i = 0; i < model.debtGuaranteeProof.length; i++) {
         formData.append("files[]", model.debtGuaranteeProof[i]);
       }
-    } 
+    }
     model.debtGuaranteeProof = null;
     model.isDebtorSolvent = Number(model.isDebtorSolvent);
-    formData.set(
-      "productRaw",
-      JSON.stringify(model)
-    );
+    formData.set("productRaw", JSON.stringify(model));
+    formData.set("debitorEntityId", model.debitorEntityId);
+    if (model.sellerRepId) {
+      formData.set("sellerRepId", model.sellerRepId);
+    }
+
     try {
       const newProduct = await MerchantService.addProduct(formData);
       console.log(newProduct);

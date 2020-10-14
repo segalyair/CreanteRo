@@ -17,7 +17,7 @@ export class MarketService extends BaseService {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(buyParams)
-            })
+            }, true)
         }
         catch (error) {
             throw error

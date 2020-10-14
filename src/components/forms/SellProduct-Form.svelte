@@ -1,7 +1,7 @@
 <script>
   import FileUpload from "../common/FileUpload.svelte";
   import FileUploadList from "../common/FileUploadList.svelte";
-  import RepresentativeTable from "../../components/tables/RepresentativeTable.svelte";
+  import EntityTable from "../../components/tables/EntityTable.svelte";
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
   import { current_user } from "../../store.js";
@@ -10,6 +10,8 @@
   export let model = {
     title: null,
     seller: null,
+    sellerRepId: null,
+    debitorEntityId: null,
     bookValueAmount: null,
     priceAmount: null,
     isGuaranteed: false,
@@ -127,7 +129,13 @@
     </label>
     <div class="div-label">
       <span class="label-text">Representative</span>
-      <RepresentativeTable selectable={true} />
+      <EntityTable selectable={true} 
+      on:select={e => (model.sellerRepId = e.detail.selectedEntity.id)}/>
+    </div>
+    <div class="div-label">
+      <span class="label-text">Debtor</span>
+      <EntityTable selectable={true} 
+      on:select={e => (model.debitorEntityId = e.detail.selectedEntity.id)}/>
     </div>
     <label>
       <span class="label-text">
@@ -257,7 +265,7 @@
     </span>
     <!-- <div class="div-label">
       <span class="label-text">Representative</span>
-      <RepresentativeTable selectable={true} />
+      <EntityTable selectable={true} />
     </div> -->
     <span class="label-text">
       <!-- <span class="label">Owed Amount:</span> -->

@@ -1,6 +1,6 @@
 import { auth } from '../firebase/firebase';
 export class BaseService {
-    static async sendFetch(url, options) {
+    static async sendFetch(url, options, raw) {
         try {
             const token = await auth.currentUser.getIdToken();
             if (!options.headers) {
@@ -8,6 +8,9 @@ export class BaseService {
             }
             options.headers.Authorization = `Bearer ${token}`
             const response = await fetch(url, options)
+            if(raw){
+                return response
+            }
             return await response.json()
         }
         catch (error) {

@@ -1,9 +1,9 @@
 <script>
-  import RepresentativeTable from "../components/tables/RepresentativeTable.svelte";
+  import EntityTable from "../components/tables/EntityTable.svelte";
 </script>
 
 <style>
 
 </style>
 
-<RepresentativeTable />
+<EntityTable />

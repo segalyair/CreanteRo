@@ -3,7 +3,7 @@
   import { MarketService } from "../../services/market-service.js";
   import { createEventDispatcher } from "svelte";
   import { current_user } from "../../store.js";
-  import RepresentativeTable from "../../components/tables/RepresentativeTable.svelte";
+  import EntityTable from "../../components/tables/EntityTable.svelte";
   const dispatch = createEventDispatcher();
   let modal,
     settings,
@@ -26,7 +26,14 @@
       buyerRepId: selectedRep.id,
       productId: settings.product.id
     };
-    const result = await MarketService.issueBuy(buyParams);
+    const result = await MarketService.issueBuy(buyParams),
+      blob = await result.blob(),
+      url = window.URL.createObjectURL(blob),
+      link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${settings.product.title}.docx`);
+    document.body.appendChild(link);
+    link.click();
     dispatch("submit");
     close();
   }
@@ -38,9 +45,9 @@
 
 <Modal bind:this={modal} on:close={() => close(true)}>
   <div slot="content">
-    <RepresentativeTable
+    <EntityTable
       selectable={true}
-      on:select={e => (selectedRep = e.detail.selectedRep)} />
+      on:select={e => (selectedRep = e.detail.selectedEntity)} />
     <!-- Other purchase stuff goes here (conditions, Stripe, signature etc.) -->
   </div>
   <div slot="actions">

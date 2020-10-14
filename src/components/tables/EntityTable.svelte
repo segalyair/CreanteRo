@@ -8,7 +8,7 @@
   } from "svelte-feather-icons";
   import { RepresentativeService } from "../../services/representative-service.js";
   import Modal from "../../components/common/Modal.svelte";
-  import RepresentativeModal from "../../components/modals/Representative-Modal.svelte";
+  import EntityModal from "../../components/modals/Entity-Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";
   import { current_user } from "../../store.js";
   export let selectable = false;
@@ -16,46 +16,46 @@
     dispatch = createEventDispatcher();
   let toast,
     deleteModal,
-    representativeModal,
-    representativeToDelete = null,
+    entityModal,
+    entityToDelete = null,
     types = ["Physical", "Juridical"],
-    representatives = null,
-    selectedRep = null,
+    entities = null,
+    selectedEntity = null,
     goToPage = false,
     currentPage = 1,
     maxPage = 20,
     skip = 0,
-    totalReps = 0;
-  function toggleRepresentativeModal(e, rep) {
+    totalEntities = 0;
+  function toggleEntityModal(e, entity) {
     e.preventDefault();
     e.stopPropagation();
-    let title = rep ? "Edit representative" : "Add new representative";
-    if (rep) {
-      rep.type = rep.kind.toString();
-      if (rep.card) {
-        rep.card.expiryDate = rep.card.expiryDate.split("T")[0];
+    let title = entity ? "Edit representative" : "Add new representative";
+    if (entity) {
+      entity.type = entity.kind.toString();
+      if (entity.card) {
+        entity.card.expiryDate = entity.card.expiryDate.split("T")[0];
       }
     }
-    representativeModal.open({ title, rep });
+    entityModal.open({ title, entity });
   }
-  function toggleDeleteModal(e, rep) {
+  function toggleDeleteModal(e, entity) {
     e.preventDefault();
     e.stopPropagation();
-    representativeToDelete = rep;
-    if (rep !== null) {
+    entityToDelete = entity;
+    if (entity !== null) {
       deleteModal.open({
-        title: `Delete '${rep.name || rep.firstname + " " + rep.lastname}'`
+        title: `Delete '${entity.name || entity.firstname + " " + entity.lastname}'`
       });
     } else {
       deleteModal.close();
     }
   }
-  async function deleteRepresentative() {
+  async function deleteEntity() {
     const errorToastColor = "#e46464";
     let result = false;
     deleteModal.toggleLoading();
     try {
-      result = await RepresentativeService.delete(representativeToDelete.id);
+      result = await RepresentativeService.delete(entityToDelete.id);
     } catch (error) {
       result = true;
     }
@@ -92,26 +92,26 @@
     if (e !== undefined && e.type !== "click") return;
     goToPage = !goToPage;
   }
-  function selectRow(rep) {
+  function selectRow(entity) {
     if (!selectable) return;
-    selectedRep = selectedRep && selectedRep.id === rep.id ? null : rep;
-    dispatch("select", { selectedRep });
+    selectedEntity = selectedEntity && selectedEntity.id === entity.id ? null : entity;
+    dispatch("select", { selectedEntity });
   }
   async function refreshList() {
     try {
-      representatives = await RepresentativeService.get(
+      entities = await RepresentativeService.get(
         $current_user.id,
         skip,
         take
       );
     } catch (error) {
-      representatives = [];
+      entities = [];
       console.log(error);
     }
   }
   async function refreshCount() {
-    totalReps = await RepresentativeService.count($current_user.id);
-    maxPage = Math.ceil((totalReps + 1) / 6);
+    totalEntities = await RepresentativeService.count($current_user.id);
+    maxPage = Math.ceil((totalEntities + 1) / 6);
     currentPage = Math.min(currentPage, maxPage);
   }
   onMount(() => {
@@ -185,7 +185,7 @@
     -webkit-appearance: none;
     margin: 0;
   }
-  .no-representatives {
+  .no-entities {
     font-size: 1.5rem;
     font-weight: 100;
     padding: 30px;
@@ -203,8 +203,8 @@
 
 <div class="container">
   <div class="actions">
-    <button on:click={e => toggleRepresentativeModal(e, null)}>
-      Add Representative
+    <button on:click={e => toggleEntityModal(e, null)}>
+      Add
     </button>
   </div>
   <table>
@@ -216,32 +216,32 @@
       </tr>
     </thead>
     <tbody>
-      {#if !representatives}
+      {#if !entities}
         <tr>
           <td colspan="100%">
-            <div class="no-representatives">Loading representatives</div>
+            <div class="no-entities">Loading entities</div>
           </td>
         </tr>
-      {:else if representatives.length > 0}
-        {#each representatives as rep}
+      {:else if entities.length > 0}
+        {#each entities as entity}
           <tr
             class:selectable
-            class:selected={selectedRep && selectedRep.id === rep.id}
-            on:click={() => selectRow(rep)}>
+            class:selected={selectedEntity && selectedEntity.id === entity.id}
+            on:click={() => selectRow(entity)}>
             <td>
               <div class="td-content">
-                {rep.name || `${rep.firstname} ${rep.lastname}`}
+                {entity.name || `${entity.firstname} ${entity.lastname}`}
               </div>
             </td>
             <td>
-              <div class="td-content">{types[rep.kind]}</div>
+              <div class="td-content">{types[entity.kind]}</div>
             </td>
             <td>
               <div class="td-content">
-                <button on:click={e => toggleRepresentativeModal(e, rep)}>
+                <button on:click={e => toggleEntityModal(e, entity)}>
                   Edit
                 </button>
-                <button on:click={e => toggleDeleteModal(e, rep)}>
+                <button on:click={e => toggleDeleteModal(e, entity)}>
                   Delete
                 </button>
               </div>
@@ -251,7 +251,7 @@
       {:else}
         <tr>
           <td colspan="100%">
-            <div class="no-representatives">No representatives found</div>
+            <div class="no-entities">No entities found</div>
           </td>
         </tr>
       {/if}
@@ -307,14 +307,14 @@
 </div>
 <Modal bind:this={deleteModal}>
   <div slot="content">
-    Are you sure you wish to delete '{representativeToDelete.name || representativeToDelete.firstname + ' ' + representativeToDelete.lastname}'?
+    Are you sure you wish to delete '{entityToDelete.name || entityToDelete.firstname + ' ' + entityToDelete.lastname}'?
   </div>
   <div slot="actions">
-    <button on:click={deleteRepresentative}>Yes</button>
+    <button on:click={deleteEntity}>Yes</button>
     <button on:click={() => toggleDeleteModal(null)}>No</button>
   </div>
 </Modal>
-<RepresentativeModal
-  bind:this={representativeModal}
+<EntityModal
+  bind:this={entityModal}
   on:submit={submitRepresentative} />
 <Toast bind:this={toast} />
