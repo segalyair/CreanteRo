@@ -28,8 +28,16 @@
     reasonForeclosureNotContested: null,
     merchantId: $current_user.id
   };
+  let debtorTable, representativeTable;
   function notEmptyRequirement(value) {
     return value && value.length > 0;
+  }
+  function updateTables(table) {
+    if (table === "Representative") {
+      debtorTable.refreshList(true);
+    } else {
+      representativeTable.refreshList(true);
+    }
   }
 </script>
 
@@ -129,13 +137,19 @@
     </label>
     <div class="div-label">
       <span class="label-text">Representative</span>
-      <EntityTable selectable={true} 
-      on:select={e => (model.sellerRepId = e.detail.selectedEntity.id)}/>
+      <EntityTable
+        bind:this={representativeTable}
+        selectable={true}
+        on:select={e => (model.sellerRepId = e.detail.selectedEntity.id)}
+        on:change={e => updateTables('Representative')} />
     </div>
     <div class="div-label">
       <span class="label-text">Debtor</span>
-      <EntityTable selectable={true} 
-      on:select={e => (model.debitorEntityId = e.detail.selectedEntity.id)}/>
+      <EntityTable
+        bind:this={debtorTable}
+        selectable={true}
+        on:select={e => (model.debitorEntityId = e.detail.selectedEntity.id)}
+        on:change={e => updateTables('Debtor')} />
     </div>
     <label>
       <span class="label-text">

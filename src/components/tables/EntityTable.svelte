@@ -44,7 +44,8 @@
     entityToDelete = entity;
     if (entity !== null) {
       deleteModal.open({
-        title: `Delete '${entity.name || entity.firstname + " " + entity.lastname}'`
+        title: `Delete '${entity.name ||
+          entity.firstname + " " + entity.lastname}'`
       });
     } else {
       deleteModal.close();
@@ -67,13 +68,13 @@
     deleteModal.toggleLoading();
     deleteModal.close();
     if (result) {
-      refreshCount();
-      refreshList();
+      refreshList(true);
+      dispatch("change");
     }
   }
   function submitRepresentative() {
-    refreshList();
-    refreshCount();
+    refreshList(true);
+    dispatch("change");
   }
   function changePage(e, page) {
     e.preventDefault();
@@ -94,16 +95,16 @@
   }
   function selectRow(entity) {
     if (!selectable) return;
-    selectedEntity = selectedEntity && selectedEntity.id === entity.id ? null : entity;
+    selectedEntity =
+      selectedEntity && selectedEntity.id === entity.id ? null : entity;
     dispatch("select", { selectedEntity });
   }
-  async function refreshList() {
+  export async function refreshList(alsoCount) {
     try {
-      entities = await RepresentativeService.get(
-        $current_user.id,
-        skip,
-        take
-      );
+      entities = await RepresentativeService.get($current_user.id, skip, take);
+      if (alsoCount) {
+        await refreshCount();
+      }
     } catch (error) {
       entities = [];
       console.log(error);
@@ -115,8 +116,7 @@
     currentPage = Math.min(currentPage, maxPage);
   }
   onMount(() => {
-    refreshList();
-    refreshCount();
+    refreshList(true);
   });
 </script>
 
@@ -203,9 +203,7 @@
 
 <div class="container">
   <div class="actions">
-    <button on:click={e => toggleEntityModal(e, null)}>
-      Add
-    </button>
+    <button on:click={e => toggleEntityModal(e, null)}>Add</button>
   </div>
   <table>
     <thead>
@@ -314,7 +312,5 @@
     <button on:click={() => toggleDeleteModal(null)}>No</button>
   </div>
 </Modal>
-<EntityModal
-  bind:this={entityModal}
-  on:submit={submitRepresentative} />
+<EntityModal bind:this={entityModal} on:submit={submitRepresentative} />
 <Toast bind:this={toast} />
