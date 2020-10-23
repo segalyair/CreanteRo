@@ -6,7 +6,7 @@
   import { createEventDispatcher } from "svelte";
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { slide } from "svelte/transition";
-  import { RepresentativeService } from "../../services/representative-service.js";
+  import { RepresentativeService } from "../../services/legalSubject-service.js";
   import { current_user } from "../../store.js";
   const dispatch = createEventDispatcher();
   const modelTemplate = {
@@ -45,8 +45,8 @@
     (model.type === "1" || anyFieldEmpty(model.card, null, cardIgnoreFields));
   export function open(data) {
     modal.open(data);
-    if (data.rep) {
-      model = data.rep;
+    if (data.entity) {
+      model = data.entity;
     } else {
       model = modelTemplate;
     }
@@ -62,19 +62,22 @@
   async function submit() {
     if (!submitEnabled) return;
     model.userId = $current_user.id;
-    const formData = new FormData(),
-      repRaw = JSON.stringify({
-        type: Number(model.type),
-        userId: $current_user.id,
-        rawEntity: JSON.stringify(model)
-      });
-    formData.set("repRaw", repRaw);
-    if (!model.id) {
-      await RepresentativeService.add(formData);
-    } else {
-      await RepresentativeService.update(formData);
+    try {
+      if (!model.id) {
+        const entParams = {
+          type: Number(model.type),
+          userId: $current_user.id,
+          rawEntity: JSON.stringify(model),
+          rawCard: JSON.stringify(model.card)
+        };
+        await RepresentativeService.add(entParams);
+      } else {
+        await RepresentativeService.update(model);
+      }
+      dispatch("submit");
+    } catch (ex) {
+      console.log(ex);
     }
-    dispatch("submit");
     close();
   }
   function close(fromModal) {

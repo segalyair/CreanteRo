@@ -6,7 +6,7 @@
     ChevronLeftIcon,
     ChevronsLeftIcon
   } from "svelte-feather-icons";
-  import { RepresentativeService } from "../../services/representative-service.js";
+  import { RepresentativeService } from "../../services/legalSubject-service.js";
   import Modal from "../../components/common/Modal.svelte";
   import EntityModal from "../../components/modals/Entity-Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";

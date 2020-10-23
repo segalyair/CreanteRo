@@ -31,11 +31,16 @@ export class RepresentativeService extends BaseService {
             throw error
         }
     }
-    static async add(formData) {
+    static async add(entParams) {
         try {
             return await this.sendFetch(`${process.env.API_URL}/rep/add`,
                 {
-                    method: 'post', body: formData
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(entParams)
                 }
             )
         }
@@ -55,7 +60,12 @@ export class RepresentativeService extends BaseService {
         try {
             return await this.sendFetch(`${process.env.API_URL}/rep/update`,
                 {
-                    method: 'patch', body: entity
+                    method: 'PATCH',
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(entity)
                 }
             )
         }
