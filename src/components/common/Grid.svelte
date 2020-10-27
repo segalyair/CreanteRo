@@ -41,34 +41,16 @@
   }
   async function deleteItem() {
     deleteModal.toggleLoading();
-
-    // await FirebaseAPI.delete("items", {
-    //   id: itemToDelete.id
-    // });
-    // if (itemToDelete.image) {
-    //   await FirebaseAPI.deleteFile("items", itemToDelete.id);
-    // }
     await MerchantService.deleteProduct(itemToDelete.id);
     deleteModal.toggleLoading();
     dismissDeleteModal();
-    //Make sure item was deleted
-    const deletedItem = await FirebaseAPI.findById("items", itemToDelete.id);
-    if (deletedItem === null) {
-      items = items.filter(i => i.id !== itemToDelete.id);
-    }
-    itemToDelete = null;
+    loadItems();
   }
   async function openAddModal() {
     addModal.open({ title: `Add new item` });
   }
   async function addModalSubmit(newItem) {
-    if (newItem) {
-      items = items ? [newItem, ...items] : [newItem];
-      if (displayItems && displayItems.length % take === 0 && !displayingAll) {
-        displayItems.pop();
-      }
-      displayItems = [newItem, ...displayItems];
-    }
+    loadItems();
   }
   async function getItemImage(item) {
     return await FirebaseAPI.downloadFile("sellerProducts", item.id);
@@ -93,12 +75,6 @@
   }
   onMount(async () => {
     loadItems();
-    // items = await FirebaseAPI.get("items", {
-    //   orderBy: "creationDate"
-    // });
-    // if (items) {
-    //   displayItems = items.slice(0, take);
-    // }
   });
 </script>
 

@@ -4,7 +4,9 @@
   import { Utils } from "../utils.js";
   import { current_user } from "../store.js";
   import { UserService } from "../services/user-service.js";
-  let model = { errors: { email: [], password: [], other: [] } };
+  import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
+  let model = { errors: { email: [], password: [], other: [] } },
+    isLoading = false;
   $: isValid =
     model.email &&
     model.email.length > 0 &&
@@ -13,6 +15,7 @@
   $: anyError = field => model.errors[field].length > 5;
   async function handleLogin(type) {
     if (!isValid) return;
+    isLoading = true;
     model.errors = { email: [], password: [], other: [] };
     try {
       const userCredential =
@@ -44,6 +47,7 @@
       }
       console.log(error);
     }
+    isLoading = false;
   }
   function addError(field, code, message) {
     model.errors[field] = [
@@ -115,5 +119,6 @@
         Login
       </button>
     </div>
+    <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
   </div>
 </div>

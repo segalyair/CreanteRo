@@ -12,6 +12,9 @@
 </script>
 
 <style>
+  .notLoading {
+    display: none !important;
+  }
   .loading {
     position: absolute;
     top: 0;
@@ -26,8 +29,10 @@
   }
 </style>
 
-{#if isLoading}
-  <div bind:this={container} transition:fade|local class="loading">
-    <Spinner {size} speed="650" color="#1b6dc1" thickness="1.5" gap="40" />
-  </div>
-{/if}
+<div
+  bind:this={container}
+  transition:fade={{ duration: 100 }}
+  class="loading"
+  class:notLoading={!isLoading}>
+  <Spinner {size} speed="650" color="#1b6dc1" thickness="1.5" gap="40" />
+</div>
