@@ -23,7 +23,7 @@
     if (!submitEnabled) return;
     const buyParams = {
       buyerId: $current_user.id,
-      buyerRepId: selectedRep.id,
+      buyerRepId: selectedRep ? selectedRep.id : null,
       productId: settings.product.id
     };
     const result = await MarketService.issueBuy(buyParams),

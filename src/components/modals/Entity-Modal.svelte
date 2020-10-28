@@ -14,6 +14,7 @@
     type: "0",
     userId: null,
     address: null,
+    email: null,
     //physical
     firstname: null,
     lastname: null,
@@ -178,6 +179,13 @@
         </label>
       </div>
     </div>
+    <label>
+      <span class="label-text">
+        Email
+        <span class="required">*</span>
+      </span>
+      <input type="email" bind:value={model.email} />
+    </label>
     {#if model.type === '0'}
       <label>
         <span class="label-text">

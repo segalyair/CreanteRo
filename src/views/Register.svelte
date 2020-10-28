@@ -31,8 +31,8 @@
     idCardModel = {
       cnp: {},
       series: {},
-      nr: {},
-      issuer: {},
+      number: {},
+      identityIssuer: {},
       expiryDate: {}
     };
   const cnpRegex = new RegExp(
@@ -57,7 +57,7 @@
       userRaw[key] = value.value;
     }
     for (const [key, value] of Object.entries(idCardModel)) {
-      if (key === "nr") {
+      if (key === "number") {
         identityCardRaw[key] = value.value.toString();
       } else {
         identityCardRaw[key] = value.value;
@@ -348,17 +348,17 @@
       </label>
       <label>
         <span class="label">
-          Nr
+          Number
           <span class="required">*</span>
         </span>
-        <input type="number" bind:value={idCardModel.nr.value} />
+        <input type="number" bind:value={idCardModel.number.value} />
       </label>
       <label>
         <span class="label">
           Issuer
           <span class="required">*</span>
         </span>
-        <input type="text" bind:value={idCardModel.issuer.value} />
+        <input type="text" bind:value={idCardModel.identityIssuer.value} />
       </label>
       <label>
         <span class="label">
