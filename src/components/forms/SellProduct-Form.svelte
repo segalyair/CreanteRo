@@ -13,13 +13,13 @@
     sellerRepId: null,
     debitorEntityId: null,
     bookValueAmount: null,
+    currency: "RON",
     priceAmount: null,
     isGuaranteed: false,
     debtGuaranteeProof: null,
     guaranteeDetails: null,
     isDebtorSolvent: 0,
     debtorSolvencyDetails: null,
-    debtor: null,
     isForeclosured: false,
     foreclosureDetails: null,
     ownerCanRequestForeclosure: false,
@@ -136,7 +136,7 @@
         on:input={notEmptyRequirement(model.title)} />
     </label>
     <div class="div-label">
-      <span class="label-text">Representative</span>
+      <span class="label-text">To Represent</span>
       <EntityTable
         bind:this={representativeTable}
         selectable={true}
@@ -220,13 +220,6 @@
       <span class="label-text">Other documents</span>
       <FileUploadList />
     </div>
-    <label>
-      <span class="label-text">
-        Debtor
-        <span class="required">*</span>
-      </span>
-      <textarea bind:value={model.debtor} />
-    </label>
     <label>
       <span class="label-text">Is foreclosured?</span>
       <input type="checkbox" bind:checked={model.isForeclosured} />
