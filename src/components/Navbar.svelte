@@ -32,8 +32,8 @@
 
 <style>
   .navbar {
-    min-width: 9vw;
-    width: 9vw;
+    min-width: 10.5vw;
+    width: 10.5vw;
     display: flex;
     flex-direction: column;
     transition: width 200ms;

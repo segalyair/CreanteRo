@@ -52,6 +52,9 @@
   async function addModalSubmit(newItem) {
     loadItems();
   }
+  async function issueBuyModalSubmit() {
+    loadItems();
+  }
   async function getItemImage(item) {
     return await FirebaseAPI.downloadFile("sellerProducts", item.id);
   }
@@ -226,7 +229,9 @@
 <SellProductModal
   bind:this={addModal}
   on:submit={event => addModalSubmit(event.detail)} />
-<IssueBuyModal bind:this={buyModal} />
+<IssueBuyModal
+  bind:this={buyModal}
+  on:submit={event => issueBuyModalSubmit()} />
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
   <div slot="content">

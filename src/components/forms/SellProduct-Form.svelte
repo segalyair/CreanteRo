@@ -2,6 +2,7 @@
   import FileUpload from "../common/FileUpload.svelte";
   import FileUploadList from "../common/FileUploadList.svelte";
   import EntityTable from "../../components/tables/EntityTable.svelte";
+  import TooltipHelp from "../common/TooltipHelp.svelte";
   import { createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
   import { current_user } from "../../store.js";
@@ -26,7 +27,8 @@
     reasonCannotObtainForeclosure: null,
     isForeclosureContested: false,
     reasonForeclosureNotContested: null,
-    merchantId: $current_user.id
+    merchantId: $current_user.id,
+    details: null
   };
   let debtorTable, representativeTable;
   function notEmptyRequirement(value) {
@@ -73,12 +75,10 @@
   }
   label {
     display: flex;
-    justify-content: space-between;
     margin-bottom: 10px;
   }
   .div-label {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
   }
@@ -88,21 +88,21 @@
     text-align: right;
     align-self: flex-start;
   }
+  .input-name {
+    width: 700px;
+  }
   input {
     margin: 0;
-    flex-grow: 1;
   }
   input[type="checkbox"] {
     cursor: pointer;
-    flex-grow: 1;
-    align-self: center;
     margin: 0;
     outline: none;
   }
   textarea {
     resize: vertical;
-    flex-grow: 1;
     margin: 0;
+    width: 700px;
   }
   .radio-buttons {
     display: flex;
@@ -132,37 +132,39 @@
       </span>
       <input
         type="text"
+        class="input-name"
         bind:value={model.title}
         on:input={notEmptyRequirement(model.title)} />
+      <TooltipHelp
+        message={'This is an example message which has to be particularly long and very elaborate about the input reason of existence and maybe a short financial definition for whatever else it has to do right now'} />
     </label>
     <div class="div-label">
+      <span class="label-text">
+        Documents
+        <span class="required">*</span>
+      </span>
+      <FileUploadList />
+    </div>
+    <!-- <div class="div-label">
       <span class="label-text">To Represent</span>
       <EntityTable
         bind:this={representativeTable}
         selectable={true}
         on:select={e => (model.sellerRepId = e.detail.selectedEntity.id)}
         on:change={e => updateTables('Representative')} />
-    </div>
+    </div> -->
     <div class="div-label">
-      <span class="label-text">Debtor</span>
+      <span class="label-text">
+        Debtor
+        <span class="required">*</span>
+      </span>
       <EntityTable
         bind:this={debtorTable}
         selectable={true}
         on:select={e => (model.debitorEntityId = e.detail.selectedEntity.id)}
         on:change={e => updateTables('Debtor')} />
     </div>
-    <label>
-      <span class="label-text">
-        Owed Amount
-        <span class="required">*</span>
-      </span>
-      <input
-        type="number"
-        min="1"
-        bind:value={model.bookValueAmount}
-        on:input={notEmptyRequirement(model.bookValueAmount)} />
-    </label>
-    <label>
+    <!-- <label>
       <span class="label-text">Is the debt guaranteed?</span>
       <input type="checkbox" bind:checked={model.isGuaranteed} />
     </label>
@@ -215,12 +217,16 @@
     <label>
       <span class="label-text">Details</span>
       <textarea bind:value={model.debtorSolvencyDetails} />
-    </label>
+    </label> -->
     <div class="div-label">
       <span class="label-text">Other documents</span>
       <FileUploadList />
     </div>
     <label>
+      <span class="label-text">Details</span>
+      <textarea bind:value={model.details} />
+    </label>
+    <!-- <label>
       <span class="label-text">Is foreclosured?</span>
       <input type="checkbox" bind:checked={model.isForeclosured} />
     </label>
@@ -251,7 +257,20 @@
           </label>
         {/if}
       </div>
-    {/if}
+    {/if} -->
+    <label>
+      <span class="label-text">
+        Owed Amount
+        <span class="required">*</span>
+      </span>
+      <input
+        type="number"
+        min="1"
+        bind:value={model.bookValueAmount}
+        on:input={notEmptyRequirement(model.bookValueAmount)} />
+      <TooltipHelp
+        message={'The value of the debt'} />
+    </label>
     <label>
       <span class="label-text">
         Price
@@ -262,6 +281,8 @@
         min="1"
         bind:value={model.priceAmount}
         on:input={notEmptyRequirement(model.priceAmount)} />
+      <TooltipHelp
+        message={'The sell price'} />
     </label>
   </div>
 {:else}
@@ -279,7 +300,7 @@
       <span class="tag">Owed Amount:</span>
       <span class="value">{model.bookValueAmount}</span>
     </span>
-    <span class="label-text">
+    <!-- <span class="label-text">
       <span class="tag">Is the debt guaranteed:</span>
       <span class="value">{model.isGuaranteed ? 'Yes' : 'No'}</span>
     </span>
@@ -299,11 +320,11 @@
     <span class="label-text">
       <span class="tag">Details:</span>
       <span class="value">{model.debtorSolvencyDetails}</span>
-    </span>
+    </span> -->
     <span class="label-text">
       <span class="tag">Other documents</span>
     </span>
-    <span class="label-text">
+    <!-- <span class="label-text">
       <span class="tag">Debtor:</span>
       <span class="value">{model.debtor}</span>
     </span>
@@ -323,15 +344,15 @@
           {model.ownerCanRequestForeclosure ? 'Yes' : 'No'}
         </span>
       </span>
-      <!-- {#if !model.ownerCanRequestForeclosure}
+       {#if !model.ownerCanRequestForeclosure}
         <label>
           <span class="label-text">
             Why can't the claimant request enforcement?
           </span>
           <input type="checkbox" />
         </label>
-      {/if} -->
-    {/if}
+      {/if}
+    {/if} -->
     <span class="label-text">
       <span class="tag">Price:</span>
       <span class="value">{model.priceAmount}</span>

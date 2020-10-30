@@ -29,7 +29,7 @@
   function toggleEntityModal(e, entity) {
     e.preventDefault();
     e.stopPropagation();
-    let title = entity ? "Edit representative" : "Add new representative";
+    let title = entity ? "Edit debtor" : "Add new debtor";
     if (entity) {
       entity.type = entity.kind.toString();
       if (entity.card) {
@@ -58,10 +58,10 @@
     try {
       result = await RepresentativeService.delete(entityToDelete.id);
     } catch (error) {
-      result = true;
+      result = false;
     }
     toast.create(
-      result ? "Representative deleted" : "Failed to delete representative",
+      result ? "Debtor deleted" : "Failed to delete debtor",
       3000,
       result ? null : errorToastColor
     );
@@ -210,6 +210,8 @@
       <tr>
         <th>Name</th>
         <th>Type</th>
+        <th>Address</th>
+        <th>Email</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -233,6 +235,12 @@
             </td>
             <td>
               <div class="td-content">{types[entity.kind]}</div>
+            </td>
+            <td>
+              <div class="td-content">{entity.address}</div>
+            </td>
+            <td>
+              <div class="td-content">{entity.email}</div>
             </td>
             <td>
               <div class="td-content">

@@ -23,7 +23,7 @@
   .container {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
+    width: 300px;
   }
   .file-list {
     display: flex;

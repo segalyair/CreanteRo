@@ -21,6 +21,7 @@
   }
   async function submit() {
     if (!model.title || model.title.length === 0) return;
+    if (model.bookValueAmount <= model.priceAmount) return;
     modal.toggleLoading();
     // const guid = Utils.create_UUID();
     // if (model.image) {
@@ -74,7 +75,7 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 45vw;
+    width: 65vw;
     padding: 0.5em;
   }
 </style>

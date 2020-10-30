@@ -5,6 +5,7 @@
   import { slide } from "svelte/transition";
   import { current_user } from "../store.js";
   import FileUpload from "../components/common/FileUpload.svelte";
+  import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
   let model = {
       email: {},
       customerType: {},
@@ -34,7 +35,8 @@
       number: {},
       identityIssuer: {},
       expiryDate: {}
-    };
+    },
+    isLoading = false;
   const cnpRegex = new RegExp(
       /\b[1-8]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(0[1-9]|[1-4]\d|5[0-2]|99)\d{4}\b/
     ),
@@ -50,6 +52,7 @@
   // &&
   // ibanIsValid;
   async function register() {
+    isLoading = true;
     const formData = new FormData(),
       userRaw = {},
       identityCardRaw = {};
@@ -83,7 +86,10 @@
         current_user.set(await UserService.getById(userCredential.user.uid));
         Utils.redirect("/list");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
+    isLoading = false;
   }
 </script>
 
@@ -381,4 +387,5 @@
       Register
     </button>
   </div>
+  <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
 </div>
