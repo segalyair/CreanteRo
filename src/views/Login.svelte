@@ -115,6 +115,7 @@
       <!-- <a href={RouteValues.Register.href}>
         <button>Register</button>
       </a> -->
+      <button on:click={() => Utils.redirect('/register')}>Register</button>
       <button disabled={!isValid} on:click={() => handleLogin('login')}>
         Login
       </button>

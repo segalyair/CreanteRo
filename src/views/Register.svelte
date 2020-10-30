@@ -53,30 +53,31 @@
   // ibanIsValid;
   async function register() {
     isLoading = true;
-    const formData = new FormData(),
-      userRaw = {},
-      identityCardRaw = {};
-    for (const [key, value] of Object.entries(model)) {
-      userRaw[key] = value.value;
-    }
-    for (const [key, value] of Object.entries(idCardModel)) {
-      if (key === "number") {
-        identityCardRaw[key] = value.value.toString();
-      } else {
-        identityCardRaw[key] = value.value;
-      }
-    }
-    formData.set("userRaw", JSON.stringify(userRaw));
-    formData.set("identityCardRaw", JSON.stringify(identityCardRaw));
-    formData.set(
-      "bankAccountRaw",
-      JSON.stringify({
-        iban: userRaw.iban,
-        bankName: userRaw.bankName
-      })
-    );
-    formData.append("photo", userRaw.photo.blob);
     try {
+      const formData = new FormData(),
+        userRaw = {},
+        identityCardRaw = {};
+      for (const [key, value] of Object.entries(model)) {
+        userRaw[key] = value.value;
+      }
+      for (const [key, value] of Object.entries(idCardModel)) {
+        if (key === "number") {
+          identityCardRaw[key] = value.value.toString();
+        } else {
+          identityCardRaw[key] = value.value;
+        }
+      }
+      formData.set("userRaw", JSON.stringify(userRaw));
+      formData.set("identityCardRaw", JSON.stringify(identityCardRaw));
+      formData.set(
+        "bankAccountRaw",
+        JSON.stringify({
+          iban: userRaw.iban,
+          bankName: userRaw.bankName
+        })
+      );
+      formData.append("photo", userRaw.photo.blob);
+
       const user = await UserService.register(formData);
       if (user) {
         const userCredential = await auth.signInWithEmailAndPassword(
@@ -176,7 +177,7 @@
 <div class="register-container">
   <div class="fill-gap" />
   <div class="container">
-    <div class="sub-container">
+    <!-- <div class="sub-container">
       <h2>Personal Data</h2>
       <label>
         <span class="label">
@@ -268,10 +269,10 @@
         <span class="required">*</span>
       </span>
       <input type="number" bind:value={model.apartmentNr.value} />
-    </label> -->
-    </div>
+    </label> 
+    </div>-->
     <div class="sub-container">
-      <h2>Account Data</h2>
+      <!-- <h2>Account Data</h2> -->
       <label>
         <span class="label">
           Email
@@ -293,7 +294,7 @@
         </span>
         <input type="password" bind:value={model.confirmPassword.value} />
       </label>
-      <label>
+      <!-- <label>
         <span class="label">
           Customer Type
           <span class="required">*</span>
@@ -379,7 +380,7 @@
           <span class="required">*</span>
         </span>
         <FileUpload on:file={e => (model.photo.value = e.detail)} />
-      </label>
+      </label> -->
     </div>
   </div>
   <div class="action-container">
