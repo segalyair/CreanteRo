@@ -2,7 +2,7 @@
   import { UserService } from "../services/user-service.js";
   import { auth } from "../firebase/firebase";
   import { Utils } from "../utils.js";
-  import { slide } from "svelte/transition";
+  import { slide, fade } from "svelte/transition";
   import { current_user } from "../store.js";
   import FileUpload from "../components/common/FileUpload.svelte";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
@@ -36,16 +36,23 @@
       identityIssuer: {},
       expiryDate: {}
     },
-    isLoading = false;
+    isLoading = false,
+    isRegisterPressed = false;
   const cnpRegex = new RegExp(
       /\b[1-8]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(0[1-9]|[1-4]\d|5[0-2]|99)\d{4}\b/
     ),
-    ibanRegex = new RegExp(/^RO\d{2}[A-Z]{4}[0-9A-Z]{16}$/);
+    ibanRegex = new RegExp(/^RO\d{2}[A-Z]{4}[0-9A-Z]{16}$/),
+    emailRegex = new RegExp(
+      /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+    );
   $: passwordConfirmed =
-    model.password && model.password.value === model.confirmPassword.value;
+    model.password &&
+    model.password.length > 5 &&
+    model.password.value === model.confirmPassword.value;
   $: ibanIsValid = ibanRegex.test(model.iban.value);
   $: cnpIsValid = cnpRegex.test(idCardModel.cnp.value);
-  $: canRegister = true;
+  $: emailIsValid = emailRegex.test(model.email.value);
+  $: canRegister = passwordConfirmed && emailIsValid;
   // !Object.keys(model).find(k => !model[k] || !model[k].value) &&
   // passwordConfirmed &&
   // cnpIsValid;
@@ -53,6 +60,7 @@
   // ibanIsValid;
   async function register() {
     isLoading = true;
+    isRegisterPressed = true;
     try {
       const formData = new FormData(),
         userRaw = {},
@@ -286,6 +294,13 @@
           <span class="required">*</span>
         </span>
         <input type="password" bind:value={model.password.value} />
+        {#if isRegisterPressed}
+          {#if !model.password.value || model.password.value < 6 }
+            <div class="transition" transition:fade={{ duration: 200 }}>
+              <span class="error">Password must be at least 6 characters</span>
+            </div>
+          {/if}
+        {/if}
       </label>
       <label>
         <span class="label">
@@ -293,6 +308,13 @@
           <span class="required">*</span>
         </span>
         <input type="password" bind:value={model.confirmPassword.value} />
+        {#if isRegisterPressed}
+          {#if !model.confirmPassword.value || model.confirmPassword.value != model.password.value }
+            <div class="transition" transition:fade={{ duration: 200 }}>
+              <span class="error">Must be the same as password</span>
+            </div>
+          {/if}
+        {/if}
       </label>
       <!-- <label>
         <span class="label">
