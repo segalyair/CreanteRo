@@ -1,4 +1,5 @@
 <script>
+  import { fade } from "svelte/transition";
   export let message = null;
   let showHelp = false;
   function toggleHelp(value) {
@@ -17,7 +18,7 @@
     margin: auto auto auto 10px;
     background-color: #1b6dc1;
     border-radius: 23px;
-    cursor: pointer;
+    cursor: help;
   }
   .container:hover {
     background-color: #1b6ec1c0;
@@ -45,6 +46,8 @@
   on:mouseleave={() => toggleHelp(false)}>
   <span class="question-mark">?</span>
   {#if showHelp}
-    <div class="message-container">{message || 'No message given'}</div>
+    <div transition:fade={{ duration: 200 }} class="message-container">
+      {message || 'No message given'}
+    </div>
   {/if}
 </div>

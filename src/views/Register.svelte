@@ -3,14 +3,10 @@
   import { UserService } from "../services/user-service.js";
   import { auth } from "../firebase/firebase";
   import { Utils } from "../utils.js";
-  import { slide, fade } from "svelte/transition";
   import { current_user } from "../store.js";
   import SInput from "../components/common/inputs/SInput.svelte";
   import FileUpload from "../components/common/FileUpload.svelte";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
-  // const cnpRegex = new RegExp(
-  //     /\b[1-8]\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])(0[1-9]|[1-4]\d|5[0-2]|99)\d{4}\b/
-  //   ),
   //   ibanRegex = new RegExp(/^RO\d{2}[A-Z]{4}[0-9A-Z]{16}$/);
   let isLoading = false,
     form,
@@ -34,37 +30,14 @@
   }
   async function register() {
     isLoading = true;
-    isRegisterPressed = true;
     try {
-      const formData = new FormData(),
-        userRaw = {},
-        identityCardRaw = {};
-      for (const [key, value] of Object.entries(model)) {
-        userRaw[key] = value.value;
-      }
-      for (const [key, value] of Object.entries(idCardModel)) {
-        if (key === "number") {
-          identityCardRaw[key] = value.value.toString();
-        } else {
-          identityCardRaw[key] = value.value;
-        }
-      }
-      formData.set("userRaw", JSON.stringify(userRaw));
-      formData.set("identityCardRaw", JSON.stringify(identityCardRaw));
-      formData.set(
-        "bankAccountRaw",
-        JSON.stringify({
-          iban: userRaw.iban,
-          bankName: userRaw.bankName
-        })
-      );
-      formData.append("photo", userRaw.photo.blob);
-
+      const formData = new FormData();
+      formData.set("userRaw", Utils.formToJSONString(form));
       const user = await UserService.register(formData);
       if (user) {
         const userCredential = await auth.signInWithEmailAndPassword(
-          model.email.value,
-          model.password.value
+          form.elements.email.value,
+          form.elements.password.value
         );
         current_user.set(await UserService.getById(userCredential.user.uid));
         Utils.redirect("/list");
@@ -134,7 +107,7 @@
   <div class="fill-gap" />
   <div class="container">
     <div class="sub-container">
-      <form bind:this={form} on:submit={register}>
+      <form bind:this={form} onsubmit="event.preventDefault(); return;">
         <SInput
           type={'email'}
           id={'email'}
@@ -156,7 +129,9 @@
           required={true}
           externalErrors={passwordErrors}
           on:change={e => passwordValidate()} />
-        <button class="register" disabled={!canRegister}>Register</button>
+        <button class="register" disabled={!canRegister} on:click={register}>
+          Register
+        </button>
       </form>
     </div>
   </div>

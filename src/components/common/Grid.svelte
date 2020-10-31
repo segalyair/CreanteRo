@@ -4,6 +4,7 @@
   import { Utils } from "../../utils.js";
   import Modal from "../../components/common/Modal.svelte";
   import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
+  import VerifyUserModal from "../../components/modals/VerifyUser-Modal.svelte";
   import IssueBuyModal from "../../components/modals/IssueBuy-Modal.svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { MarketService } from "../../services/market-service.js";
@@ -12,6 +13,7 @@
   import { selected_product, current_user } from "../../store.js";
   let addModal,
     deleteModal,
+    verifyUserModal,
     buyModal,
     itemToDelete,
     items = [],
@@ -19,17 +21,30 @@
     hasLoadingError = false,
     skip = 0;
   const take = 6;
-  async function openIssueBuyModal(item) {
-    buyModal.open({
-      title: `Buy '${item.title}'`,
-      product: item
+  function openVerifyUserModal(item) {
+    verifyUserModal.open({
+      title: `Verify Account`
     });
   }
-  async function openDeleteModal(item) {
-    itemToDelete = item;
-    deleteModal.open({
-      title: `Delete '${itemToDelete.title}'`
-    });
+  function openIssueBuyModal(item) {
+    if (!$current_user.isEmailVerified) {
+      openVerifyUserModal();
+    } else {
+      buyModal.open({
+        title: `Buy '${item.title}'`,
+        product: item
+      });
+    }
+  }
+  function openDeleteModal(item) {
+    if (!$current_user.isEmailVerified) {
+      openVerifyUserModal();
+    } else {
+      itemToDelete = item;
+      deleteModal.open({
+        title: `Delete '${itemToDelete.title}'`
+      });
+    }
   }
   async function dismissDeleteModal() {
     deleteModal.close();
@@ -47,7 +62,11 @@
     loadItems();
   }
   async function openAddModal() {
-    addModal.open({ title: `Add new item` });
+    if (!$current_user.isEmailVerified) {
+      openVerifyUserModal();
+    } else {
+      addModal.open({ title: `Add new item` });
+    }
   }
   async function addModalSubmit(newItem) {
     loadItems();
@@ -232,6 +251,9 @@
 <IssueBuyModal
   bind:this={buyModal}
   on:submit={event => issueBuyModalSubmit()} />
+<VerifyUserModal
+  bind:this={verifyUserModal}
+  on:submit={event => verifyUserModalSubmit()} />
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
   <div slot="content">

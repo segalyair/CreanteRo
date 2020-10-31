@@ -19,6 +19,17 @@ export class UserService extends BaseService {
             throw error
         }
     }
+    static async verify(formData) {
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/account/verify`, {
+                method: 'post',
+                body: formData
+            })
+        }
+        catch (error) {
+            throw error
+        }
+    }
     static async getById(firebaseId) {
         try {
             return await this.sendFetch(`${process.env.API_URL}/account/get-by-id?firebaseId=${firebaseId}`, { method: 'get' })

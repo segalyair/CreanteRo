@@ -3,14 +3,19 @@
   import { slide } from "svelte/transition";
   import InputEmail from "./Input-Email.svelte";
   import InputText from "./Input-Text.svelte";
+  import InputNumber from "./Input-Number.svelte";
   import InputLabel from "./Input-Label.svelte";
   import InputPassword from "./Input-Password.svelte";
+  import InputDate from "./Input-Date.svelte";
   const dispatch = createEventDispatcher();
   export let type,
     id,
     name,
     label,
     required,
+    pattern = null,
+    minlength = 0,
+    maxlength = 524288,
     externalErrors = [];
   let input,
     isDirty = false,
@@ -52,12 +57,38 @@
       {name}
       {required}
       {label}
+      {pattern}
+      {minlength}
+      {maxlength}
+      class={hasErrors ? 'error' : ''}
+      on:error={e => (errors = [e.detail])}
+      on:valid={e => validInput(e.detail)}
+      on:dirty={() => (isDirty = true)} />
+  {:else if type === 'number'}
+    <InputNumber
+      bind:this={input}
+      {id}
+      {name}
+      {required}
+      {label}
+      {pattern}
       class={hasErrors ? 'error' : ''}
       on:error={e => (errors = [e.detail])}
       on:valid={e => validInput(e.detail)}
       on:dirty={() => (isDirty = true)} />
   {:else if type === 'password'}
     <InputPassword
+      bind:this={input}
+      {id}
+      {name}
+      {required}
+      {label}
+      class={hasErrors ? 'error' : ''}
+      on:error={e => (errors = [e.detail])}
+      on:valid={e => validInput(e.detail)}
+      on:dirty={() => (isDirty = true)} />
+  {:else if type === 'date'}
+    <InputDate
       bind:this={input}
       {id}
       {name}

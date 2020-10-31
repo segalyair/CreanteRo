@@ -2,26 +2,16 @@
   import { onMount, createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
 
-  export let id,
-    name,
-    required,
-    label,
-    pattern,
-    minlength = 0,
-    maxlength = 524288;
+  export let id, name, required, label, pattern;
   let input;
   const dispatch = createEventDispatcher();
   function validate() {
     if (input.validity.valueMissing) {
       dispatch("error", `${label} is required`);
-    } else if (
-      input.validity.tooShort ||
-      (pattern && !pattern.test(input.value))
-    ) {
+    } else if (pattern && !pattern.test(input.value)) {
       input.setCustomValidity(`${label} is not valid`);
       dispatch("error", `${label} is not valid`);
     } else {
-      input.setCustomValidity("");
       dispatch("valid", input.value);
     }
   }
@@ -50,9 +40,4 @@
   }
 </style>
 
-<input
-  type="text"
-  bind:this={input}
-  class={$$props.class}
-  {minlength}
-  {maxlength} />
+<input type="number" bind:this={input} class={$$props.class} />
