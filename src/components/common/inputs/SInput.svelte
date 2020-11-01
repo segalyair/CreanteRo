@@ -3,6 +3,7 @@
   import { slide } from "svelte/transition";
   import InputEmail from "./Input-Email.svelte";
   import InputText from "./Input-Text.svelte";
+  import InputTextarea from "./Input-Textarea.svelte";
   import InputNumber from "./Input-Number.svelte";
   import InputLabel from "./Input-Label.svelte";
   import InputPassword from "./Input-Password.svelte";
@@ -14,7 +15,10 @@
     name,
     label,
     required,
+    showPreview = true,
     displayFileName = true,
+    uploadLabel = "Choose File",
+    multiple = false,
     pattern = null,
     minlength = 0,
     maxlength = 524288,
@@ -40,7 +44,7 @@
 </style>
 
 <div class="container">
-  <InputLabel {name} {label} />
+  <InputLabel {name} {label} {required} />
   {#if type === 'email'}
     <InputEmail
       bind:this={input}
@@ -54,6 +58,20 @@
       on:dirty={() => (isDirty = true)} />
   {:else if type === 'text'}
     <InputText
+      bind:this={input}
+      {id}
+      {name}
+      {required}
+      {label}
+      {pattern}
+      {minlength}
+      {maxlength}
+      class={hasErrors ? 'error' : ''}
+      on:error={e => (errors = [e.detail])}
+      on:valid={e => validInput(e.detail)}
+      on:dirty={() => (isDirty = true)} />
+  {:else if type === 'textarea'}
+    <InputTextarea
       bind:this={input}
       {id}
       {name}
@@ -106,7 +124,10 @@
       {name}
       {required}
       {label}
+      {showPreview}
       {displayFileName}
+      {uploadLabel}
+      {multiple}
       on:error={e => (errors = [e.detail])}
       on:valid={e => validInput(e.detail)}
       on:dirty={() => (isDirty = true)} />

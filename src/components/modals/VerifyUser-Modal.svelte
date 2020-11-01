@@ -14,41 +14,43 @@
     canVerify = e.detail;
   }
   async function submit() {
-    const formData = new FormData(),
-      data = Utils.formToJSON(form);
-    formData.set(
-      "verifyUserParams",
-      JSON.stringify({
-        userId: $current_user.id,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        address: data.address
-      })
-    );
-    formData.set(
-      "identityCardRaw",
-      JSON.stringify({
-        cnp: data.cnp,
-        series: data.series,
-        number: data.number,
-        identityIssuer: data.identityIssuer,
-        expiryDate: data.expiryDate
-      })
-    );
-    formData.set(
-      "bankAccountRaw",
-      JSON.stringify({
-        iban: data.iban,
-        bankName: data.bankName
-      })
-    );
-    formData.append('photo', form.photo.files[0], 'photo.jpg');
+    modal.toggleLoading();
     try {
+      const formData = new FormData(),
+        data = Utils.formToJSON(form);
+      formData.set(
+        "verifyUserParams",
+        JSON.stringify({
+          userId: $current_user.id,
+          firstName: data.firstName,
+          lastName: data.lastName,
+          address: data.address
+        })
+      );
+      formData.set(
+        "identityCardRaw",
+        JSON.stringify({
+          cnp: data.cnp,
+          series: data.series,
+          number: data.number,
+          identityIssuer: data.identityIssuer,
+          expiryDate: data.expiryDate
+        })
+      );
+      formData.set(
+        "bankAccountRaw",
+        JSON.stringify({
+          iban: data.iban,
+          bankName: data.bankName
+        })
+      );
+      formData.append("photo", form.photo.files[0], form.photo.files[0].name);
       current_user.set(await UserService.verify(formData));
       close();
     } catch (error) {
       console.log(error);
     }
+    modal.toggleLoading();
   }
   export function open(data) {
     modal.open(data);

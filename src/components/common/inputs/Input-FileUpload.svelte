@@ -1,6 +1,6 @@
 <script>
-  import { onMount } from "svelte";
-  import { createEventDispatcher } from "svelte";
+  import { onMount, createEventDispatcher } from "svelte";
+  import { XIcon } from "svelte-feather-icons";
   export let id,
     name,
     required,
@@ -11,14 +11,17 @@
     multiple = false,
     type = "img";
   const dispatch = createEventDispatcher();
-  let chooseFileButton;
-  let input;
+  let chooseFileButton,
+    input,
+    files = [],
+    previewContainer;
   let preparedFile = null;
-  let previewContainer;
   function validate() {
     if (input.validity.valueMissing) {
       dispatch("error", `${label} is required`);
-      removePreview();
+      if (multiple === false) {
+        removePreview();
+      }
     } else {
       input.setCustomValidity("");
       fileChange();
@@ -26,10 +29,12 @@
   }
   function fileChange(event) {
     const files = input.files;
+    input["realFiles"] = files;
+    dispatch("valid", { files });
     if (files.length === 0) {
       return;
     }
-    if (type === "img") {
+    if (type === "img" && multiple === false) {
       const file = files[0];
       const maxFileSize = 5; //MB
       const fileSizeInMb = file.size / 1024 / 1024;
@@ -63,8 +68,6 @@
       };
       const url = window.URL || window.webkitURL;
       image.src = url.createObjectURL(file);
-    } else {
-      dispatch("valid", { files });
     }
   }
   function removePreview() {
@@ -74,13 +77,27 @@
     }
     previewContainer.style.display = "none";
   }
+  function add(event) {
+    files = [...files, ...event.target.files];
+    validate();
+  }
+  function remove(i) {
+    if (files && files.length > 0) {
+      files.splice(i, 1);
+      files = files;
+      if (files.length === 0) {
+        input.value = "";
+      }
+    }
+    validate();
+  }
   onMount(() => {
     chooseFileButton.onclick = () => {
+      dispatch("dirty");
       input.click();
     };
     input.multiple = multiple;
     input.oninput = () => {
-      dispatch("dirty");
       validate();
     };
   });
@@ -91,13 +108,36 @@
     display: none;
   }
   .upload-button {
-    width: 100%;
+    width: 300px;
   }
   .preview-container {
     margin-top: 10px;
     display: none;
     justify-content: center;
     max-width: 300px;
+  }
+  .file-list {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+  }
+  .file:not(:first-child) {
+    border-top: 0;
+  }
+  .file {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    padding: 0.4em;
+  }
+  .file span {
+    overflow-wrap: anywhere;
+  }
+  .icon-container {
+    cursor: pointer;
+    margin-left: 5px;
   }
 </style>
 
@@ -114,8 +154,28 @@
     {name}
     {required}
     type="file"
-    accept="image/*" />
+    accept="image/*"
+    on:change={event => add(event)} />
   {#if showPreview}
     <div class="preview-container" bind:this={previewContainer} />
+  {/if}
+  {#if multiple}
+    <div class="file-list">
+      {#if files && files.length > 0}
+        {#each files as file, i}
+          <div class="file">
+            <span>{file.name}</span>
+            <div class="icon-container" on:click={event => remove(i)}>
+              <XIcon size="18" />
+            </div>
+          </div>
+        {/each}
+      {:else}
+        <div class="file file-empty">
+          <span>No files uploaded</span>
+          <div />
+        </div>
+      {/if}
+    </div>
   {/if}
 </div>

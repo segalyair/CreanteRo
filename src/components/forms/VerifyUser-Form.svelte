@@ -57,6 +57,7 @@
       name={'photo'}
       label="Photo"
       displayFileName={false}
+      multiple={false}
       required={true} />
     <p>Bank Information</p>
     <SInput

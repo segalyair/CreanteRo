@@ -126,7 +126,10 @@
   }
   .actions {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
+  }
+  .actions button {
+    width: 7vw;
   }
   table {
     border-collapse: collapse;
@@ -203,7 +206,9 @@
 
 <div class="container">
   <div class="actions">
-    <button on:click={e => toggleEntityModal(e, null)}>Add</button>
+    <button on:click={e => toggleEntityModal(e, null)} type="button">
+      Add
+    </button>
   </div>
   <table>
     <thead>
@@ -244,10 +249,14 @@
             </td>
             <td>
               <div class="td-content">
-                <button on:click={e => toggleEntityModal(e, entity)}>
+                <button
+                  on:click={e => toggleEntityModal(e, entity)}
+                  type="button">
                   Edit
                 </button>
-                <button on:click={e => toggleDeleteModal(e, entity)}>
+                <button
+                  on:click={e => toggleDeleteModal(e, entity)}
+                  type="button">
                   Delete
                 </button>
               </div>
@@ -316,8 +325,8 @@
     Are you sure you wish to delete '{entityToDelete.name || entityToDelete.firstname + ' ' + entityToDelete.lastname}'?
   </div>
   <div slot="actions">
-    <button on:click={deleteEntity}>Yes</button>
-    <button on:click={() => toggleDeleteModal(null)}>No</button>
+    <button on:click={deleteEntity} type="button">Yes</button>
+    <button on:click={() => toggleDeleteModal(null)} type="button">No</button>
   </div>
 </Modal>
 <EntityModal bind:this={entityModal} on:submit={submitRepresentative} />
