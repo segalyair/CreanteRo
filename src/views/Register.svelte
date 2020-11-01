@@ -10,17 +10,10 @@
     form,
     canRegister,
     passwordErrors = [];
-  function passwordsValid() {
-    return (
-      form &&
-      form.elements.password.value.length > 5 &&
-      form.elements.confirmPassword.value.length > 5
-    );
-  }
   function passwordValidate() {
     const passwordsNotEqual =
       form && form.elements.password.value !== form.confirmPassword.value;
-    if (passwordsValid() && passwordsNotEqual) {
+    if (form.checkValidity() && passwordsNotEqual) {
       passwordErrors = ["Password and Confirm Password has to match"];
     } else {
       passwordErrors = [];
@@ -55,7 +48,7 @@
     form.addEventListener("input", () => {
       const emailValid = form.elements.email.value.length > 0;
       canRegister =
-        emailValid && passwordsValid() && passwordErrors.length === 0;
+        form.checkValidity() && passwordErrors.length === 0;
     });
   });
 </script>
