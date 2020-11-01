@@ -109,19 +109,18 @@
   </div>
 {:else}
   <div class="preview-container">
-    <span class="label-text">
+    <!-- <span class="label-text">
       <span class="tag">Title:</span>
       <span class="value">{model.title}</span>
-    </span>
+    </span> -->
     <!-- <div class="div-label">
       <span class="label-text">Representative</span>
       <EntityTable selectable={true} />
     </div> -->
-    <span class="label-text">
-      <!-- <span class="label">Owed Amount:</span> -->
+    <!-- <span class="label-text">
       <span class="tag">Owed Amount:</span>
       <span class="value">{model.bookValueAmount}</span>
-    </span>
+    </span> -->
     <!-- <span class="label-text">
       <span class="tag">Is the debt guaranteed:</span>
       <span class="value">{model.isGuaranteed ? 'Yes' : 'No'}</span>
@@ -175,9 +174,9 @@
         </label>
       {/if}
     {/if} -->
-    <span class="label-text">
+    <!-- <span class="label-text">
       <span class="tag">Price:</span>
       <span class="value">{model.priceAmount}</span>
-    </span>
+    </span> -->
   </div>
 {/if}

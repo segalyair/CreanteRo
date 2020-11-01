@@ -40,9 +40,9 @@
 
 <style>
   textarea {
-    width: 300px;
+    width: 500px;
+    height: 150px;
     margin: 0;
-    transition: all 200ms;
   }
   textarea.error {
     border-color: red;
