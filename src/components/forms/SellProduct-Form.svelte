@@ -1,5 +1,5 @@
 <script>
-  import FileUpload from "../common/FileUpload.svelte";
+  import FileUpload from "../common/inputs/Input-FileUpload.svelte";
   import FileUploadList from "../common/FileUploadList.svelte";
   import EntityTable from "../../components/tables/EntityTable.svelte";
   import TooltipHelp from "../common/TooltipHelp.svelte";

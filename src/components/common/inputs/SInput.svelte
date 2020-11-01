@@ -7,12 +7,14 @@
   import InputLabel from "./Input-Label.svelte";
   import InputPassword from "./Input-Password.svelte";
   import InputDate from "./Input-Date.svelte";
+  import InputFileUpload from "./Input-FileUpload.svelte";
   const dispatch = createEventDispatcher();
   export let type,
     id,
     name,
     label,
     required,
+    displayFileName = true,
     pattern = null,
     minlength = 0,
     maxlength = 524288,
@@ -95,6 +97,16 @@
       {required}
       {label}
       class={hasErrors ? 'error' : ''}
+      on:error={e => (errors = [e.detail])}
+      on:valid={e => validInput(e.detail)}
+      on:dirty={() => (isDirty = true)} />
+  {:else if type === 'file'}
+    <InputFileUpload
+      {id}
+      {name}
+      {required}
+      {label}
+      {displayFileName}
       on:error={e => (errors = [e.detail])}
       on:valid={e => validInput(e.detail)}
       on:dirty={() => (isDirty = true)} />

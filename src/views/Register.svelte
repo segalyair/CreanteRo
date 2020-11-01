@@ -5,9 +5,7 @@
   import { Utils } from "../utils.js";
   import { current_user } from "../store.js";
   import SInput from "../components/common/inputs/SInput.svelte";
-  import FileUpload from "../components/common/FileUpload.svelte";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
-  //   ibanRegex = new RegExp(/^RO\d{2}[A-Z]{4}[0-9A-Z]{16}$/);
   let isLoading = false,
     form,
     canRegister,
@@ -32,7 +30,7 @@
     isLoading = true;
     try {
       const formData = new FormData();
-      formData.set("userRaw", Utils.formToJSONString(form));
+      formData.set("userRaw", Utils.formToJSON(form, true));
       const user = await UserService.register(formData);
       if (user) {
         const userCredential = await auth.signInWithEmailAndPassword(

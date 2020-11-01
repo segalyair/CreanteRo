@@ -1,24 +1,31 @@
 <script>
   import { onMount } from "svelte";
   import { createEventDispatcher } from "svelte";
-  export let showPreview = true,
+  export let id,
+    name,
+    required,
+    label,
+    showPreview = true,
     displayFileName = true,
     uploadLabel = "Choose File",
     multiple = false,
     type = "img";
   const dispatch = createEventDispatcher();
   let chooseFileButton;
-  let uploadInput;
+  let input;
   let preparedFile = null;
   let previewContainer;
-  onMount(() => {
-    chooseFileButton.onclick = () => {
-      uploadInput.click();
-    };
-    uploadInput.multiple = multiple;
-  });
+  function validate() {
+    if (input.validity.valueMissing) {
+      dispatch("error", `${label} is required`);
+      removePreview();
+    } else {
+      input.setCustomValidity("");
+      fileChange();
+    }
+  }
   function fileChange(event) {
-    const files = event.target.files;
+    const files = input.files;
     if (files.length === 0) {
       return;
     }
@@ -30,6 +37,8 @@
         return;
       }
       const image = new Image();
+      image.style.border = "1px solid lightgray";
+      image.style.borderRadius = "4px";
       image.onload = () => {
         preparedFile = file;
         if (showPreview) {
@@ -37,7 +46,7 @@
           image.style.maxWidth = "100%";
           image.style.maxHeight = "100%";
           previewContainer.appendChild(image);
-          previewContainer.style.display = "block";
+          previewContainer.style.display = "flex";
         }
         const canvas = document.createElement("canvas");
         const context = canvas.getContext("2d");
@@ -46,7 +55,7 @@
         canvas.height = image.height * scale;
         context.drawImage(image, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
-          dispatch("file", { file, blob });
+          dispatch("valid", { file, blob });
         });
       };
       image.onerror = () => {
@@ -55,7 +64,7 @@
       const url = window.URL || window.webkitURL;
       image.src = url.createObjectURL(file);
     } else {
-      dispatch("file", { files });
+      dispatch("valid", { files });
     }
   }
   function removePreview() {
@@ -65,6 +74,16 @@
     }
     previewContainer.style.display = "none";
   }
+  onMount(() => {
+    chooseFileButton.onclick = () => {
+      input.click();
+    };
+    input.multiple = multiple;
+    input.oninput = () => {
+      dispatch("dirty");
+      validate();
+    };
+  });
 </script>
 
 <style>
@@ -75,23 +94,26 @@
     width: 100%;
   }
   .preview-container {
+    margin-top: 10px;
     display: none;
-    width: 250px;
-    height: 250px;
+    justify-content: center;
+    max-width: 300px;
   }
 </style>
 
 <div class="container">
-  <button class="upload-button" bind:this={chooseFileButton}>
+  <button class="upload-button" bind:this={chooseFileButton} type="button">
     {uploadLabel}
   </button>
   {#if displayFileName}
     <span>{preparedFile ? preparedFile.name : 'No file uploaded'}</span>
   {/if}
   <input
+    bind:this={input}
+    {id}
+    {name}
+    {required}
     type="file"
-    bind:this={uploadInput}
-    on:change={fileChange}
     accept="image/*" />
   {#if showPreview}
     <div class="preview-container" bind:this={previewContainer} />

@@ -1,11 +1,14 @@
 <script>
   import { onMount } from "svelte";
   import SInput from "../../components/common/inputs/SInput.svelte";
-  let form, canVerify;
+  import { createEventDispatcher } from "svelte";
+  let form;
+  const dispatch = createEventDispatcher();
   onMount(() => {
     form.addEventListener("input", () => {
-      canVerify = true;
+      dispatch("input", form.checkValidity());
     });
+    dispatch("mount", form);
   });
 </script>
 
@@ -87,6 +90,13 @@
       id={'expiryDate'}
       name={'expiryDate'}
       label="Expiry Date"
+      required={true} />
+    <SInput
+      type={'file'}
+      id={'photo'}
+      name={'photo'}
+      label="Photo"
+      displayFileName={false}
       required={true} />
   </form>
 </div>

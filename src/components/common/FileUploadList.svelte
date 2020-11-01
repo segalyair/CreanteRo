@@ -1,6 +1,6 @@
 <script>
   import { XIcon } from "svelte-feather-icons";
-  import FileUpload from "../common/FileUpload.svelte";
+  import FileUpload from "../common/inputs/Input-FileUpload.svelte";
   import { slide } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   const dispatch = createEventDispatcher();

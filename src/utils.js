@@ -22,7 +22,7 @@ export class Utils {
   static redirect(route) {
     page.redirect(route);
   }
-  static formToJSONString(form) {
+  static formToJSON(form, toString) {
     var obj = {};
     var elements = form.querySelectorAll("input, select, textarea");
     for (var i = 0; i < elements.length; ++i) {
@@ -34,6 +34,6 @@ export class Utils {
         obj[name] = value;
       }
     }
-    return JSON.stringify(obj);
+    return toString ? JSON.stringify(obj) : obj;
   }
 }

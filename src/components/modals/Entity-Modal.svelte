@@ -1,6 +1,6 @@
 <script>
   import Modal from "../../components/common/Modal.svelte";
-  import FileUpload from "../common/FileUpload.svelte";
+  import FileUpload from "../common/inputs/Input-FileUpload.svelte";
   import FileUploadList from "../common/FileUploadList.svelte";
   import { Utils } from "../../utils.js";
   import { createEventDispatcher } from "svelte";

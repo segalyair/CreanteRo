@@ -12,6 +12,7 @@
       input.setCustomValidity(`${label} is not valid`);
       dispatch("error", `${label} is not valid`);
     } else {
+      input.setCustomValidity("");
       dispatch("valid", input.value);
     }
   }
