@@ -7,14 +7,33 @@
   import { current_user } from "../../store.js";
   export let preview = false;
   const dispatch = createEventDispatcher();
-  let form, debtorTable;
+  let form,
+    amountErrors = [],
+    debtorTable;
   function dispatchDebtorTable(e) {
     dispatch("debtor", e.detail);
+  }
+  function amountsValidation() {
+    if (
+      form.priceAmount.value.length > 0 &&
+      form.bookValueAmount.value.length > 0 &&
+      Number(form.priceAmount.value) >= Number(form.bookValueAmount.value)
+    ) {
+      form.priceAmount.setCustomValidity(
+        "Price has to be smaller than Owed Amount"
+      );
+      amountErrors = ["Price has to be smaller than Owed Amount"];
+    } else {
+      form.priceAmount.setCustomValidity("");
+      amountErrors = [];
+    }
   }
   onMount(() => {
     form.addEventListener("input", () => {
       dispatch("input", form.checkValidity());
     });
+    form.bookValueAmount.addEventListener("input", amountsValidation);
+    form.priceAmount.addEventListener("input", amountsValidation);
     dispatch("mount", form);
   });
 </script>
@@ -83,7 +102,8 @@
         id={'priceAmount'}
         name={'priceAmount'}
         label="Price"
-        required={true} />
+        required={true}
+        externalErrors={amountErrors} />
       <label for="debtor">Debtor</label>
       <EntityTable
         bind:this={debtorTable}

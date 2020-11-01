@@ -9,8 +9,11 @@
   let modal,
     form,
     debtor,
-    submitEnabled = true,
+    submitEnabled = false,
     settings;
+  function isValid(e) {
+    submitEnabled = e.detail;
+  }
   export function open(data) {
     modal.open(data);
     settings = data;
@@ -87,10 +90,15 @@
   <div slot="content" class="form">
     <SellProductForm
       on:mount={e => (form = e.detail)}
-      on:debtor={e => (debtor = e.detail)} />
+      on:debtor={e => (debtor = e.detail)}
+      on:input={isValid} />
   </div>
   <div slot="actions">
-    <button disabled={!submitEnabled} on:click={submit}>Submit</button>
+    <button
+      disabled={!submitEnabled || !debtor || !debtor.selectedEntity}
+      on:click={submit}>
+      Submit
+    </button>
     <button on:click={close}>Cancel</button>
   </div>
 </Modal>

@@ -18,6 +18,7 @@
   let preparedFile = null;
   function validate() {
     if (input.validity.valueMissing) {
+      input.setCustomValidity(`${label} is required`);
       dispatch("error", `${label} is required`);
       if (multiple === false) {
         removePreview();
