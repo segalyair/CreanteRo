@@ -6,4 +6,5 @@
 
 </style>
 
+<label>Debtor</label>
 <EntityTable />
