@@ -119,8 +119,8 @@
     max-width: 300px;
   }
   .file-list {
-    display: flex;
-    flex-direction: column;
+    /* display: flex;
+    flex-direction: column; */
     width: 300px;
   }
   .file:not(:first-child) {

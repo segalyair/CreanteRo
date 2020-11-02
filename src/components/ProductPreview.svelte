@@ -16,7 +16,7 @@
     overflow: auto;
   }
   .container .no-product {
-    font-size: 32px;
+    font-size: 1.5em;
     font-weight: 100;
     justify-self: center;
     align-self: center;
@@ -29,8 +29,6 @@
       Alegeti un contract din lista de contracte ca sa vizualizati detaliile
     </span>
   {:else}
-    <div style="flex-grow:1" in:fade>
-      
-    </div>
+    <div style="flex-grow:1" in:fade />
   {/if}
 </div>

@@ -111,7 +111,7 @@
   .container {
     display: flex;
     flex-direction: column;
-    flex: 1 1 0px;
+    flex: 2 1 0px;
     height: 100%;
     overflow: auto;
     padding: 10px;
@@ -213,16 +213,16 @@
               <span>{item.title}</span>
             </div>
             <div class="item-column">
-              <span class="item-column-header">Vanzator</span>
-              <span>PlaceHolder Nume</span>
-            </div>
-            <div class="item-column">
               <span class="item-column-header">Suma datorata</span>
               <span>{item.bookValueAmount} RON</span>
             </div>
             <div class="item-column">
               <span class="item-column-header">Pret</span>
               <span>{item.priceAmount} RON</span>
+            </div>
+            <div class="item-column">
+              <span class="item-column-header">Profit</span>
+              <span>{item.bookValueAmount - item.priceAmount} RON</span>
             </div>
           </div>
 

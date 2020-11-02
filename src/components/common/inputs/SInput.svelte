@@ -16,6 +16,7 @@
     name = "defaultName",
     label = "Default Label",
     required,
+    helpMessage = null,
     showPreview = true,
     displayFileName = true,
     uploadLabel = "Choose File",
@@ -50,7 +51,7 @@
 </style>
 
 <div class="container">
-  <InputLabel {name} {label} {required} />
+  <InputLabel {name} {label} {required} {helpMessage} />
   {#if type === 'email'}
     <InputEmail
       bind:this={input}

@@ -3,8 +3,12 @@
 </script>
 
 <style>
-
+  .container {
+    padding: 20px;
+  }
 </style>
 
-<label>Debtor</label>
-<EntityTable />
+<div class="container">
+  <label>Debtor</label>
+  <EntityTable />
+</div>

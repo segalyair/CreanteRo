@@ -2,8 +2,8 @@
   import { onMount, createEventDispatcher } from "svelte";
   import { slide } from "svelte/transition";
   import EntityTable from "../../components/tables/EntityTable.svelte";
-  import TooltipHelp from "../common/TooltipHelp.svelte";
   import SInput from "../../components/common/inputs/SInput.svelte";
+  import InputLabel from "../../components/common/inputs/Input-Label.svelte";
   import { current_user } from "../../store.js";
   const dispatch = createEventDispatcher();
   let form,
@@ -59,7 +59,8 @@
       id={'title'}
       name={'title'}
       label="Title"
-      required={true} />
+      required={true}
+      helpMessage={'Tipul creantei'} />
     <SInput
       type={'file'}
       id={'documents'}
@@ -69,12 +70,14 @@
       multiple={true}
       displayFileName={false}
       uploadLabel={'Upload Files'}
-      showPreview={false} />
+      showPreview={false}
+      helpMessage={'Documente pentru creanta'} />
     <SInput
       type={'number'}
       id={'bookValueAmount'}
       name={'bookValueAmount'}
       label="Owed Amount"
+      helpMessage={'Valorea creantei'}
       required={true} />
     <SInput
       type={'number'}
@@ -82,8 +85,13 @@
       name={'priceAmount'}
       label="Price"
       required={true}
-      externalErrors={amountErrors} />
-    <label for="debtor">Debtor</label>
+      externalErrors={amountErrors}
+      helpMessage={'Pretul cu care vrei sa vinzi creanta'} />
+    <InputLabel
+      required={true}
+      for={'debtor'}
+      label={'Debtor'}
+      helpMessage={'The debtor who owes the debt'} />
     <EntityTable
       bind:this={debtorTable}
       selectable={true}

@@ -10,14 +10,14 @@
 <style>
   .container {
     position: relative;
-    display: flex;
+    display: inline-flex;
     justify-content: center;
     align-items: center;
-    width: 23px;
-    height: 23px;
-    margin: auto auto auto 10px;
+    width: 15px;
+    height: 15px;
+    margin: auto auto auto 0;
     background-color: #1b6dc1;
-    border-radius: 23px;
+    border-radius: 12px;
     cursor: help;
   }
   .container:hover {
@@ -26,6 +26,7 @@
   .question-mark {
     color: white;
     font-weight: bold;
+    font-size: 0.7em;
     user-select: none;
   }
   .message-container {
