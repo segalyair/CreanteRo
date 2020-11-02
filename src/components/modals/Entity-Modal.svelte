@@ -94,8 +94,10 @@
     <EntityForm on:mount={mountForm} on:input={isValid} />
   </div>
   <div slot="actions">
-    <button disabled={!submitEnabled} on:click={submit}>Submit</button>
-    <button on:click={() => close(false)}>Cancel</button>
+    <button disabled={!submitEnabled} on:click={submit} type="button">
+      Submit
+    </button>
+    <button on:click={() => close(false)} type="button">Cancel</button>
   </div>
 </Modal>
 <Toast bind:this={toast} />

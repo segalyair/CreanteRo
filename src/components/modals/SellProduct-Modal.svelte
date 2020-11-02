@@ -100,10 +100,11 @@
   <div slot="actions">
     <button
       disabled={!submitEnabled || !debtor || !debtor.selectedEntity}
-      on:click={submit}>
+      on:click={submit}
+      type="button">
       Submit
     </button>
-    <button on:click={close}>Cancel</button>
+    <button on:click={close} type="button">Cancel</button>
   </div>
 </Modal>
 <Toast bind:this={toast} />
