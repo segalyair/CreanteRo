@@ -3,6 +3,7 @@
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { Utils } from "../../utils.js";
   import Modal from "../../components/common/Modal.svelte";
+  import Toast from "../../components/common/Toast.svelte";
   import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
   import VerifyUserModal from "../../components/modals/VerifyUser-Modal.svelte";
   import IssueBuyModal from "../../components/modals/IssueBuy-Modal.svelte";
@@ -15,6 +16,7 @@
     deleteModal,
     verifyUserModal,
     buyModal,
+    toast,
     itemToDelete,
     items = [],
     isLoading = true,
@@ -56,10 +58,15 @@
   }
   async function deleteItem() {
     deleteModal.toggleLoading();
-    await MerchantService.deleteProduct(itemToDelete.id);
+    try {
+      await MerchantService.deleteProduct(itemToDelete.id);
+      toast.create(`Item deleted successfully`, 3000);
+      loadItems();
+    } catch (error) {
+      toast.create(`Failed to delete item`, 3000, "#e46464");
+    }
     deleteModal.toggleLoading();
     dismissDeleteModal();
-    loadItems();
   }
   async function openAddModal() {
     if (!$current_user.isEmailVerified) {
@@ -134,7 +141,7 @@
     align-items: center;
     margin-bottom: 10px;
     width: 100%;
-    height: 75px;
+    height: 125px;
     padding: 6px;
     cursor: pointer;
   }
@@ -264,3 +271,4 @@
     <button on:click={dismissDeleteModal}>No</button>
   </div>
 </Modal>
+<Toast bind:this={toast} />

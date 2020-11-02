@@ -6,8 +6,10 @@
   import { current_user } from "../store.js";
   import SInput from "../components/common/inputs/SInput.svelte";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
+  import Toast from "../components/common/Toast.svelte";
   let isLoading = false,
     form,
+    toast,
     canRegister,
     passwordErrors = [];
   function passwordValidate() {
@@ -34,6 +36,7 @@
         Utils.redirect("/list");
       }
     } catch (error) {
+      toast.create(`Failed to register user`, 3000, "#e46464");
       console.log(error);
     }
     isLoading = false;
@@ -47,8 +50,7 @@
     });
     form.addEventListener("input", () => {
       const emailValid = form.elements.email.value.length > 0;
-      canRegister =
-        form.checkValidity() && passwordErrors.length === 0;
+      canRegister = form.checkValidity() && passwordErrors.length === 0;
     });
   });
 </script>
@@ -128,3 +130,4 @@
   </div>
   <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
 </div>
+<Toast bind:this={toast} />

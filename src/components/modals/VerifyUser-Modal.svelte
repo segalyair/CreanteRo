@@ -5,8 +5,10 @@
   import { Utils } from "../../utils.js";
   import VerifyUserForm from "../../components/forms/VerifyUser-Form.svelte";
   import Modal from "../../components/common/Modal.svelte";
+  import Toast from "../../components/common/Toast.svelte";
   let modal,
     form,
+    toast,
     settings,
     canVerify = false;
   const dispatch = createEventDispatcher();
@@ -44,10 +46,12 @@
           bankName: data.bankName
         })
       );
-      formData.append("photo", form.photo.files[0], form.photo.files[0].name);
+      formData.append("idPhoto", form.photo.files[0], form.photo.files[0].name);
       current_user.set(await UserService.verify(formData));
+      toast.create(`Account verified successfully`, 3000);
       close();
     } catch (error) {
+      toast.create(`Failed to verify account`, 3000, "#e46464");
       console.log(error);
     }
     modal.toggleLoading();
@@ -82,3 +86,4 @@
     <button on:click={close}>Cancel</button>
   </div>
 </Modal>
+<Toast bind:this={toast} />

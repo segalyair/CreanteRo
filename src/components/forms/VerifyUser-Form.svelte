@@ -87,6 +87,7 @@
       name={'series'}
       label="Series"
       required={true}
+      pattern={new RegExp(/[A-Z]{2}/)}
       minlength={2}
       maxlength={2} />
     <SInput
@@ -94,6 +95,7 @@
       id={'number'}
       name={'number'}
       label="Number"
+      pattern={new RegExp(/^[0-9]{6}/)}
       required={true} />
     <SInput
       type={'text'}

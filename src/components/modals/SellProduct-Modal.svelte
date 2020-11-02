@@ -1,5 +1,6 @@
 <script>
   import Modal from "../../components/common/Modal.svelte";
+  import Toast from "../../components/common/Toast.svelte";
   import SellProductForm from "../forms/SellProduct-Form.svelte";
   import { Utils } from "../../utils.js";
   import { createEventDispatcher } from "svelte";
@@ -8,6 +9,7 @@
   const dispatch = createEventDispatcher();
   let modal,
     form,
+    toast,
     debtor,
     submitEnabled = false,
     settings;
@@ -63,6 +65,7 @@
         }
       }
       const newProduct = await MerchantService.addProduct(formData);
+      toast.create(`Product created successfully`, 3000);
       dispatch("submit", newProduct);
     } catch (error) {
       console.log(error);
@@ -72,6 +75,7 @@
   }
   function close() {
     modal.close();
+    submitEnabled = false;
     dispatch("close");
   }
 </script>
@@ -102,3 +106,4 @@
     <button on:click={close}>Cancel</button>
   </div>
 </Modal>
+<Toast bind:this={toast} />

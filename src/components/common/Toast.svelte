@@ -16,7 +16,7 @@
     const newToast = template.cloneNode(true);
     newToast.classList.add(index++);
     newToast.style.display = "flex";
-    const green = "#7ae464";
+    const green = "#61b84f";
     newToast.style.backgroundColor = color || green;
     const icon = newToast.getElementsByClassName("icon-container")[0];
     const msg = newToast.getElementsByClassName("message")[0];
@@ -44,9 +44,9 @@
     bottom: 10px;
     min-width: 150px;
     max-width: 300px;
-    height: 30px;
+    min-height: 50px;
     padding: 12px;
-    background-color: #7ae464;
+    background-color: #61b84f;
     border-radius: 4px;
     display: none;
     justify-content: space-between;
@@ -56,11 +56,13 @@
     transition: opacity 200ms linear;
   }
   .message {
-    font-size: 14px;
+    font-size: 1em;
+    color: white;
   }
   .icon-container {
     line-height: 10px;
     cursor: pointer;
+    color: white;
   }
 </style>
 

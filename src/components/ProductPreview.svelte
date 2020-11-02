@@ -30,7 +30,7 @@
     </span>
   {:else}
     <div style="flex-grow:1" in:fade>
-      <SellProductForm model={$selected_product} preview={true} />
+      
     </div>
   {/if}
 </div>

@@ -19,6 +19,7 @@
   function validate() {
     if (input.validity.valueMissing) {
       input.setCustomValidity(`${label} is required`);
+      input.checkValidity();
       dispatch("error", `${label} is required`);
       if (multiple === false) {
         removePreview();
@@ -29,9 +30,7 @@
     }
   }
   function fileChange(event) {
-    const files = input.files;
-    input["realFiles"] = files;
-    dispatch("valid", { files });
+    dispatch("valid", input["realFiles"]);
     if (files.length === 0) {
       return;
     }
@@ -80,12 +79,14 @@
   }
   function add(event) {
     files = [...files, ...event.target.files];
+    input["realFiles"] = files;
     validate();
   }
   function remove(i) {
     if (files && files.length > 0) {
       files.splice(i, 1);
       files = files;
+      input["realFiles"] = files;
       if (files.length === 0) {
         input.value = "";
       }

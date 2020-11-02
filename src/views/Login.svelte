@@ -7,7 +7,9 @@
   import { UserService } from "../services/user-service.js";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
   import SInput from "../components/common/inputs/SInput.svelte";
+  import Toast from "../components/common/Toast.svelte";
   let form,
+    toast,
     canLogin = false,
     isLoading = false;
   async function handleLogin() {
@@ -20,6 +22,7 @@
       current_user.set(await UserService.getById(userCredential.user.uid));
       Utils.redirect("/list");
     } catch (error) {
+      toast.create(`Failed to login`, 3000, "#e46464");
       console.log(error);
     }
     isLoading = false;
@@ -42,8 +45,8 @@
     justify-content: center;
     align-items: center;
   }
-  .actions{
-    display:flex;
+  .actions {
+    display: flex;
     justify-content: space-between;
   }
 </style>
@@ -69,3 +72,4 @@
   </form>
   <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
 </div>
+<Toast bind:this={toast} />

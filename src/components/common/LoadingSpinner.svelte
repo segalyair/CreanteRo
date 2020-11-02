@@ -8,6 +8,7 @@
   let container;
   onMount(() => {
     container.style.backgroundColor = backgroundColor;
+    container.style.zIndex = 100;
   });
 </script>
 

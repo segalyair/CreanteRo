@@ -5,13 +5,16 @@
   import { current_route, current_user } from "../store.js";
   import { Utils } from "../utils.js";
   import { auth } from "../firebase/firebase";
-
-  let currentUser,
+  import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
+  let isLoading = false,
+    currentUser,
     currentRoutes = [];
   async function signOut() {
+    isLoading = true;
     await auth.signOut();
     current_user.set(null);
     await auth.signInAnonymously();
+    isLoading = false;
     Utils.redirect("/login");
   }
   auth.onAuthStateChanged(user => {
@@ -102,3 +105,4 @@
     {/if}
   </div>
 </div>
+<LoadingSpinner {isLoading} backgroundColor={'white'} />

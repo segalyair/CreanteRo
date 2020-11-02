@@ -9,11 +9,12 @@
   import InputPassword from "./Input-Password.svelte";
   import InputDate from "./Input-Date.svelte";
   import InputFileUpload from "./Input-FileUpload.svelte";
+  import InputRadioButton from "./Input-RadioButton.svelte";
   const dispatch = createEventDispatcher();
   export let type,
     id,
-    name,
-    label,
+    name = "defaultName",
+    label = "Default Label",
     required,
     showPreview = true,
     displayFileName = true,
@@ -22,6 +23,11 @@
     pattern = null,
     minlength = 0,
     maxlength = 524288,
+    group = "default",
+    buttons = [
+      { label: "Male", for: "male", value: "0" },
+      { label: "Female", for: "female", value: "1" }
+    ],
     externalErrors = [];
   let input,
     isDirty = false,
@@ -128,6 +134,15 @@
       {displayFileName}
       {uploadLabel}
       {multiple}
+      on:error={e => (errors = [e.detail])}
+      on:valid={e => validInput(e.detail)}
+      on:dirty={() => (isDirty = true)} />
+  {:else if type === 'radio'}
+    <InputRadioButton
+      bind:this={input}
+      {id}
+      {group}
+      {buttons}
       on:error={e => (errors = [e.detail])}
       on:valid={e => validInput(e.detail)}
       on:dirty={() => (isDirty = true)} />
