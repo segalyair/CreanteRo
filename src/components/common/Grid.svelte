@@ -7,14 +7,16 @@
   import SellProductModal from "../../components/modals/SellProduct-Modal.svelte";
   import VerifyUserModal from "../../components/modals/VerifyUser-Modal.svelte";
   import IssueBuyModal from "../../components/modals/IssueBuy-Modal.svelte";
+  import ImgModal from "../../components/modals/Img-Modal.svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
   import { MarketService } from "../../services/market-service.js";
   import { MerchantService } from "../../services/merchant-service.js";
-  import { fade } from "svelte/transition";
+  import { fade, slide } from "svelte/transition";
   import { selected_product, current_user } from "../../store.js";
   let addModal,
     deleteModal,
     verifyUserModal,
+    imgModal,
     buyModal,
     toast,
     itemToDelete,
@@ -23,6 +25,9 @@
     hasLoadingError = false,
     skip = 0;
   const take = 6;
+  function openImgModal() {
+    imgModal.open({ title: "" });
+  }
   function openVerifyUserModal(item) {
     verifyUserModal.open({
       title: `Verify Account`
@@ -52,9 +57,8 @@
     deleteModal.close();
   }
   function selectItem(item) {
-    selected_product.set(
-      $selected_product && $selected_product.id === item.id ? null : item
-    );
+    if ($selected_product && $selected_product.id === item.id) return;
+    selected_product.set(item);
   }
   async function deleteItem() {
     deleteModal.toggleLoading();
@@ -137,13 +141,41 @@
     border: 1px solid lightgray;
     border-radius: 8px;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     width: 100%;
-    height: 125px;
-    padding: 6px;
+    padding: 20px;
     cursor: pointer;
+    user-select: none;
+  }
+  .item-secondary-content {
+    margin-top: 15px;
+  }
+  .item-secondary-content img {
+    object-fit: cover;
+    width: 100px;
+    height: 100px;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    cursor: pointer;
+    margin: 2px;
+  }
+  .pdfs {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 15px;
+  }
+  .item-main-content {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
   }
   .item-content {
     width: 100%;
@@ -167,7 +199,7 @@
   .item.selected {
     background-color: rgba(173, 216, 230, 0.4);
     transition: background-color 200ms;
-    cursor: pointer;
+    cursor: auto;
   }
   .item:hover:not(.selected) {
     background-color: rgba(173, 216, 230, 0.2);
@@ -208,32 +240,50 @@
           transition:fade|local
           class="item no-scroll"
           class:selected={$selected_product && $selected_product.id === item.id}>
-          <div class="item-content">
-            <div class="item-column">
-              <span>{item.title}</span>
+          <div class="item-main-content">
+            <div class="item-content">
+              <div class="item-column">
+                <span>{item.title}</span>
+              </div>
+              <div class="item-column">
+                <span class="item-column-header">Suma datorata</span>
+                <span>{item.bookValueAmount} RON</span>
+              </div>
+              <div class="item-column">
+                <span class="item-column-header">Pret</span>
+                <span>{item.priceAmount} RON</span>
+              </div>
+              <div class="item-column">
+                <span class="item-column-header">Profit</span>
+                <span>{item.bookValueAmount - item.priceAmount} RON</span>
+              </div>
             </div>
-            <div class="item-column">
-              <span class="item-column-header">Suma datorata</span>
-              <span>{item.bookValueAmount} RON</span>
-            </div>
-            <div class="item-column">
-              <span class="item-column-header">Pret</span>
-              <span>{item.priceAmount} RON</span>
-            </div>
-            <div class="item-column">
-              <span class="item-column-header">Profit</span>
-              <span>{item.bookValueAmount - item.priceAmount} RON</span>
-            </div>
+            {#if $current_user && $current_user.id === item.merchantId}
+              <button class="item-action" on:click={openDeleteModal(item)}>
+                Remove
+              </button>
+            {:else}
+              <button class="item-action" on:click={openIssueBuyModal(item)}>
+                Buy
+              </button>
+            {/if}
           </div>
-
-          {#if $current_user && $current_user.id === item.merchantId}
-            <button class="item-action" on:click={openDeleteModal(item)}>
-              Remove
-            </button>
-          {:else}
-            <button class="item-action" on:click={openIssueBuyModal(item)}>
-              Buy
-            </button>
+          {#if $selected_product && item && $selected_product.id === item.id}
+            <div class="item-secondary-content" transition:slide>
+              <div class="pdfs">
+                {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as img}
+                  <span>{`somepdf${img}`}</span>
+                {/each}
+              </div>
+              <div class="thumbnails">
+                {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as img}
+                  <img
+                    on:click={openImgModal}
+                    src="logo200.png"
+                    alt="thumbnail" />
+                {/each}
+              </div>
+            </div>
           {/if}
         </div>
       {/each}
@@ -261,6 +311,7 @@
 <VerifyUserModal
   bind:this={verifyUserModal}
   on:submit={event => verifyUserModalSubmit()} />
+<ImgModal bind:this={imgModal} />
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
   <div slot="content">
