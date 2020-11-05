@@ -206,7 +206,7 @@
 
 <div class="container">
   <div class="actions">
-    <button on:click={e => toggleEntityModal(e, null)} type="button">
+    <button class="primary" on:click={e => toggleEntityModal(e, null)} type="button">
       Add
     </button>
   </div>

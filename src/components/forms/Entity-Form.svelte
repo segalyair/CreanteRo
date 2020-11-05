@@ -72,14 +72,14 @@
           name={'series'}
           label="Series"
           required={true}
-          minlength={2}
-          maxlength={2} />
+          pattern={new RegExp(/[A-Z]{2}/)} />
         <SInput
           type={'number'}
           id={'number'}
           name={'number'}
           label="Number"
-          required={true} />
+          required={true}
+          pattern={new RegExp(/^[0-9]{6}/)} />
         <SInput
           type={'text'}
           id={'identityIssuer'}

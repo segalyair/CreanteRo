@@ -51,7 +51,13 @@
     <!-- Other purchase stuff goes here (conditions, Stripe, signature etc.) -->
   </div>
   <div slot="actions">
-    <button disabled={!submitEnabled} on:click={submit}>Buy</button>
-    <button on:click={() => close(false)}>Cancel</button>
+    <button
+      class="primary"
+      disabled={!submitEnabled}
+      on:click={submit}
+      type="button">
+      Buy
+    </button>
+    <button on:click={() => close(false)} type="button">Cancel</button>
   </div>
 </Modal>

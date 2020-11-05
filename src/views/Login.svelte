@@ -41,9 +41,15 @@
   .container {
     display: flex;
     flex-direction: column;
-    height: 100%;
     justify-content: center;
     align-items: center;
+    padding: 50px 100px 50px 100px;
+    width: fit-content;
+    border: 1px solid lightgray;
+    border-radius: 12px;
+    background-color: white;
+    -webkit-box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
   }
   .actions {
     display: flex;
@@ -67,7 +73,7 @@
       required={true} />
     <div class="actions">
       <button on:click={() => Utils.redirect('/register')}>Register</button>
-      <button disabled={!canLogin} on:click={() => handleLogin()}>Login</button>
+      <button class="primary" disabled={!canLogin} on:click={() => handleLogin()}>Login</button>
     </div>
   </form>
   <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />

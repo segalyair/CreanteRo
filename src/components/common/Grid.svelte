@@ -56,6 +56,7 @@
   async function dismissDeleteModal() {
     deleteModal.close();
   }
+  function downloadPDF() {}
   function selectItem(item) {
     if ($selected_product && $selected_product.id === item.id) return;
     selected_product.set(item);
@@ -118,7 +119,13 @@
     flex: 2 1 0px;
     height: 100%;
     overflow: auto;
-    padding: 10px;
+    padding: 50px 50px 50px 50px;
+    width: 100%;
+    border: 1px solid lightgray;
+    border-radius: 12px;
+    background-color: white;
+    -webkit-box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
   }
   .actions {
     margin-bottom: 10px;
@@ -229,7 +236,7 @@
 <div class="container">
   {#if !isLoading && !hasLoadingError && items}
     <div transition:fade|local class="actions">
-      <button on:click={openAddModal}>Add Item</button>
+      <button class="primary" on:click={openAddModal}>Add Item</button>
     </div>
   {/if}
   <div class="items">
@@ -259,24 +266,31 @@
               </div>
             </div>
             {#if $current_user && $current_user.id === item.merchantId}
-              <button class="item-action" on:click={openDeleteModal(item)}>
+              <button
+                class="item-action"
+                on:click={openDeleteModal(item)}
+                type="button">
                 Remove
               </button>
             {:else}
-              <button class="item-action" on:click={openIssueBuyModal(item)}>
+              <button
+                class="primary item-action"
+                on:click={openIssueBuyModal(item)}
+                type="button">
                 Buy
               </button>
             {/if}
           </div>
           {#if $selected_product && item && $selected_product.id === item.id}
             <div class="item-secondary-content" transition:slide>
-              <div class="pdfs">
-                {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as img}
-                  <span>{`somepdf${img}`}</span>
-                {/each}
-              </div>
               <div class="thumbnails">
-                {#each [1, 2, 3, 4, 5, 6, 7, 8, 9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 0] as img}
+                {#each [1, 2, 3] as pdf}
+                  <img
+                    on:click={downloadPDF}
+                    src="PDF_file_icon.png"
+                    alt="pdf" />
+                {/each}
+                {#each [1, 2, 3, 4, 5, 6] as img}
                   <img
                     on:click={openImgModal}
                     src="logo200.png"
@@ -292,7 +306,9 @@
     {:else if hasLoadingError}
       <div in:fade|local class="no-items no-scroll loading-error">
         <span>A aparut o eroare</span>
-        <button on:click={loadItems}>Try Again</button>
+        <button class="primary" on:click={loadItems} type="button">
+          Try Again
+        </button>
       </div>
     {:else if !isLoading && (!items || items.length === 0)}
       <div transition:fade|local class="no-items no-scroll">
@@ -318,8 +334,8 @@
     Are you sure you wish to delete '{itemToDelete.title}'?
   </div>
   <div slot="actions">
-    <button on:click={deleteItem}>Yes</button>
-    <button on:click={dismissDeleteModal}>No</button>
+    <button class="primary" on:click={deleteItem} type="button">Yes</button>
+    <button on:click={dismissDeleteModal} type="button">No</button>
   </div>
 </Modal>
 <Toast bind:this={toast} />

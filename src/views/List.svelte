@@ -9,10 +9,12 @@
   .container {
     display: flex;
     height: 100%;
+    width: 100%;
+    margin: 0 20px 0 20px;
   }
 </style>
 
 <div class="container">
   <Grid />
-  <ProductPreview />
+  <!-- <ProductPreview /> -->
 </div>

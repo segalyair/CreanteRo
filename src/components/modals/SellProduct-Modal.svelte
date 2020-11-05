@@ -99,6 +99,7 @@
   </div>
   <div slot="actions">
     <button
+      class="primary"
       disabled={!submitEnabled || !debtor || !debtor.selectedEntity}
       on:click={submit}
       type="button">

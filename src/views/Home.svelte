@@ -4,12 +4,17 @@
 
 <style>
   .container {
-    height: 100%;
-    padding: 10px;
     display: flex;
     flex-direction: column;
     justify-content: center;
     text-align: center;
+    padding: 100px;
+    width: fit-content;
+    border: 1px solid lightgray;
+    border-radius: 12px;
+    background-color: white;
+    -webkit-box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
+    box-shadow: 5px 5px 8px 0px rgba(0, 0, 0, 0.5);
   }
   h1 {
     font-size: 3vw;

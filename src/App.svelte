@@ -42,13 +42,26 @@
     user-select: none;
     cursor: pointer;
     margin: 0;
+    border-radius: 4px;
+  }
+  :global(button.primary) {
+    background-color: #1b6dc1;
+    color: white;
+  }
+  :global(button.primary):hover {
+    background-color: #357ec7;
+    transition: all 200ms;
   }
   :global(button):hover {
     background-color: lightgray;
-    transition: background-color 200ms;
+    transition: all 200ms;
   }
   :global(button):disabled {
     cursor: not-allowed;
+  }
+  :global(button.primary):disabled {
+    color: #999;
+    background-color: #f4f4f4;
   }
   :global(h2),
   :global(h1) {
@@ -82,6 +95,7 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    background-color: #d3d3d33d;
   }
   .router {
     padding: 10px;

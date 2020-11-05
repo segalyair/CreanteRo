@@ -56,13 +56,19 @@
         rawEntity: JSON.stringify(data),
         rawCard: JSON.stringify(data)
       };
+      let result;
       if (isEdit) {
-        await RepresentativeService.update(data);
+        result = await RepresentativeService.update(data);
       } else {
-        await RepresentativeService.add(entParams);
+        result = await RepresentativeService.add(entParams);
+      }
+      modal.toggleLoading();
+      if (typeof result === "string") {
+        throw Error("Error occured in backend");
       }
       toast.create(`Debtor successfully ${isEdit ? "edited" : "added"}`, 3000);
       dispatch("submit");
+      close();
     } catch (ex) {
       toast.create(
         `Failed to ${isEdit ? "edit" : "add"} debtor`,
@@ -71,11 +77,10 @@
       );
       console.log(ex);
     }
-    modal.toggleLoading();
-    close();
   }
   function close(fromModal) {
     submitEnabled = false;
+    isEdit = false;
     if (!fromModal) {
       modal.close();
     }
@@ -94,7 +99,7 @@
     <EntityForm on:mount={mountForm} on:input={isValid} />
   </div>
   <div slot="actions">
-    <button disabled={!submitEnabled} on:click={submit} type="button">
+    <button class="primary" disabled={!submitEnabled} on:click={submit} type="button">
       Submit
     </button>
     <button on:click={() => close(false)} type="button">Cancel</button>

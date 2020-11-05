@@ -82,7 +82,11 @@
     <VerifyUserForm on:mount={e => (form = e.detail)} on:input={isValid} />
   </div>
   <div slot="actions">
-    <button disabled={!canVerify} on:click={submit} type="button">
+    <button
+      class="primary"
+      disabled={!canVerify}
+      on:click={submit}
+      type="button">
       Submit
     </button>
     <button on:click={close} type="button">Cancel</button>
