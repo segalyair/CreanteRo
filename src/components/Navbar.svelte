@@ -69,7 +69,7 @@
   .route {
     padding: 10px 0;
     text-align: center;
-    font-size: 1.4vw;
+    font-size: 1.2vw;
     cursor: pointer;
     color: #1b6dc1;
     border-top: 1px solid lightgray;

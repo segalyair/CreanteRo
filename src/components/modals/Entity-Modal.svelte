@@ -7,6 +7,7 @@
   import { FirebaseAPI } from "../../firebase/firebase-api.js";
   import { RepresentativeService } from "../../services/legalSubject-service.js";
   import { current_user } from "../../store.js";
+  import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   let modal,
     toast,
@@ -66,12 +67,12 @@
       if (typeof result === "string") {
         throw Error("Error occured in backend");
       }
-      toast.create(`Debtor successfully ${isEdit ? "edited" : "added"}`, 3000);
+      toast.create(`${isEdit ? $_("entityModal.debtorEdited") : $_("entityModal.debtorAdded")}`, 3000);
       dispatch("submit");
       close();
     } catch (ex) {
       toast.create(
-        `Failed to ${isEdit ? "edit" : "add"} debtor`,
+        `Failed to ${isEdit ? $_("entityModal.debtorFailEdit") : $_("entityModal.debtorFailAdd")} debtor`,
         3000,
         "#e46464"
       );
@@ -99,10 +100,16 @@
     <EntityForm on:mount={mountForm} on:input={isValid} />
   </div>
   <div slot="actions">
-    <button class="primary" disabled={!submitEnabled} on:click={submit} type="button">
-      Submit
+    <button
+      class="primary"
+      disabled={!submitEnabled}
+      on:click={submit}
+      type="button">
+      {$_('entityModal.submit')}
     </button>
-    <button on:click={() => close(false)} type="button">Cancel</button>
+    <button on:click={() => close(false)} type="button">
+      {$_('entityModal.cancel')}
+    </button>
   </div>
 </Modal>
 <Toast bind:this={toast} />

@@ -30,7 +30,7 @@
   function toggleEntityModal(e, entity) {
     e.preventDefault();
     e.stopPropagation();
-    let title = entity ? "Edit debtor" : "Add new debtor";
+    let title = entity ? $_("entity.editDebtor") : $_("entity.addDebtor");
     if (entity) {
       entity.type = entity.kind.toString();
       if (entity.card) {
@@ -45,7 +45,7 @@
     entityToDelete = entity;
     if (entity !== null) {
       deleteModal.open({
-        title: `Delete '${entity.name ||
+        title: `${$_("entity.delete")} '${entity.name ||
           entity.firstname + " " + entity.lastname}'`
       });
     } else {
@@ -62,7 +62,7 @@
       result = false;
     }
     toast.create(
-      result ? "Debtor deleted" : "Failed to delete debtor",
+      result ? $_("entity.debtorDeleted") : $_("entity.debtorFailDelete"),
       3000,
       result ? null : errorToastColor
     );
@@ -323,11 +323,13 @@
 </div>
 <Modal bind:this={deleteModal}>
   <div slot="content">
-    Are you sure you wish to delete '{entityToDelete.name || entityToDelete.firstname + ' ' + entityToDelete.lastname}'?
+    {$_('entity.areYouSureYouWishToDelete')} '{entityToDelete.name || entityToDelete.firstname + ' ' + entityToDelete.lastname}'?
   </div>
   <div slot="actions">
-    <button on:click={deleteEntity} type="button">Yes</button>
-    <button on:click={() => toggleDeleteModal(null)} type="button">No</button>
+    <button on:click={deleteEntity} type="button">{$_('entity.yes')}</button>
+    <button on:click={(e) => toggleDeleteModal(e, null)} type="button">
+      {$_('entity.no')}
+    </button>
   </div>
 </Modal>
 <EntityModal bind:this={entityModal} on:submit={submitRepresentative} />

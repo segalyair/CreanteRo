@@ -82,9 +82,15 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 }
             },
             list: {
+                tryAgain: "Încearcă din nou",
                 addItem: "Creează",
                 remove: "Șterge",
-                buy: "Cumpără"
+                buy: "Cumpără",
+                areYouSureYouWishToDelete: "Ești sigur că dorești să ștergi",
+                yes: "Da",
+                no: "Nu",
+                itemDeleted: "Creanța a fost ștearsă",
+                itemFailDelete: "Ștergerea creanței a eșuat",
             },
             sellProduct: {
                 addNewItem: "Creează o creanță",
@@ -140,7 +146,100 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 page: "Pagina",
                 outOf: "din",
                 physical: "Fizic",
-                juridical: "Juridic"
+                juridical: "Juridic",
+                areYouSureYouWishToDelete: "Ești sigur că dorești să ștergi",
+                yes: "Da",
+                no: "Nu",
+                debtorDeleted: "Datornicul a fost șters",
+                debtorFailDelete: "Ștergerea datornicului a eșuat",
+                editDebtor: "Modifică datornic",
+                addDebtor: "Adaugă datornic"
+            },
+            entityModal: {
+                submit: "Trimite",
+                cancel: "Anulează",
+                debtorEdited: "Datornicul a fost modificat",
+                debtorFailEdit: "Modificarea datornicului a eșuat",
+                debtorAdded: "Datornicul a fost adăugat",
+                debtorFailAdd: "Adăugarea datornicului a eșuat",
+                type: {
+                    label: "Tip"
+                },
+                email: {
+                    label: "Email",
+                    error: {
+                        isInvalid: "Email-ul este invalid"
+                    }
+                },
+                firstName: {
+                    label: "Prenume",
+                    error: {
+                        isRequired: "Prenumele este necesar",
+                    }
+                },
+                lastName: {
+                    label: "Nume",
+                    error: {
+                        isRequired: "Numele este necesar",
+                    }
+                },
+                cnp: {
+                    label: "CNP",
+                    error: {
+                        isInvalid: "CNP-ul este invalid",
+                        isRequired: "CNP-ul este necesar",
+                    }
+                },
+                series: {
+                    label: "Serie",
+                    error: {
+                        isInvalid: "Seria este invalidă",
+                        isRequired: "Seria este necesară",
+                    }
+                },
+                number: {
+                    label: "Număr",
+                    error: {
+                        isInvalid: "Numărul este invalid",
+                        isRequired: "Numărul este necesar",
+                    }
+                },
+                identityIssuer: {
+                    label: "Emitent",
+                    error: {
+                        isRequired: "Emitentul este necesar",
+                    }
+                },
+                expiryDate: {
+                    label: "Valabilitate",
+                    error: {
+                        isRequired: "Valabilitatea este necesară",
+                    }
+                },
+                name: {
+                    label: "Nume",
+                    error: {
+                        isRequired: "Numele este necesar",
+                    }
+                },
+                cui: {
+                    label: "CUI",
+                    error: {
+                        isRequired: "CUI-ul este necesar",
+                    }
+                },
+                recom: {
+                    label: "RECOM",
+                    error: {
+                        isRequired: "RECOM-ul este necesar",
+                    }
+                },
+                address: {
+                    label: "Adresă",
+                    error: {
+                        isRequired: "Adresa este necesară",
+                    }
+                }
             }
         },
     });

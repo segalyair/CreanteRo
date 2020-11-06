@@ -39,7 +39,7 @@
       openVerifyUserModal();
     } else {
       buyModal.open({
-        title: `Buy '${item.title}'`,
+        title: `${$_("list.buy")} '${item.title}'`,
         product: item
       });
     }
@@ -50,7 +50,7 @@
     } else {
       itemToDelete = item;
       deleteModal.open({
-        title: `Delete '${itemToDelete.title}'`
+        title: `${$_("list.remove")} '${itemToDelete.title}'`
       });
     }
   }
@@ -66,10 +66,10 @@
     deleteModal.toggleLoading();
     try {
       await MerchantService.deleteProduct(itemToDelete.id);
-      toast.create(`Item deleted successfully`, 3000);
+      toast.create($_("list.itemDeleted"), 3000);
       loadItems();
     } catch (error) {
-      toast.create(`Failed to delete item`, 3000, "#e46464");
+      toast.create($_("list.itemFailDelete"), 3000, "#e46464");
     }
     deleteModal.toggleLoading();
     dismissDeleteModal();
@@ -237,7 +237,9 @@
 <div class="container">
   {#if !isLoading && !hasLoadingError && items}
     <div transition:fade|local class="actions">
-      <button class="primary" on:click={openAddModal}>{$_("list.addItem")}</button>
+      <button class="primary" on:click={openAddModal}>
+        {$_('list.addItem')}
+      </button>
     </div>
   {/if}
   <div class="items">
@@ -271,14 +273,14 @@
                 class="item-action"
                 on:click={openDeleteModal(item)}
                 type="button">
-                {$_("list.remove")}
+                {$_('list.remove')}
               </button>
             {:else}
               <button
                 class="primary item-action"
                 on:click={openIssueBuyModal(item)}
                 type="button">
-                {$_("list.buy")}
+                {$_('list.buy')}
               </button>
             {/if}
           </div>
@@ -308,7 +310,7 @@
       <div in:fade|local class="no-items no-scroll loading-error">
         <span>A aparut o eroare</span>
         <button class="primary" on:click={loadItems} type="button">
-          Try Again
+          {$_('list.tryAgain')}
         </button>
       </div>
     {:else if !isLoading && (!items || items.length === 0)}
@@ -332,11 +334,13 @@
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
   <div slot="content">
-    Are you sure you wish to delete '{itemToDelete.title}'?
+    {$_('list.areYouSureYouWishToDelete')} '{itemToDelete.title}'?
   </div>
   <div slot="actions">
-    <button class="primary" on:click={deleteItem} type="button">Yes</button>
-    <button on:click={dismissDeleteModal} type="button">No</button>
+    <button class="primary" on:click={deleteItem} type="button">
+      {$_('list.yes')}
+    </button>
+    <button on:click={dismissDeleteModal} type="button">{$_('list.no')}</button>
   </div>
 </Modal>
 <Toast bind:this={toast} />
