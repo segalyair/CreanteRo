@@ -6,6 +6,7 @@
   import { current_route, current_user } from "../store.js";
   import { Utils } from "../utils.js";
   import { auth } from "../firebase/firebase";
+  import { _ } from "../i18n";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
   let isLoading = false,
     currentUser,
@@ -129,7 +130,7 @@
         class:last={i + 1 === currentRoutes.length}
         on:click={e => routeClick(route.href)}
         href="javascript:void(0)">
-        {route.value}
+        {$_(route.i18n)}
       </a>
     {/each}
     <div class="fill-gap" />
@@ -139,7 +140,7 @@
           <UserIcon size="50" />
         </div>
         <div class="route signout" on:click={signOut}>
-          <a href="javascript:void(0)">Sign Out</a>
+          <a href="javascript:void(0)">{$_('navbar.signout')}</a>
         </div>
       </div>
     {/if}

@@ -7,6 +7,7 @@
   import SInput from "../components/common/inputs/SInput.svelte";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
   import Toast from "../components/common/Toast.svelte";
+  import { _ } from "../i18n";
   let isLoading = false,
     form,
     toast,
@@ -15,8 +16,8 @@
   function passwordValidate() {
     const passwordsNotEqual =
       form && form.elements.password.value !== form.confirmPassword.value;
-    if (form.checkValidity() && passwordsNotEqual) {
-      passwordErrors = ["Password and Confirm Password has to match"];
+    if (passwordsNotEqual) {
+      passwordErrors = [$_("register.confirmPassword.error.mustMatchWithPassword")];
     } else {
       passwordErrors = [];
     }
@@ -93,6 +94,7 @@
     height: 100%;
   }
   .register {
+    margin-top: 20px;
     cursor: pointer;
     width: 150px;
     height: 40px;
@@ -111,25 +113,28 @@
           type={'email'}
           id={'email'}
           name={'email'}
-          label="Email"
+          label="register.email"
           required={true} />
         <SInput
           type={'password'}
           id={'password'}
           name={'password'}
-          label="Password"
+          label="register.password"
           required={true}
           on:change={e => passwordValidate()} />
         <SInput
           type={'password'}
           id={'confirmPassword'}
           name={'confirmPassword'}
-          label="Confirm Password"
+          label="register.confirmPassword"
           required={true}
           externalErrors={passwordErrors}
           on:change={e => passwordValidate()} />
-        <button class="primary register" disabled={!canRegister} on:click={register}>
-          Register
+        <button
+          class="primary register"
+          disabled={!canRegister}
+          on:click={register}>
+          {$_('register.register')}
         </button>
       </form>
     </div>

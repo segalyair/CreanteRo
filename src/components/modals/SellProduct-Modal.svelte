@@ -6,6 +6,7 @@
   import { createEventDispatcher } from "svelte";
   import { MerchantService } from "../../services/merchant-service.js";
   import { current_user } from "../../store.js";
+  import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   let modal,
     form,
@@ -103,9 +104,9 @@
       disabled={!submitEnabled || !debtor || !debtor.selectedEntity}
       on:click={submit}
       type="button">
-      Submit
+      {$_('sellProduct.submit')}
     </button>
-    <button on:click={close} type="button">Cancel</button>
+    <button on:click={close} type="button">{$_('sellProduct.cancel')}</button>
   </div>
 </Modal>
 <Toast bind:this={toast} />

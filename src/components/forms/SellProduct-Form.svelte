@@ -5,6 +5,7 @@
   import SInput from "../../components/common/inputs/SInput.svelte";
   import InputLabel from "../../components/common/inputs/Input-Label.svelte";
   import { current_user } from "../../store.js";
+  import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   let form,
     amountErrors = [],
@@ -21,9 +22,11 @@
       Number(form.priceAmount.value) >= Number(form.bookValueAmount.value)
     ) {
       form.priceAmount.setCustomValidity(
-        "Price has to be smaller than Owed Amount"
+        $_("sellProduct.price.error.hasToBeSmallerThanOwedAmount")
       );
-      amountErrors = ["Price has to be smaller than Owed Amount"];
+      amountErrors = [
+        $_("sellProduct.price.error.hasToBeSmallerThanOwedAmount")
+      ];
     } else {
       form.priceAmount.setCustomValidity("");
       amountErrors = [];
@@ -58,39 +61,39 @@
       type={'text'}
       id={'title'}
       name={'title'}
-      label="Title"
+      label="sellProduct.title"
       required={true}
       helpMessage={'Tipul creantei'} />
     <SInput
       type={'file'}
       id={'documents'}
       name={'documents'}
-      label="Documents"
+      label="sellProduct.documents"
       required={true}
       multiple={true}
       displayFileName={false}
-      uploadLabel={'Upload Files'}
+      uploadLabel={'fileUpload.uploadFiles'}
       showPreview={false}
       helpMessage={'Documente pentru creanta'} />
     <SInput
       type={'number'}
       id={'bookValueAmount'}
       name={'bookValueAmount'}
-      label="Owed Amount"
+      label="sellProduct.owedAmount"
       helpMessage={'Valorea creantei'}
       required={true} />
     <SInput
       type={'number'}
       id={'priceAmount'}
       name={'priceAmount'}
-      label="Price"
+      label="sellProduct.price"
       required={true}
       externalErrors={amountErrors}
       helpMessage={'Pretul cu care vrei sa vinzi creanta'} />
     <InputLabel
       required={true}
       for={'debtor'}
-      label={'Debtor'}
+      label={'sellProduct.debtor'}
       helpMessage={'The debtor who owes the debt'} />
     <EntityTable
       bind:this={debtorTable}
@@ -105,17 +108,17 @@
       type={'file'}
       id={'otherDocuments'}
       name={'otherDocuments'}
-      label="Other Documents"
+      label="sellProduct.otherDocuments"
       required={false}
       multiple={true}
       displayFileName={false}
-      uploadLabel={'Upload Files'}
+      uploadLabel={'fileUpload.uploadFiles'}
       showPreview={false} />
     <SInput
       type={'textarea'}
       id={'details'}
       name={'details'}
-      label="Details"
+      label="sellProduct.details"
       required={false} />
   </form>
 </div>

@@ -40,7 +40,7 @@
 
 <style>
   textarea {
-    width: 500px;
+    width: 100%;
     height: 150px;
     margin: 0;
   }

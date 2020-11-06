@@ -9,7 +9,7 @@ import { auth } from "../firebase/firebase";
 export const routes = [
     { href: '/', value: 'Home', component: Home },
     {
-        href: '/list', value: 'List', component: List,
+        href: '/list', value: "List", i18n: "routes.list", component: List,
         guard: () => {
             return auth.currentUser && !auth.currentUser.isAnonymous
         }
@@ -21,12 +21,12 @@ export const routes = [
         }
     },
     {
-        href: '/login', value: 'Login', component: Login, guard: () => {
+        href: '/login', value: "Login", i18n: "routes.login", component: Login, guard: () => {
             return auth.currentUser && auth.currentUser.isAnonymous
         }
     },
     {
-        href: '/register', value: 'Register', component: Register, guard: () => {
+        href: '/register', value: "Register", i18n: "routes.register", component: Register, guard: () => {
             return auth.currentUser && auth.currentUser.isAnonymous
         }
     },

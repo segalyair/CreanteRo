@@ -1,13 +1,14 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
   import { XIcon } from "svelte-feather-icons";
+  import { _ } from "../../../i18n";
   export let id,
     name,
     required,
     label,
     showPreview = true,
     displayFileName = true,
-    uploadLabel = "Choose File",
+    uploadLabel = "fileupload.chooseFile",
     multiple = false,
     type = "img";
   const dispatch = createEventDispatcher();
@@ -18,9 +19,9 @@
   let preparedFile = null;
   function validate() {
     if (input.validity.valueMissing) {
-      input.setCustomValidity(`${label} is required`);
+      input.setCustomValidity(`${$_(label + ".error.isRequired")}`);
       input.checkValidity();
-      dispatch("error", `${label} is required`);
+      dispatch("error", `${$_(label + ".error.isRequired")}`);
       if (multiple === false) {
         removePreview();
       }
@@ -110,7 +111,7 @@
     display: none;
   }
   .upload-button {
-    width: 300px;
+    width: 100%;
   }
   .preview-container {
     margin-top: 10px;
@@ -121,7 +122,7 @@
   .file-list {
     /* display: flex;
     flex-direction: column; */
-    width: 300px;
+    width: 100%;
   }
   .file:not(:first-child) {
     border-top: 0;
@@ -145,10 +146,12 @@
 
 <div class="container">
   <button class="upload-button" bind:this={chooseFileButton} type="button">
-    {uploadLabel}
+    {$_(uploadLabel)}
   </button>
   {#if displayFileName}
-    <span>{preparedFile ? preparedFile.name : 'No file uploaded'}</span>
+    <span>
+      {preparedFile ? preparedFile.name : $_('fileUpload.noFilesUploaded')}
+    </span>
   {/if}
   <input
     bind:this={input}
@@ -173,7 +176,7 @@
         {/each}
       {:else}
         <div class="file file-empty">
-          <span>No files uploaded</span>
+          <span>{$_('fileUpload.noFilesUploaded')}</span>
           <div />
         </div>
       {/if}

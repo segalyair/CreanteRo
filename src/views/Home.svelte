@@ -1,5 +1,6 @@
 <script>
-  import Payment from "../components/payment/Payment.svelte";
+  import { _ } from "../i18n";
+  // import Payment from "../components/payment/Payment.svelte";
 </script>
 
 <style>
@@ -30,8 +31,8 @@
 </style>
 
 <div class="container">
-  <h1>Bine ai venit la Bursa de Creante</h1>
-  <h2>Singurul site unde poti cumpara si vinde creante rapid si usor</h2>
+  <h1>{$_('home.title1')}</h1>
+  <h2>{$_('home.title2')}</h2>
   <span>🤝</span>
   <!-- <Payment amount={19.99} description={"Creanta Description"}/> -->
 </div>

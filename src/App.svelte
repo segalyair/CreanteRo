@@ -7,6 +7,9 @@
   import { auth } from "./firebase/firebase";
   import { UserService } from "./services/user-service.js";
   import { current_user } from "./store.js";
+  import { setupI18n } from "./i18n";
+  setupI18n({ withLocale: "ro" });
+
   $: isReady = isUserLoaded;
   let isUserLoaded = false;
   auth.onAuthStateChanged(async user => {

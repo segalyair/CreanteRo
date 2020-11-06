@@ -19,7 +19,7 @@
     helpMessage = null,
     showPreview = true,
     displayFileName = true,
-    uploadLabel = "Choose File",
+    uploadLabel = "fileupload.chooseFile",
     multiple = false,
     pattern = null,
     minlength = 0,
@@ -43,6 +43,7 @@
 <style>
   .container {
     margin: 10px 0;
+    width: 300px;
   }
   .error {
     color: red;

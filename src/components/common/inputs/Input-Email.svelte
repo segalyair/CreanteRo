@@ -1,13 +1,13 @@
 <script>
   import { onMount, createEventDispatcher } from "svelte";
-
+  import { _ } from "../../../i18n";
   export let id, name, label, required;
   let input;
   const pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     dispatch = createEventDispatcher();
   function validate() {
     if (input.validity.valueMissing || !pattern.test(input.value)) {
-      dispatch("error", `${label} is invalid`);
+      dispatch("error", `${$_(label + ".error.isInvalid")}`);
     } else {
       dispatch("valid", input.value);
     }
@@ -27,7 +27,7 @@
 
 <style>
   input {
-    width: 300px;
+    width: 100%;
     margin: 0;
     transition: all 200ms;
   }

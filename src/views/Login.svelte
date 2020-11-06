@@ -5,6 +5,7 @@
   import { Utils } from "../utils.js";
   import { current_user } from "../store.js";
   import { UserService } from "../services/user-service.js";
+  import { _ } from "../i18n";
   import LoadingSpinner from "../Components/Common/LoadingSpinner.svelte";
   import SInput from "../components/common/inputs/SInput.svelte";
   import Toast from "../components/common/Toast.svelte";
@@ -63,21 +64,23 @@
       type={'email'}
       id={'email'}
       name={'email'}
-      label="Email"
+      label="login.email"
       required={true} />
     <SInput
       type={'password'}
       id={'password'}
       name={'password'}
-      label="Password"
+      label="login.password"
       required={true} />
     <div class="actions">
-      <button on:click={() => Utils.redirect('/register')}>Register</button>
+      <button on:click={() => Utils.redirect('/register')}>
+        {$_('login.register')}
+      </button>
       <button
         class="primary"
         disabled={!canLogin}
         on:click={() => handleLogin()}>
-        Login
+        {$_('login.login')}
       </button>
     </div>
   </form>

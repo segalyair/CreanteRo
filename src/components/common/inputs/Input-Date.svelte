@@ -28,7 +28,7 @@
 
 <style>
   input {
-    width: 300px;
+    width: 100%;
     margin: 0;
     transition: all 200ms;
   }

@@ -11,6 +11,7 @@
   import EntityModal from "../../components/modals/Entity-Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";
   import { current_user } from "../../store.js";
+  import { _ } from "../../i18n";
   export let selectable = false;
   const take = 6,
     dispatch = createEventDispatcher();
@@ -18,7 +19,7 @@
     deleteModal,
     entityModal,
     entityToDelete = null,
-    types = ["Physical", "Juridical"],
+    types = [$_("entity.physical"), $_("entity.juridical")],
     entities = null,
     selectedEntity = null,
     goToPage = false,
@@ -145,9 +146,6 @@
   td {
     width: 200px;
   }
-  td button {
-    width: 70px;
-  }
   .td-paginator {
     padding: 0;
   }
@@ -206,25 +204,28 @@
 
 <div class="container">
   <div class="actions">
-    <button class="primary" on:click={e => toggleEntityModal(e, null)} type="button">
-      Add
+    <button
+      class="primary"
+      on:click={e => toggleEntityModal(e, null)}
+      type="button">
+      {$_('entity.add')}
     </button>
   </div>
   <table>
     <thead>
       <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Address</th>
-        <th>Email</th>
-        <th>Actions</th>
+        <th>{$_('entity.name')}</th>
+        <th>{$_('entity.type')}</th>
+        <th>{$_('entity.address')}</th>
+        <th>{$_('entity.email')}</th>
+        <th>{$_('entity.actions')}</th>
       </tr>
     </thead>
     <tbody>
       {#if !entities}
         <tr>
           <td colspan="100%">
-            <div class="no-entities">Loading entities</div>
+            <div class="no-entities">{$_('entity.loadingEntities')}</div>
           </td>
         </tr>
       {:else if entities.length > 0}
@@ -252,12 +253,12 @@
                 <button
                   on:click={e => toggleEntityModal(e, entity)}
                   type="button">
-                  Edit
+                  {$_('entity.edit')}
                 </button>
                 <button
                   on:click={e => toggleDeleteModal(e, entity)}
                   type="button">
-                  Delete
+                  {$_('entity.delete')}
                 </button>
               </div>
             </td>
@@ -266,7 +267,7 @@
       {:else}
         <tr>
           <td colspan="100%">
-            <div class="no-entities">No entities found</div>
+            <div class="no-entities">{$_('entity.noEntitiesFound')}</div>
           </td>
         </tr>
       {/if}
@@ -287,7 +288,7 @@
               on:click={e => changePage(e, currentPage - 1)}>
               <ChevronLeftIcon size="18" />
             </div>
-            <span>Page</span>
+            <span>{$_('entity.page')}</span>
             {#if !goToPage}
               <span class="currentPage" on:click={toggleGoToPage}>
                 {currentPage}
@@ -301,7 +302,7 @@
                 max={maxPage}
                 autofocus />
             {/if}
-            <span>out of {maxPage}</span>
+            <span>{$_('entity.outOf')} {maxPage}</span>
             <div
               class="icon-container"
               class:disabled={currentPage >= maxPage}

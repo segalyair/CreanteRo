@@ -1,5 +1,6 @@
 <script>
   import TooltipHelp from "../TooltipHelp.svelte";
+  import { _ } from "../../../i18n";
   export let name, label, required, helpMessage;
 </script>
 
@@ -13,9 +14,9 @@
 </style>
 
 <label for={name}>
-  {label}
+  {$_(`${label}.label`)}
   {#if !required}
-    <span>(Optional)</span>
+    <span>({$_('label.optional')})</span>
   {/if}
   {#if helpMessage}
     <TooltipHelp message={helpMessage} />

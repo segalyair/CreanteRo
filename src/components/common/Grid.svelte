@@ -13,6 +13,7 @@
   import { MerchantService } from "../../services/merchant-service.js";
   import { fade, slide } from "svelte/transition";
   import { selected_product, current_user } from "../../store.js";
+  import { _ } from "../../i18n";
   let addModal,
     deleteModal,
     verifyUserModal,
@@ -77,7 +78,7 @@
     if (!$current_user.isEmailVerified) {
       openVerifyUserModal();
     } else {
-      addModal.open({ title: `Add new item` });
+      addModal.open({ title: `sellProduct.addNewItem` });
     }
   }
   async function addModalSubmit(newItem) {
@@ -236,7 +237,7 @@
 <div class="container">
   {#if !isLoading && !hasLoadingError && items}
     <div transition:fade|local class="actions">
-      <button class="primary" on:click={openAddModal}>Add Item</button>
+      <button class="primary" on:click={openAddModal}>{$_("list.addItem")}</button>
     </div>
   {/if}
   <div class="items">
@@ -270,14 +271,14 @@
                 class="item-action"
                 on:click={openDeleteModal(item)}
                 type="button">
-                Remove
+                {$_("list.remove")}
               </button>
             {:else}
               <button
                 class="primary item-action"
                 on:click={openIssueBuyModal(item)}
                 type="button">
-                Buy
+                {$_("list.buy")}
               </button>
             {/if}
           </div>
