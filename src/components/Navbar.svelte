@@ -52,7 +52,7 @@
     max-width: 100%;
     max-height: 100%;
     padding: 1vh 0.5vw 0 0.5vw;
-    margin-bottom: 10vh;
+    margin-bottom: 6vh;
   }
   .routes {
     display: flex;
