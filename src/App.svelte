@@ -33,6 +33,7 @@
     box-sizing: border-box;
   }
   :global(body) {
+    overflow-x: hidden;
     padding: 0 !important;
     height: 100vh;
     -webkit-font-smoothing: antialiased;
@@ -43,6 +44,7 @@
     cursor: pointer;
     margin: 0;
     border-radius: 4px;
+    min-width: 50px;
   }
   :global(button.primary) {
     background-color: #1b6dc1;

@@ -16,7 +16,7 @@
   }
 </style>
 
-<div {id} class="radio-buttons">
+<div class="radio-buttons">
   {#each buttons as button}
     <input
       type="radio"

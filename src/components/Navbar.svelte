@@ -11,6 +11,10 @@
     currentUser,
     currentRoutes = [];
   const ignoredRoutes = ["/", "*", "/forbidden", "/settings"];
+  function routeClick(href) {
+    if (href === window.location.pathname) return;
+    Utils.redirect(href);
+  }
   async function signOut() {
     isLoading = true;
     await auth.signOut();
@@ -87,7 +91,7 @@
     color: #1b6dc1;
   }
   .route:hover:not(.signout) {
-    background-color: #ffe17f75;
+    background-color: #ffe17f3f;
     text-decoration: none;
   }
   .route.active {
@@ -107,11 +111,14 @@
   }
   .signout {
     font-size: 1.2em;
+    border: none;
   }
 </style>
 
 <div class="navbar">
-  <a href={routes.find(r => r.value === 'Home').href}>
+  <a
+    on:click={e => routeClick(routes.find(r => r.value === 'Home').href)}
+    href="javascript:void(0)">
     <img class="logo" src="logo200.png" alt="Bursa de creante" />
   </a>
   <div class="routes">
@@ -120,7 +127,7 @@
         class="route"
         class:active={$current_route.value === route.value}
         class:last={i + 1 === currentRoutes.length}
-        on:click={e => Utils.redirect(route.href)}
+        on:click={e => routeClick(route.href)}
         href="javascript:void(0)">
         {route.value}
       </a>
@@ -128,7 +135,7 @@
     <div class="fill-gap" />
     {#if currentUser && !currentUser.isAnonymous}
       <div class="signout-container">
-        <div on:click={e => Utils.redirect('/settings')} class="icon-container">
+        <div on:click={e => routeClick('/settings')} class="icon-container">
           <UserIcon size="50" />
         </div>
         <div class="route signout" on:click={signOut}>

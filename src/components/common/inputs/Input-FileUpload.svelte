@@ -152,7 +152,6 @@
   {/if}
   <input
     bind:this={input}
-    {id}
     {name}
     {required}
     type="file"

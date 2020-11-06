@@ -73,7 +73,12 @@
       required={true} />
     <div class="actions">
       <button on:click={() => Utils.redirect('/register')}>Register</button>
-      <button class="primary" disabled={!canLogin} on:click={() => handleLogin()}>Login</button>
+      <button
+        class="primary"
+        disabled={!canLogin}
+        on:click={() => handleLogin()}>
+        Login
+      </button>
     </div>
   </form>
   <LoadingSpinner {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />

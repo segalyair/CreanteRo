@@ -17,7 +17,7 @@
     }
   }
   onMount(() => {
-    input.id = id;
+    // input.id = id;
     input.name = name;
     input.required = required;
     input.onblur = () => {

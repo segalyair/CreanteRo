@@ -117,9 +117,10 @@
     display: flex;
     flex-direction: column;
     flex: 2 1 0px;
-    height: 100%;
+    height: 95vh;
     overflow: auto;
     padding: 50px 50px 50px 50px;
+    min-width: 60vw;
     width: 100%;
     border: 1px solid lightgray;
     border-radius: 12px;
@@ -137,14 +138,14 @@
     height: 100%;
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    align-items: flex-start;
-    align-content: flex-start;
+    align-items: center;
+    flex-direction: column;
   }
   .no-scroll {
     overflow: hidden;
   }
   .item {
+    width: 60vw;
     border: 1px solid lightgray;
     border-radius: 8px;
     display: flex;
@@ -152,7 +153,6 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
-    width: 100%;
     padding: 20px;
     cursor: pointer;
     user-select: none;

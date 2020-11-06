@@ -128,7 +128,7 @@
           required={true}
           externalErrors={passwordErrors}
           on:change={e => passwordValidate()} />
-        <button class="register" disabled={!canRegister} on:click={register}>
+        <button class="primary register" disabled={!canRegister} on:click={register}>
           Register
         </button>
       </form>
