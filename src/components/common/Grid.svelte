@@ -31,7 +31,7 @@
   }
   function openVerifyUserModal(item) {
     verifyUserModal.open({
-      title: $_('verifyAccount.verifyAccount')
+      title: $_("verifyAccount.verifyAccount")
     });
   }
   function openIssueBuyModal(item) {
@@ -137,8 +137,8 @@
   .items {
     position: relative;
     height: 100%;
+    overflow-y: auto;
     display: flex;
-    flex-wrap: wrap;
     align-items: center;
     flex-direction: column;
   }
@@ -146,6 +146,7 @@
     overflow: hidden;
   }
   .item {
+    flex-shrink: 0;
     width: 60vw;
     border: 1px solid lightgray;
     border-radius: 8px;
