@@ -44,16 +44,12 @@
           currency: "RON"
         })
       );
-      let photoIndex = 0,
-        pdfIndex = 0;
       for (let file of Array.from(form.documents.realFiles)) {
-        let fileName = "document_";
+        let fileName = "";
         if (file["type"].split("/")[0] === "image") {
-          photoIndex++;
-          fileName += `photo${photoIndex}`;
+          fileName += `photo_${file.name}`;
         } else {
-          pdfIndex++;
-          fileName += `pdf${pdfIndex}`;
+          fileName += `pdf${file.name}`;
         }
         formData.append("documents", file, fileName);
       }
@@ -61,18 +57,18 @@
         let otherDocumentIndex = 0;
 
         for (let file of Array.from(form.otherDocuments.realFiles)) {
-          let fileName = `otherDocument_${file.name}`;
+          let fileName = `other_${file.name}`;
           formData.append("documents", file, fileName);
         }
       }
       const newProduct = await MerchantService.addProduct(formData);
       toast.create(`Product created successfully`, 3000);
       dispatch("submit", newProduct);
+      close();
     } catch (error) {
       console.log(error);
     }
     modal.toggleLoading();
-    close();
   }
   function close() {
     modal.close();
