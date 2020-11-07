@@ -19,7 +19,7 @@
     helpMessage = null,
     showPreview = true,
     displayFileName = true,
-    uploadLabel = "fileupload.chooseFile",
+    uploadLabel = "fileUpload.chooseFile",
     multiple = false,
     pattern = null,
     minlength = 0,

@@ -59,6 +59,7 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
             },
             register: {
                 register: "Înregistrare",
+                accountFailRegister: "Înregistrarea a eșuat",
                 email: {
                     label: "Email",
                     error: {
@@ -240,6 +241,93 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                         isRequired: "Adresa este necesară",
                     }
                 }
+            },
+            verifyAccount: {
+                verifyAccount: "Activare cont",
+                verifyAccountFirst: "Trebuie să îți activezi contul înainte să continui",
+                submit: "Trimite",
+                cancel: "Anulează",
+                accountActivated: "Contul tău a fost activat",
+                accountFailActivate: "Activarea contului tău a eșuat",
+                userInformation: "Informații cont",
+                bankInformation: "Informații bancă",
+                identityCard: "Actul de identitate",
+                firstName: {
+                    label: "Prenume",
+                    error: {
+                        isRequired: "Prenumele este necesar",
+                    }
+                },
+                lastName: {
+                    label: "Nume",
+                    error: {
+                        isRequired: "Numele este necesar",
+                    }
+                },
+                phone: {
+                    label: "Telefon",
+                    error: {
+                        isRequired: "Telefonul este necesar",
+                    }
+                },
+                address: {
+                    label: "Adresă",
+                    error: {
+                        isRequired: "Adresa este necesară",
+                    }
+                },
+                photo: {
+                    label: "Poză",
+                    error: {
+                        isRequired: "Poza este necesară",
+                    }
+                },
+                bank: {
+                    label: "Banca",
+                    error: {
+                        isRequired: "Banca este necesară",
+                    }
+                },
+                iban: {
+                    label: "IBAN",
+                    error: {
+                        isInvalid: "IBAN-ul este invalid",
+                        isRequired: "IBAN-ul este necesar",
+                    }
+                },
+                cnp: {
+                    label: "CNP",
+                    error: {
+                        isInvalid: "CNP-ul este invalid",
+                        isRequired: "CNP-ul este necesar",
+                    }
+                },
+                series: {
+                    label: "Serie",
+                    error: {
+                        isInvalid: "Seria este invalidă",
+                        isRequired: "Seria este necesară",
+                    }
+                },
+                number: {
+                    label: "Număr",
+                    error: {
+                        isInvalid: "Numărul este invalid",
+                        isRequired: "Numărul este necesar",
+                    }
+                },
+                identityIssuer: {
+                    label: "Emitent",
+                    error: {
+                        isRequired: "Emitentul este necesar",
+                    }
+                },
+                expiryDate: {
+                    label: "Valabilitate",
+                    error: {
+                        isRequired: "Valabilitatea este necesară",
+                    }
+                },
             }
         },
     });

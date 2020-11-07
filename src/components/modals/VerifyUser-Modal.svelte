@@ -6,6 +6,7 @@
   import VerifyUserForm from "../../components/forms/VerifyUser-Form.svelte";
   import Modal from "../../components/common/Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";
+    import { _ } from "../../i18n";
   let modal,
     form,
     toast,
@@ -48,10 +49,10 @@
       );
       formData.append("idPhoto", form.photo.files[0], form.photo.files[0].name);
       current_user.set(await UserService.verify(formData));
-      toast.create(`Account verified successfully`, 3000);
+      toast.create($_("verifyAccount.accountActivated"), 3000);
       close();
     } catch (error) {
-      toast.create(`Failed to verify account`, 3000, "#e46464");
+      toast.create($_("verifyAccount.accountFailActivate"), 3000, "#e46464");
       console.log(error);
     }
     modal.toggleLoading();
@@ -78,7 +79,7 @@
 
 <Modal bind:this={modal}>
   <div slot="content" class="form">
-    <p>We need you to verify your account first</p>
+    <p>{$_("verifyAccount.verifyAccountFirst")}</p>
     <VerifyUserForm on:mount={e => (form = e.detail)} on:input={isValid} />
   </div>
   <div slot="actions">
@@ -87,9 +88,9 @@
       disabled={!canVerify}
       on:click={submit}
       type="button">
-      Submit
+      {$_("verifyAccount.submit")}
     </button>
-    <button on:click={close} type="button">Cancel</button>
+    <button on:click={close} type="button">{$_("verifyAccount.cancel")}</button>
   </div>
 </Modal>
 <Toast bind:this={toast} />

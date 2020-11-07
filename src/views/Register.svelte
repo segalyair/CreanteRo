@@ -37,7 +37,7 @@
         Utils.redirect("/list");
       }
     } catch (error) {
-      toast.create(`Failed to register user`, 3000, "#e46464");
+      toast.create($_('register.accountFailRegister'), 3000, "#e46464");
       console.log(error);
     }
     isLoading = false;

@@ -8,7 +8,7 @@
     label,
     showPreview = true,
     displayFileName = true,
-    uploadLabel = "fileupload.chooseFile",
+    uploadLabel = "fileUpload.chooseFile",
     multiple = false,
     type = "img";
   const dispatch = createEventDispatcher();

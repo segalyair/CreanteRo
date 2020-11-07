@@ -31,7 +31,7 @@
   }
   function openVerifyUserModal(item) {
     verifyUserModal.open({
-      title: `Verify Account`
+      title: $_('verifyAccount.verifyAccount')
     });
   }
   function openIssueBuyModal(item) {
