@@ -69,6 +69,7 @@
       id={'documents'}
       name={'documents'}
       label="sellProduct.documents"
+      accept={'image/*,application/pdf'}
       required={true}
       multiple={true}
       displayFileName={false}
@@ -109,6 +110,7 @@
       id={'otherDocuments'}
       name={'otherDocuments'}
       label="sellProduct.otherDocuments"
+      accept={null}
       required={false}
       multiple={true}
       displayFileName={false}

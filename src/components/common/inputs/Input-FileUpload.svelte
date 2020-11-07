@@ -6,6 +6,7 @@
     name,
     required,
     label,
+    accept,
     showPreview = true,
     displayFileName = true,
     uploadLabel = "fileUpload.chooseFile",
@@ -157,8 +158,8 @@
     bind:this={input}
     {name}
     {required}
+    {accept}
     type="file"
-    accept="image/*"
     on:change={event => add(event)} />
   {#if showPreview}
     <div class="preview-container" bind:this={previewContainer} />

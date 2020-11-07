@@ -17,6 +17,7 @@
     label = "Default Label",
     required,
     helpMessage = null,
+    accept,
     showPreview = true,
     displayFileName = true,
     uploadLabel = "fileUpload.chooseFile",
@@ -132,6 +133,7 @@
       {name}
       {required}
       {label}
+      {accept}
       {showPreview}
       {displayFileName}
       {uploadLabel}

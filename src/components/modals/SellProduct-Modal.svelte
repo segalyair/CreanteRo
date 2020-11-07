@@ -49,7 +49,7 @@
         if (file["type"].split("/")[0] === "image") {
           fileName += `photo_${file.name}`;
         } else {
-          fileName += `pdf${file.name}`;
+          fileName += `pdf_${file.name}`;
         }
         formData.append("documents", file, fileName);
       }

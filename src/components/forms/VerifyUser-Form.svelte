@@ -57,6 +57,7 @@
       id={'photo'}
       name={'photo'}
       label="verifyAccount.photo"
+      accept={'image/*'}
       displayFileName={false}
       multiple={false}
       required={true} />
