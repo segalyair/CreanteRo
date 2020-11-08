@@ -4,6 +4,7 @@
   import { createEventDispatcher } from "svelte";
   import { current_user } from "../../store.js";
   import EntityTable from "../../components/tables/EntityTable.svelte";
+  import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   let modal,
     settings,
@@ -21,21 +22,25 @@
   }
   async function submit() {
     if (!submitEnabled) return;
-    const buyParams = {
-      buyerId: $current_user.id,
-      buyerRepId: selectedRep ? selectedRep.id : null,
-      productId: settings.product.id
-    };
-    const result = await MarketService.issueBuy(buyParams),
-      blob = await result.blob(),
-      url = window.URL.createObjectURL(blob),
-      link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `${settings.product.title}.docx`);
-    document.body.appendChild(link);
-    link.click();
-    dispatch("submit");
-    close();
+    try {
+      const buyParams = {
+        buyerId: $current_user.id,
+        buyerRepId: selectedRep ? selectedRep.id : null,
+        productId: settings.product.id
+      };
+      const result = await MarketService.issueBuy(buyParams),
+        blob = await result.blob(),
+        url = window.URL.createObjectURL(blob),
+        link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `${settings.product.title}.docx`);
+      document.body.appendChild(link);
+      link.click();
+      dispatch("submit");
+      close();
+    } catch (err) {
+      console.log(err);
+    }
   }
 </script>
 
@@ -56,8 +61,10 @@
       disabled={!submitEnabled}
       on:click={submit}
       type="button">
-      Buy
+      {$_('issueBuy.buy')}
     </button>
-    <button on:click={() => close(false)} type="button">Cancel</button>
+    <button on:click={() => close(false)} type="button">
+      {$_('issueBuy.cancel')}
+    </button>
   </div>
 </Modal>

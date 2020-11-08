@@ -130,6 +130,7 @@
     justify-content: flex-start;
   }
   .actions button {
+    min-width: 100px;
     width: 7vw;
   }
   table {
@@ -327,7 +328,7 @@
   </div>
   <div slot="actions">
     <button on:click={deleteEntity} type="button">{$_('entity.yes')}</button>
-    <button on:click={(e) => toggleDeleteModal(e, null)} type="button">
+    <button on:click={e => toggleDeleteModal(e, null)} type="button">
       {$_('entity.no')}
     </button>
   </div>

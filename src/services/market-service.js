@@ -23,4 +23,14 @@ export class MarketService extends BaseService {
             throw error
         }
     }
+    static async getProductFile(id, name) {
+        try {
+            return await this.sendFetch(`${process.env.API_URL}/market/product-file?id=${id}&name=${name}`, {
+                method: 'GET'
+            }, true)
+        }
+        catch (error) {
+            throw error
+        }
+    }
 }

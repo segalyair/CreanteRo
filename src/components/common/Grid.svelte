@@ -26,8 +26,17 @@
     hasLoadingError = false,
     skip = 0;
   const take = 6;
-  function openImgModal() {
-    imgModal.open({ title: "" });
+  async function openImgModal(id, photo) {
+    try {
+      let img = await MarketService.getProductFile(id, photo);
+      if (img && img.ok === false) {
+        throw Error("img not ok");
+      }
+    } catch (err) {
+      toast.create($_("list.itemImageFailOpen"), 3000, "#e46464");
+      imgModal.open({ title: "" });
+      console.log(err);
+    }
   }
   function openVerifyUserModal(item) {
     verifyUserModal.open({
@@ -57,7 +66,7 @@
   async function dismissDeleteModal() {
     deleteModal.close();
   }
-  function downloadPDF() {}
+  function downloadPDF(id, pdf) {}
   function selectItem(item) {
     if ($selected_product && $selected_product.id === item.id) return;
     selected_product.set(item);
@@ -86,9 +95,6 @@
   }
   async function issueBuyModalSubmit() {
     loadItems();
-  }
-  async function getItemImage(item) {
-    return await FirebaseAPI.downloadFile("sellerProducts", item.id);
   }
   async function loadMore() {
     if (canLoadMore) {
@@ -161,6 +167,27 @@
   }
   .item-secondary-content {
     margin-top: 15px;
+    display: flex;
+    width: 100%;
+    background-color: white;
+    border-radius: 6px;
+    border: 1px solid lightgray;
+    padding: 10px;
+  }
+  .url {
+    cursor: pointer;
+    color: #1b6dc1;
+    flex-shrink: 0;
+    margin: 2px 5px;
+    width: fit-content;
+  }
+  .url:hover {
+    text-decoration: underline;
+    color: #1b6ec1a9;
+  }
+  .docs-span {
+    margin-top: 2px;
+    margin-right: 10px;
   }
   .item-secondary-content img {
     object-fit: cover;
@@ -175,16 +202,23 @@
     display: flex;
     flex-wrap: wrap;
   }
-  .thumbnails {
+  .item-secondary-column {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
-    margin-top: 15px;
+    flex-direction: column;
+    max-height: 110px;
+  }
+  .item-secondary-column.files {
+    width: 100%;
+    overflow-x: auto;
   }
   .item-main-content {
     width: 100%;
     display: flex;
     justify-content: space-between;
+  }
+  .item-main-content button {
+    min-width: 70px;
   }
   .item-content {
     width: 100%;
@@ -247,58 +281,65 @@
     {#if items && items.length > 0}
       {#each items as item}
         <div
-          on:click={selectItem(item)}
+          on:click={selectItem(item.product)}
           transition:fade|local
           class="item no-scroll"
-          class:selected={$selected_product && $selected_product.id === item.id}>
+          class:selected={$selected_product && $selected_product.id === item.product.id}>
           <div class="item-main-content">
             <div class="item-content">
               <div class="item-column">
-                <span>{item.title}</span>
+                <span>{item.product.title}</span>
               </div>
               <div class="item-column">
                 <span class="item-column-header">Suma datorata</span>
-                <span>{item.bookValueAmount} RON</span>
+                <span>{item.product.bookValueAmount} RON</span>
               </div>
               <div class="item-column">
                 <span class="item-column-header">Pret</span>
-                <span>{item.priceAmount} RON</span>
+                <span>{item.product.priceAmount} RON</span>
               </div>
               <div class="item-column">
                 <span class="item-column-header">Profit</span>
-                <span>{item.bookValueAmount - item.priceAmount} RON</span>
+                <span>
+                  {item.product.bookValueAmount - item.product.priceAmount} RON
+                </span>
               </div>
             </div>
-            {#if $current_user && $current_user.id === item.merchantId}
+            {#if $current_user && $current_user.id === item.product.merchantId}
               <button
                 class="item-action"
-                on:click={openDeleteModal(item)}
+                on:click={openDeleteModal(item.product)}
                 type="button">
                 {$_('list.remove')}
               </button>
             {:else}
               <button
                 class="primary item-action"
-                on:click={openIssueBuyModal(item)}
+                on:click={openIssueBuyModal(item.product)}
                 type="button">
                 {$_('list.buy')}
               </button>
             {/if}
           </div>
-          {#if $selected_product && item && $selected_product.id === item.id}
-            <div class="item-secondary-content" transition:slide>
-              <div class="thumbnails">
-                {#each [1, 2, 3] as pdf}
-                  <img
-                    on:click={downloadPDF}
-                    src="PDF_file_icon.png"
-                    alt="pdf" />
+          {#if $selected_product && item && $selected_product.id === item.product.id}
+            <div class="item-secondary-content">
+              <div class="item-secondary-column">
+                <span class="docs-span">Acte:</span>
+              </div>
+              <div class="item-secondary-column files">
+                {#each item.pdfs as pdf}
+                  <span
+                    class="url"
+                    on:click={e => downloadPDF(item.product.id, pdf)}>
+                    {pdf}
+                  </span>
                 {/each}
-                {#each [1, 2, 3, 4, 5, 6] as img}
-                  <img
-                    on:click={openImgModal}
-                    src="logo200.png"
-                    alt="thumbnail" />
+                {#each item.photos as photo}
+                  <span
+                    class="url"
+                    on:click={e => openImgModal(item.product.id, photo)}>
+                    {photo}
+                  </span>
                 {/each}
               </div>
             </div>

@@ -92,11 +92,14 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 no: "Nu",
                 itemDeleted: "Creanța a fost ștearsă",
                 itemFailDelete: "Ștergerea creanței a eșuat",
+                itemImageFailOpen: "Încărcarea imaginii a eșuat"
             },
             sellProduct: {
                 addNewItem: "Creează o creanță",
                 submit: "Trimite",
                 cancel: "Anulează",
+                productCreated: "Creanța a fost creată",
+                productFailCreate: "Crearea creanței a eșuat",
                 title: {
                     label: "Titlu",
                     error: {
@@ -328,6 +331,10 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                         isRequired: "Valabilitatea este necesară",
                     }
                 },
+            },
+            issueBuy: {
+                buy: "Cumpără",
+                cancel: "Anulează",
             }
         },
     });

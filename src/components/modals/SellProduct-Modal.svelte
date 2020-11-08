@@ -62,10 +62,11 @@
         }
       }
       const newProduct = await MerchantService.addProduct(formData);
-      toast.create(`Product created successfully`, 3000);
+      toast.create($_('sellProduct.productCreated'), 3000);
       dispatch("submit", newProduct);
       close();
     } catch (error) {
+      toast.create($_('sellProduct.productFailCreate'), 3000);
       console.log(error);
     }
     modal.toggleLoading();

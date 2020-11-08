@@ -20,6 +20,8 @@
   let preparedFile = null;
   function validate() {
     if (input.validity.valueMissing) {
+      input["realFiles"] = [];
+      files = [];
       input.setCustomValidity(`${$_(label + ".error.isRequired")}`);
       input.checkValidity();
       dispatch("error", `${$_(label + ".error.isRequired")}`);
