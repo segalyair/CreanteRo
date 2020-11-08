@@ -16,7 +16,8 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 email: "Email",
                 password: "Password",
                 register: "Register",
-                login: "Login"
+                login: "Login",
+                loginFailed: ""
             }
         },
         ro: {
@@ -55,7 +56,8 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                     },
                 },
                 register: "Înregistrare",
-                login: "Autentificare"
+                login: "Autentificare",
+                loginFailed: "Autentificarea a eșuat"
             },
             register: {
                 register: "Înregistrare",
@@ -84,7 +86,7 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
             },
             list: {
                 tryAgain: "Încearcă din nou",
-                addItem: "Creează",
+                addItem: "Adaugă",
                 remove: "Șterge",
                 buy: "Cumpără",
                 areYouSureYouWishToDelete: "Ești sigur că dorești să ștergi",

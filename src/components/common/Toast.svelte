@@ -43,9 +43,9 @@
     margin-left: auto;
     margin-right: auto;
     bottom: 10px;
-    min-width: 150px;
+    min-width: 200px;
     max-width: 300px;
-    min-height: 50px;
+    min-height: 70px;
     padding: 12px;
     background-color: #61b84f;
     border-radius: 4px;
@@ -57,7 +57,7 @@
     transition: opacity 200ms linear;
   }
   .message {
-    font-size: 1em;
+    font-size: 1.1em;
     color: white;
   }
   .icon-container {

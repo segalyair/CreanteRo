@@ -218,7 +218,7 @@
     justify-content: space-between;
   }
   .item-main-content button {
-    min-width: 70px;
+    min-width: 90px;
   }
   .item-content {
     width: 100%;
@@ -350,14 +350,14 @@
       <LoadingSpinner {isLoading} />
     {:else if hasLoadingError}
       <div in:fade|local class="no-items no-scroll loading-error">
-        <span>A aparut o eroare</span>
+        <span>A apărut o eroare</span>
         <button class="primary" on:click={loadItems} type="button">
           {$_('list.tryAgain')}
         </button>
       </div>
     {:else if !isLoading && (!items || items.length === 0)}
       <div transition:fade|local class="no-items no-scroll">
-        <span>In acest moment nu exista o creanta listata</span>
+        <span>În acest moment nu există o creanță listată</span>
       </div>
     {/if}
   </div>

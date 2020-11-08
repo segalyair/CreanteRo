@@ -1,7 +1,10 @@
 <script>
   import TooltipHelp from "../TooltipHelp.svelte";
   import { _ } from "../../../i18n";
-  export let name, label, required, helpMessage;
+  export let name = "defaultName",
+    label = "Default Label",
+    required,
+    helpMessage;
 </script>
 
 <style>

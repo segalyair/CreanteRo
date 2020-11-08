@@ -24,7 +24,7 @@
       current_user.set(await UserService.getById(userCredential.user.uid));
       Utils.redirect("/list");
     } catch (error) {
-      toast.create(`Failed to login`, 3000, "#e46464");
+      toast.create($_("login.loginFailed"), 3000, "#e46464");
       console.log(error);
     }
     isLoading = false;

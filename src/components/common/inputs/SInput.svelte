@@ -17,7 +17,7 @@
     label = "Default Label",
     required,
     helpMessage = null,
-    accept,
+    accept = null,
     showPreview = true,
     displayFileName = true,
     uploadLabel = "fileUpload.chooseFile",

@@ -93,7 +93,6 @@
       helpMessage={'Pretul cu care vrei sa vinzi creanta'} />
     <InputLabel
       required={true}
-      for={'debtor'}
       label={'sellProduct.debtor'}
       helpMessage={'The debtor who owes the debt'} />
     <EntityTable
