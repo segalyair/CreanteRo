@@ -14,6 +14,7 @@
     canLogin = false,
     isLoading = false;
   async function handleLogin() {
+    if (!canLogin) return;
     isLoading = true;
     try {
       const userCredential = await auth.signInWithEmailAndPassword(
@@ -34,6 +35,20 @@
       const emailValid = form.elements.email.value.length > 0;
       const passwordValid = form.elements.password.value.length > 5;
       canLogin = emailValid && passwordValid;
+    });
+    form.email.addEventListener("keydown", e => {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        e.stopPropagation();
+        handleLogin();
+      }
+    });
+    form.password.addEventListener("keydown", e => {
+      if (e.keyCode == 13) {
+        e.preventDefault();
+        e.stopPropagation();
+        handleLogin();
+      }
     });
   });
 </script>
