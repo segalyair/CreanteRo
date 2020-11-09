@@ -3,7 +3,6 @@
   import { fade } from "svelte/transition";
   import { createEventDispatcher } from "svelte";
   import LoadingSpinner from "./LoadingSpinner.svelte";
-  import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   let visible = false,
     isLoading = false,
@@ -93,7 +92,7 @@
           <LoadingSpinner size={100} {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
         {/if}
         <div class="modal-title">
-          <h2>{$_(settings.title)}</h2>
+          <h2>{settings.title}</h2>
           <div class="icon-container" on:click={close}>
             <XIcon size="18" />
           </div>

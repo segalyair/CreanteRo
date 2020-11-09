@@ -29,7 +29,7 @@
       formData.set(
         "postingRaw",
         JSON.stringify({
-          debtorId: debtor.selectedEntity.id,
+          debtorId: debtor.id,
           sellerRepId: null,
           quality: null
         })
@@ -98,7 +98,7 @@
   <div slot="actions">
     <button
       class="primary"
-      disabled={!submitEnabled || !debtor || !debtor.selectedEntity}
+      disabled={!submitEnabled || !debtor}
       on:click={submit}
       type="button">
       {$_('sellProduct.submit')}

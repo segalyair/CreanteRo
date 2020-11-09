@@ -87,7 +87,7 @@
     if (!$current_user.isEmailVerified) {
       openVerifyUserModal();
     } else {
-      addModal.open({ title: `sellProduct.addNewItem` });
+      addModal.open({ title: $_(`sellProduct.addNewItem`) });
     }
   }
   async function addModalSubmit(newItem) {

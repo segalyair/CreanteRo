@@ -3,14 +3,76 @@
   import { slide } from "svelte/transition";
   import EntityTable from "../../components/tables/EntityTable.svelte";
   import SInput from "../../components/common/inputs/SInput.svelte";
+  import SmartDropdown from "../../components/common/SmartDropdown.svelte";
   import InputLabel from "../../components/common/inputs/Input-Label.svelte";
+  import Modal from "../../components/common/Modal.svelte";
+  import EntityModal from "../../components/modals/Entity-Modal.svelte";
+  import Toast from "../../components/common/Toast.svelte";
+  import { RepresentativeService } from "../../services/legalSubject-service.js";
   import { current_user } from "../../store.js";
   import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   let form,
+    toast,
     amountErrors = [],
     debtorTable,
+    deleteModal,
+    entityModal,
+    debtors = [],
+    debtorToDelete = null,
     error = null;
+  async function submitRepresentative() {
+    updateDebtors();
+  }
+  function toggleEntityModal(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const entity = e.detail;
+    let title = entity ? $_("entity.editDebtor") : $_("entity.addDebtor");
+    if (entity && entity.value) {
+      entity.value.type = entity.value.kind.toString();
+      if (entity.value.card) {
+        entity.value.card.expiryDate = entity.value.card.expiryDate.split(
+          "T"
+        )[0];
+      }
+      entityModal.open({ title, entity: entity.value });
+    } else {
+      entityModal.open({ title, entity: null });
+    }
+  }
+  function toggleDeleteModal(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const entity = e.detail;
+    if (entity && entity.value) {
+      debtorToDelete = entity.value;
+      deleteModal.open({
+        title: `${$_("entity.delete")} '${entity.value.name ||
+          entity.value.firstname + " " + entity.value.lastname}'`
+      });
+    } else {
+      deleteModal.close();
+    }
+  }
+  async function deleteEntity() {
+    const errorToastColor = "#e46464";
+    let result = false;
+    deleteModal.toggleLoading();
+    try {
+      result = await RepresentativeService.delete(debtorToDelete.id);
+    } catch (error) {
+      result = false;
+    }
+    toast.create(
+      result ? $_("entity.debtorDeleted") : $_("entity.debtorFailDelete"),
+      3000,
+      result ? null : errorToastColor
+    );
+    deleteModal.toggleLoading();
+    deleteModal.close();
+    updateDebtors();
+  }
   function dispatchDebtorTable(e) {
     error = e.detail.selectedEntity ? null : "Debtor is required";
     dispatch("debtor", e.detail);
@@ -32,7 +94,20 @@
       amountErrors = [];
     }
   }
-  onMount(() => {
+  async function updateDebtors() {
+    const rawDebtors = await RepresentativeService.get(
+      $current_user.id,
+      null,
+      null
+    );
+    debtors = rawDebtors.map(d => ({
+      id: d.id,
+      value: d,
+      label: d.kind === 0 ? `${d.firstname} ${d.lastname}` : d.name
+    }));
+  }
+  onMount(async () => {
+    updateDebtors();
     form.addEventListener("input", () => {
       dispatch("input", form.checkValidity());
     });
@@ -95,15 +170,12 @@
       required={true}
       label={'sellProduct.debtor'}
       helpMessage={'The debtor who owes the debt'} />
-    <EntityTable
-      bind:this={debtorTable}
-      selectable={true}
-      on:select={dispatchDebtorTable} />
-    {#if error}
-      <div transition:slide>
-        <p class="error">{error}</p>
-      </div>
-    {/if}
+    <SmartDropdown
+      items={debtors}
+      on:add={e => toggleEntityModal(e)}
+      on:select={e => dispatch('debtor', e.detail ? e.detail.value : null)}
+      on:edit={e => toggleEntityModal(e)}
+      on:delete={e => toggleDeleteModal(e)} />
     <SInput
       type={'file'}
       id={'otherDocuments'}
@@ -123,3 +195,16 @@
       required={false} />
   </form>
 </div>
+<Modal bind:this={deleteModal}>
+  <div slot="content">
+    {$_('entity.areYouSureYouWishToDelete')} '{debtorToDelete.name || debtorToDelete.firstname + ' ' + debtorToDelete.lastname}'?
+  </div>
+  <div slot="actions">
+    <button on:click={deleteEntity} type="button">{$_('entity.yes')}</button>
+    <button on:click={e => toggleDeleteModal(e)} type="button">
+      {$_('entity.no')}
+    </button>
+  </div>
+</Modal>
+<EntityModal bind:this={entityModal} on:submit={submitRepresentative} />
+<Toast bind:this={toast} />
