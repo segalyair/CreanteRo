@@ -1,8 +1,10 @@
 <script>
   import { Trash2Icon, Edit2Icon, PlusCircleIcon } from "svelte-feather-icons";
-  import { onMount, createEventDispatcher } from "svelte";
+  import { onMount, onDestroy, createEventDispatcher } from "svelte";
+  // import { _ } from "../../../i18n";
   const dispatch = createEventDispatcher();
-  export let items = [];
+  export let items = [],
+    required;
   $: {
     selected = null;
     dispatch("select", null);
@@ -14,11 +16,26 @@
           );
   }
   let search,
+    open = false,
     filteredItems = [],
     selected;
-  function select(item) {
+  function select(e, item) {
+    e.preventDefault();
+    e.stopPropagation();
     selected = item;
     dispatch("select", item);
+    search.value = item.label;
+    open = false;
+  }
+  function edit(e, item) {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch("edit", item);
+  }
+  function remove(e, item) {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch("delete", item);
   }
   function debounce(func, wait) {
     let timeout;
@@ -31,6 +48,10 @@
       timeout = setTimeout(later, wait);
     };
   }
+  function mouseClick(e) {
+    if (e.target === search) return;
+    open = false;
+  }
   onMount(() => {
     filteredItems = items;
     search.addEventListener(
@@ -42,8 +63,23 @@
             : items.filter(i =>
                 i.label.toLowerCase().includes(search.value.toLowerCase())
               );
+        // if (required && !search.validity.valueMissing && !selected) {
+        //   input.setCustomValidity(`${$_(label + ".error.doesNotExist")}`);
+        //   dispatch("error", `${$_(label + ".error.doesNotExist")}`);
+        // } else {
+        //   input.setCustomValidity("");
+        //   dispatch("valid", input.value);
+        // }
       }, 150)
     );
+    search.addEventListener("focus", () => {
+      open = true;
+      search.value = "";
+    });
+    document.addEventListener("click", mouseClick);
+  });
+  onDestroy(() => {
+    document.removeEventListener("click", mouseClick);
   });
 </script>
 
@@ -52,15 +88,22 @@
     display: flex;
     flex-direction: column;
     width: 300px;
+    position: relative;
   }
-  .search {
+  input {
     flex-grow: 1;
     margin: 0;
+  }
+  input.error {
+    border-color: red;
+    background-color: rgba(255, 0, 0, 0.025);
   }
   .debtor-container {
     height: 250px;
     overflow-y: auto;
-    background-color: #f4f4f4;
+    width: inherit;
+    position: absolute;
+    top: 40px;
   }
   .item {
     display: flex;
@@ -84,6 +127,7 @@
   }
   .header {
     display: flex;
+    height: 40px;
   }
   .header button {
     background-color: #1b6dc1;
@@ -103,10 +147,11 @@
 <div class="container">
   <div class="header">
     <input
-      class="search"
+      class={$$props.class}
       bind:this={search}
       type="text"
-      placeholder="Caută..." />
+      placeholder="Caută..."
+      {required} />
     <button type="button" on:click={() => dispatch('add')}>
       <div class="icon-container">
         <PlusCircleIcon size="22" />
@@ -114,22 +159,24 @@
     </button>
   </div>
 
-  <div class="debtor-container">
-    {#each filteredItems as item}
-      <div
-        class="item"
-        class:selected={selected && item.id === selected.id}
-        on:click={() => select(item)}>
-        <span>{item.label}</span>
-        <div class="actions">
-          <div class="icon-container" on:click={() => dispatch('edit', item)}>
-            <Edit2Icon size="22" />
-          </div>
-          <div class="icon-container" on:click={() => dispatch('delete', item)}>
-            <Trash2Icon size="22" />
+  {#if open}
+    <div class="debtor-container">
+      {#each filteredItems as item}
+        <div
+          class="item"
+          class:selected={selected && item.id === selected.id}
+          on:click={e => select(e, item)}>
+          <span>{item.label}</span>
+          <div class="actions">
+            <div class="icon-container" on:click={e => edit(e, item)}>
+              <Edit2Icon size="22" />
+            </div>
+            <div class="icon-container" on:click={e => remove(e, item)}>
+              <Trash2Icon size="22" />
+            </div>
           </div>
         </div>
-      </div>
-    {/each}
-  </div>
+      {/each}
+    </div>
+  {/if}
 </div>

@@ -62,14 +62,15 @@
         }
       }
       const newProduct = await MerchantService.addProduct(formData);
-      toast.create($_('sellProduct.productCreated'), 3000);
+      toast.create($_("sellProduct.productCreated"), 3000);
       dispatch("submit", newProduct);
+      modal.toggleLoading();
       close();
     } catch (error) {
-      toast.create($_('sellProduct.productFailCreate'), 3000);
+      toast.create($_("sellProduct.productFailCreate"), 3000);
       console.log(error);
+      modal.toggleLoading();
     }
-    modal.toggleLoading();
   }
   function close() {
     modal.close();
@@ -83,7 +84,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
-    width: 65vw;
+    align-items: center;
+    width: 30vw;
     padding: 0.5em;
   }
 </style>
