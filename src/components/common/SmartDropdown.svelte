@@ -1,13 +1,14 @@
 <script>
   import { Trash2Icon, Edit2Icon, PlusCircleIcon } from "svelte-feather-icons";
   import { onMount, onDestroy, createEventDispatcher } from "svelte";
-  // import { _ } from "../../../i18n";
+  import { slide } from "svelte/transition";
+  import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   export let items = [],
-    required;
+    label = "defaultLabel",
+    required = false;
+  let dirty = false;
   $: {
-    selected = null;
-    dispatch("select", null);
     filteredItems =
       !search || !search.value || search.value.length === 0
         ? items
@@ -23,7 +24,7 @@
     e.preventDefault();
     e.stopPropagation();
     selected = item;
-    dispatch("select", item);
+    dispatch("select", selected);
     search.value = item.label;
     open = false;
   }
@@ -50,7 +51,12 @@
   }
   function mouseClick(e) {
     if (e.target === search) return;
-    open = false;
+    if (open) {
+      dirty = true;
+      selected = null;
+      dispatch("select", selected);
+      open = false;
+    }
   }
   onMount(() => {
     filteredItems = items;
@@ -63,13 +69,6 @@
             : items.filter(i =>
                 i.label.toLowerCase().includes(search.value.toLowerCase())
               );
-        // if (required && !search.validity.valueMissing && !selected) {
-        //   input.setCustomValidity(`${$_(label + ".error.doesNotExist")}`);
-        //   dispatch("error", `${$_(label + ".error.doesNotExist")}`);
-        // } else {
-        //   input.setCustomValidity("");
-        //   dispatch("valid", input.value);
-        // }
       }, 150)
     );
     search.addEventListener("focus", () => {
@@ -97,6 +96,10 @@
   input.error {
     border-color: red;
     background-color: rgba(255, 0, 0, 0.025);
+  }
+  .error {
+    color: red;
+    font-size: 0.8em;
   }
   .debtor-container {
     height: 250px;
@@ -147,18 +150,21 @@
 <div class="container">
   <div class="header">
     <input
-      class={$$props.class}
+      class={dirty ? $$props.class : ''}
       bind:this={search}
       type="text"
-      placeholder="Caută..."
-      {required} />
+      placeholder="Caută..." />
     <button type="button" on:click={() => dispatch('add')}>
       <div class="icon-container">
         <PlusCircleIcon size="22" />
       </div>
     </button>
   </div>
-
+  {#if !selected && dirty && required}
+    <div transition:slide>
+      <p class="error">{$_(`${label}.error.isRequired`)}</p>
+    </div>
+  {/if}
   {#if open}
     <div class="debtor-container">
       {#each filteredItems as item}

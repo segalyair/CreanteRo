@@ -128,7 +128,10 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                     }
                 },
                 debtor: {
-                    label: "Datornic"
+                    label: "Datornic",
+                    error: {
+                        isRequired: "Datornicul este necesar"
+                    }
                 },
                 otherDocuments: {
                     label: "Alte documente"

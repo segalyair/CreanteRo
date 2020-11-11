@@ -31,6 +31,7 @@
   }
   .message-container {
     position: absolute;
+    z-index: 10;
     width: 250px;
     top: 0;
     left: 40px;

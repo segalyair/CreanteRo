@@ -18,6 +18,7 @@
     debtorTable,
     deleteModal,
     entityModal,
+    debtor = null,
     debtors = [],
     debtorToDelete = null,
     error = null;
@@ -106,6 +107,11 @@
       label: d.kind === 0 ? `${d.firstname} ${d.lastname}` : d.name
     }));
   }
+  function select(e) {
+    debtor = e.detail ? e.detail.value : null;
+    dispatch("debtor", debtor);
+    console.log(debtor);
+  }
   onMount(async () => {
     updateDebtors();
     form.addEventListener("input", () => {
@@ -123,10 +129,6 @@
 <style>
   .container {
     flex-grow: 1;
-  }
-  .error {
-    color: red;
-    font-size: 0.8em;
   }
 </style>
 
@@ -172,8 +174,11 @@
       helpMessage={'The debtor who owes the debt'} />
     <SmartDropdown
       items={debtors}
+      label={'sellProduct.debtor'}
+      required={true}
+      class={debtor ? '' : 'error'}
       on:add={e => toggleEntityModal(e)}
-      on:select={e => dispatch('debtor', e.detail ? e.detail.value : null)}
+      on:select={e => select(e)}
       on:edit={e => toggleEntityModal(e)}
       on:delete={e => toggleDeleteModal(e)} />
     <SInput
