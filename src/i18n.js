@@ -94,7 +94,8 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 no: "Nu",
                 itemDeleted: "Creanța a fost ștearsă",
                 itemFailDelete: "Ștergerea creanței a eșuat",
-                itemImageFailOpen: "Încărcarea imaginii a eșuat"
+                itemImageFailOpen: "Încărcarea imaginii a eșuat",
+                pdfFailDownload: "Descărcarea PDF-ului a eșuat" 
             },
             sellProduct: {
                 addNewItem: "Creează o creanță",

@@ -70,7 +70,7 @@
     margin-left: 5px;
   }
   .content-slot {
-    max-height: 70vh;
+    max-height: 90vh;
     overflow-y: auto;
   }
   .actions-slot {
@@ -89,7 +89,10 @@
       on:mousedown={close}>
       <div class="modal" on:mousedown|stopPropagation>
         {#if isLoading}
-          <LoadingSpinner size={100} {isLoading} backgroundColor={'rgba(0, 0, 0, 0.05)'} />
+          <LoadingSpinner
+            size={100}
+            {isLoading}
+            backgroundColor={'rgba(0, 0, 0, 0.05)'} />
         {/if}
         <div class="modal-title">
           <h2>{settings.title}</h2>
@@ -105,5 +108,8 @@
         </div>
       </div>
     </div>
+  </div>
+  <div transition:fade={{ duration: 200 }}>
+    <slot name="background" />
   </div>
 {/if}

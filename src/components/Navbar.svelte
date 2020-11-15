@@ -136,9 +136,9 @@
     <div class="fill-gap" />
     {#if currentUser && !currentUser.isAnonymous}
       <div class="signout-container">
-        <div on:click={e => routeClick('/settings')} class="icon-container">
+        <!-- <div on:click={e => routeClick('/settings')} class="icon-container">
           <UserIcon size="50" />
-        </div>
+        </div> -->
         <div class="route signout" on:click={signOut}>
           <a href="javascript:void(0)">{$_('navbar.signout')}</a>
         </div>

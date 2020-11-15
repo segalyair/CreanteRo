@@ -4,6 +4,7 @@
   import { createEventDispatcher } from "svelte";
   import { current_user } from "../../store.js";
   import EntityTable from "../../components/tables/EntityTable.svelte";
+  import { Utils } from "../../utils.js";
   import { _ } from "../../i18n";
   const dispatch = createEventDispatcher();
   let modal,
@@ -28,14 +29,8 @@
         buyerRepId: selectedRep ? selectedRep.id : null,
         productId: settings.product.id
       };
-      const result = await MarketService.issueBuy(buyParams),
-        blob = await result.blob(),
-        url = window.URL.createObjectURL(blob),
-        link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `${settings.product.title}.docx`);
-      document.body.appendChild(link);
-      link.click();
+      const result = await MarketService.issueBuy(buyParams);
+      await Utils.download(result, `${settings.product.title}.docx`);
       dispatch("submit");
       close();
     } catch (err) {

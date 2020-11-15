@@ -36,4 +36,13 @@ export class Utils {
     }
     return toString ? JSON.stringify(obj) : obj;
   }
+  static async download(result, name) {
+    let blob = await result.blob(),
+      url = window.URL.createObjectURL(blob),
+      link = document.createElement("a");
+    link.href = url;
+    link.download = name;
+    document.body.appendChild(link);
+    link.click();
+  }
 }

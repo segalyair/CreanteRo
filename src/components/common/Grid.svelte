@@ -18,6 +18,7 @@
     deleteModal,
     verifyUserModal,
     imgModal,
+    imgIndex = 0,
     buyModal,
     toast,
     itemToDelete,
@@ -26,12 +27,43 @@
     hasLoadingError = false,
     skip = 0;
   const take = 6;
-  async function openImgModal(id, photo) {
-    try {
-      let img = await MarketService.getProductFile(id, photo);
+  async function setObjectUrl(thumbnails) {
+    if (!thumbnails[imgIndex].objectUrl) {
+      let img = await MarketService.getProductFile(
+        $selected_product.product.id,
+        thumbnails[imgIndex].name
+      );
       if (img && img.ok === false) {
         throw Error("img not ok");
       }
+      thumbnails[imgIndex].objectUrl = URL.createObjectURL(await img.blob());
+    }
+  }
+  async function changeImg(i) {
+    const newImgIndex = imgIndex + i;
+    const thumbnails = $selected_product.thumbnails;
+    if (newImgIndex >= 0 && newImgIndex < thumbnails.length) {
+      imgIndex = newImgIndex;
+      await setObjectUrl(thumbnails);
+      imgModal.changeSettings({
+        title: "",
+        src: thumbnails[imgIndex].objectUrl,
+        current: imgIndex,
+        length: thumbnails.length
+      });
+    }
+  }
+  async function openImgModal(id, photo, index) {
+    try {
+      imgIndex = index;
+      const thumbnails = $selected_product.thumbnails;
+      await setObjectUrl(thumbnails);
+      imgModal.open({
+        title: "",
+        src: thumbnails[index].objectUrl,
+        current: imgIndex,
+        length: thumbnails.length
+      });
     } catch (err) {
       toast.create($_("list.itemImageFailOpen"), 3000, "#e46464");
       imgModal.open({ title: "" });
@@ -66,9 +98,21 @@
   async function dismissDeleteModal() {
     deleteModal.close();
   }
-  function downloadPDF(id, pdf) {}
+  async function downloadPDF(id, pdf) {
+    try {
+      let pdfResult = await MarketService.getProductFile(id, pdf);
+      if (pdfResult && pdfResult.ok === false) {
+        throw Error("pdf not ok");
+      }
+      await Utils.download(pdfResult, pdf);
+    } catch (err) {
+      toast.create($_("list.pdfFailDownload"), 3000, "#e46464");
+      imgModal.open({ title: "" });
+      console.log(err);
+    }
+  }
   function selectItem(item) {
-    if ($selected_product && $selected_product.id === item.id) return;
+    if ($selected_product && $selected_product.product.id === item.id) return;
     selected_product.set(item);
   }
   async function deleteItem() {
@@ -205,7 +249,7 @@
   .item-secondary-column {
     display: flex;
     flex-wrap: wrap;
-    flex-direction: column;
+    /* flex-direction: column; */
     max-height: 110px;
   }
   .item-secondary-column.files {
@@ -281,7 +325,7 @@
     {#if items && items.length > 0}
       {#each items as item}
         <div
-          on:click={selectItem(item.product)}
+          on:click={selectItem(item)}
           transition:fade|local
           class="item no-scroll"
           class:selected={$selected_product && $selected_product.id === item.product.id}>
@@ -321,25 +365,20 @@
               </button>
             {/if}
           </div>
-          {#if $selected_product && item && $selected_product.id === item.product.id}
+          {#if $selected_product && item && $selected_product.product.id === item.product.id}
             <div class="item-secondary-content">
-              <div class="item-secondary-column">
-                <span class="docs-span">Acte:</span>
-              </div>
               <div class="item-secondary-column files">
-                {#each item.pdfs as pdf}
-                  <span
-                    class="url"
-                    on:click={e => downloadPDF(item.product.id, pdf)}>
-                    {pdf}
-                  </span>
+                {#each item.pdfNames as pdf}
+                  <img
+                    src="./PDF_file_icon.png"
+                    alt={pdf}
+                    on:click={e => downloadPDF(item.product.id, pdf)} />
                 {/each}
-                {#each item.photos as photo}
-                  <span
-                    class="url"
-                    on:click={e => openImgModal(item.product.id, photo)}>
-                    {photo}
-                  </span>
+                {#each item.thumbnails as photo, i}
+                  <img
+                    src={`data:image/png;base64,${photo.base64Thumbnail}`}
+                    alt={photo.name}
+                    on:click={e => openImgModal(item.product.id, photo.name, i)} />
                 {/each}
               </div>
             </div>
@@ -372,7 +411,7 @@
 <VerifyUserModal
   bind:this={verifyUserModal}
   on:submit={event => verifyUserModalSubmit()} />
-<ImgModal bind:this={imgModal} />
+<ImgModal bind:this={imgModal} on:change={e => changeImg(e.detail)} />
 <!-- delete modal -->
 <Modal bind:this={deleteModal}>
   <div slot="content">
