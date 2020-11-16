@@ -45,9 +45,9 @@
 
 <Modal bind:this={modal} on:close={() => close(true)}>
   <div slot="content">
-    <EntityTable
+    <!-- <EntityTable
       selectable={true}
-      on:select={e => (selectedRep = e.detail.selectedEntity)} />
+      on:select={e => (selectedRep = e.detail.selectedEntity)} /> -->
     <!-- Other purchase stuff goes here (conditions, Stripe, signature etc.) -->
   </div>
   <div slot="actions">

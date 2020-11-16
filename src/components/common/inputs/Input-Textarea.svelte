@@ -41,6 +41,7 @@
 <style>
   textarea {
     width: 100%;
+    max-width: 100%;
     height: 150px;
     margin: 0;
   }

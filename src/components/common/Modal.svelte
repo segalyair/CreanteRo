@@ -71,6 +71,7 @@
   }
   .content-slot {
     max-height: 90vh;
+    max-width: 80vw;
     overflow-y: auto;
   }
   .actions-slot {
