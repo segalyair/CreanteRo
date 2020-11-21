@@ -30,7 +30,7 @@
         productId: settings.product.id
       };
       const result = await MarketService.issueBuy(buyParams);
-      await Utils.download(result, `${settings.product.title}.docx`);
+      await Utils.download(result, `${settings.product.title}.pdf`);
       dispatch("submit");
       close();
     } catch (err) {

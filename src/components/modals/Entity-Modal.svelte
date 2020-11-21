@@ -72,7 +72,7 @@
       close();
     } catch (ex) {
       toast.create(
-        `Failed to ${isEdit ? $_("entityModal.debtorFailEdit") : $_("entityModal.debtorFailAdd")} debtor`,
+        `${isEdit ? $_("entityModal.debtorFailEdit") : $_("entityModal.debtorFailAdd")} debtor`,
         3000,
         "#e46464"
       );
