@@ -107,7 +107,18 @@
       await Utils.download(pdfResult, pdf);
     } catch (err) {
       toast.create($_("list.pdfFailDownload"), 3000, "#e46464");
-      imgModal.open({ title: "" });
+      console.log(err);
+    }
+  }
+  async function downloadZIP(id) {
+    try {
+      let otherResult = await MarketService.getProductFile(id, "other.zip");
+      if (otherResult && otherResult.ok === false) {
+        throw Error("pdf not ok");
+      }
+      await Utils.download(otherResult, "other.zip");
+    } catch (err) {
+      toast.create($_("list.pdfFailDownload"), 3000, "#e46464");
       console.log(err);
     }
   }
@@ -380,6 +391,12 @@
                     alt={photo.name}
                     on:click={e => openImgModal(item.product.id, photo.name, i)} />
                 {/each}
+                {#if item.hasOtherDocuments}
+                  <img
+                    src={`./ZIP_file_icon.png}`}
+                    alt={'Alte documente'}
+                    on:click={e => downloadZIP(item.product.id)} />
+                {/if}
               </div>
             </div>
           {/if}
