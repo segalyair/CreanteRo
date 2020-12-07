@@ -1,4 +1,4 @@
-import { firebaseConfig, storage, auth } from "./firebase";
+import { firebaseConfig, auth } from "./firebase";
 import { Utils } from '../utils';
 export class FirebaseAPI {
     static async get(collection, { orderBy, startAt, endAt, limitToFirst, limitToLast }) {
@@ -74,21 +74,21 @@ export class FirebaseAPI {
 
         return await response.json();
     }
-    static async uploadFile(collection, file, name) {
-        return await storage
-            .child(`${collection}/${name}`)
-            .put(file)
-    }
-    static async downloadFile(collection, name) {
-        return await storage
-            .child(`${collection}/${name}`)
-            .getDownloadURL()
-    }
-    static async deleteFile(collection, name) {
-        return await storage
-            .child(`${collection}/${name}`)
-            .delete()
-    }
+    // static async uploadFile(collection, file, name) {
+    //     return await storage
+    //         .child(`${collection}/${name}`)
+    //         .put(file)
+    // }
+    // static async downloadFile(collection, name) {
+    //     return await storage
+    //         .child(`${collection}/${name}`)
+    //         .getDownloadURL()
+    // }
+    // static async deleteFile(collection, name) {
+    //     return await storage
+    //         .child(`${collection}/${name}`)
+    //         .delete()
+    // }
 }
 async function addToken(url) {
     const token = await auth.currentUser.getIdToken()
