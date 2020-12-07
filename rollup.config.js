@@ -5,8 +5,9 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
+// "https://invictus1995.ddns.net:60002"
 const production = !process.env.ROLLUP_WATCH,
-	API_URL = process.env.BUILD === 'test' ? "https://invictus1995.ddns.net:60002" : "http://localhost:8600";
+	API_URL = process.env.BUILD === 'test' ? "https://creanteapi.azurewebsites.net/" : "http://localhost:8600";
 
 export default {
 	input: 'src/main.js',
