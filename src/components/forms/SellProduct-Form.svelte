@@ -110,7 +110,6 @@
   function select(e) {
     debtor = e.detail ? e.detail.value : null;
     dispatch("debtor", debtor);
-    console.log(debtor);
   }
   onMount(async () => {
     updateDebtors();
