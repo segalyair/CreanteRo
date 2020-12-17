@@ -29,7 +29,10 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 signout: 'Ieși din cont'
             },
             routes: {
-                list: "Listă",
+                list: "Listă Creanțe",
+                myaccount: "Contul Meu",
+                contact: "Contact",
+                tutorial: "Tutorial",
                 login: "Autentificare",
                 register: "Înregistrare"
             },
@@ -95,34 +98,38 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 itemDeleted: "Creanța a fost ștearsă",
                 itemFailDelete: "Ștergerea creanței a eșuat",
                 itemImageFailOpen: "Încărcarea imaginii a eșuat",
-                pdfFailDownload: "Descărcarea PDF-ului a eșuat" 
+                pdfFailDownload: "Descărcarea PDF-ului a eșuat"
             },
             sellProduct: {
-                addNewItem: "Creează o creanță",
+                addNewItem: "Vinde o creanță",
                 submit: "Trimite",
                 cancel: "Anulează",
                 productCreated: "Creanța a fost creată",
                 productFailCreate: "Crearea creanței a eșuat",
                 title: {
-                    label: "Titlu",
+                    label: "Titlu de creanță",
+                    help: "Titlul în baza căruia vă este datorată creanța. De ex. Sentința civilă 123/2020 sau Factura AB123/12.12.2020; <br><a href=\"javascript:void(0)\">Află mai multe</a>",
                     error: {
-                        isRequired: "Titlul este necesar"
+                        isRequired: "Titlul de creanță este necesar"
                     }
                 },
                 documents: {
                     label: "Documente",
+                    help: 'Documente pentru creanță',
                     error: {
                         isRequired: "Documentele sunt necesare"
                     }
                 },
                 owedAmount: {
                     label: "Suma datorată",
+                    help: "Valorea creanței",
                     error: {
                         isRequired: "Suma datorată este necesară"
                     }
                 },
                 price: {
                     label: "Preț",
+                    help: "Prețul cu care vrei să vinzi creanța",
                     error: {
                         isRequired: "Prețul este necesar",
                         hasToBeSmallerThanOwedAmount: "Prețul trebuie să fie mai mic decât suma datorată"
@@ -130,6 +137,7 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 },
                 debtor: {
                     label: "Datornic",
+                    help: "Datornicul căruia îi aparține datoria",
                     error: {
                         isRequired: "Datornicul este necesar"
                     }
@@ -138,7 +146,8 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                     label: "Alte documente"
                 },
                 details: {
-                    label: "Detalii"
+                    label: "Detalii",
+                    help: "Ajută-i pe potențialii tăi clienți să ințeleagă ce creanță se vinde. Aici poți să răspunzi."
                 }
 
             },
@@ -252,6 +261,8 @@ function setupI18n({ withLocale: _locale } = { withLocale: 'ro' }) {
                 }
             },
             verifyAccount: {
+                explanation1: "Cu toții ne dorim afaceri mai sigure.",
+                explanation2: "Avem nevoie de datele tale pentru a putea genera automat un contract în cazul în care vrei să cumperi sau să vinzi o creanță.",
                 verifyAccount: "Activare cont",
                 verifyAccountFirst: "Trebuie să îți activezi contul înainte să continui",
                 submit: "Trimite",

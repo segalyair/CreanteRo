@@ -22,6 +22,6 @@
     <span>({$_('label.optional')})</span>
   {/if}
   {#if helpMessage}
-    <TooltipHelp message={helpMessage} />
+    <TooltipHelp message={$_(`${label}.help`)} />
   {/if}
 </label>

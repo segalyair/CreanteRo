@@ -139,7 +139,7 @@
       name={'title'}
       label="sellProduct.title"
       required={true}
-      helpMessage={'Tipul creantei'} />
+      helpMessage={true} />
     <SInput
       type={'file'}
       id={'documents'}
@@ -151,13 +151,13 @@
       displayFileName={false}
       uploadLabel={'fileUpload.uploadFiles'}
       showPreview={false}
-      helpMessage={'Documente pentru creanta'} />
+      helpMessage={true} />
     <SInput
       type={'number'}
       id={'bookValueAmount'}
       name={'bookValueAmount'}
       label="sellProduct.owedAmount"
-      helpMessage={'Valorea creantei'}
+      helpMessage={true}
       required={true} />
     <SInput
       type={'number'}
@@ -166,11 +166,11 @@
       label="sellProduct.price"
       required={true}
       externalErrors={amountErrors}
-      helpMessage={'Pretul cu care vrei sa vinzi creanta'} />
+      helpMessage={true} />
     <InputLabel
       required={true}
       label={'sellProduct.debtor'}
-      helpMessage={'The debtor who owes the debt'} />
+      helpMessage={true} />
     <SmartDropdown
       items={debtors}
       label={'sellProduct.debtor'}
@@ -196,7 +196,8 @@
       id={'details'}
       name={'details'}
       label="sellProduct.details"
-      required={false} />
+      required={false}
+      helpMessage={true} />
   </form>
 </div>
 <Modal bind:this={deleteModal}>

@@ -7,7 +7,7 @@ import injectProcessEnv from 'rollup-plugin-inject-process-env';
 
 // "https://invictus1995.ddns.net:60002"
 const production = !process.env.ROLLUP_WATCH,
-	API_URL = process.env.BUILD === 'test' ? "https://creanteapi.azurewebsites.net/" : "http://localhost:8600";
+	API_URL = process.env.BUILD === 'test' ? "https://creanteapi.azurewebsites.net/" : "https://localhost:44384";
 
 export default {
 	input: 'src/main.js',

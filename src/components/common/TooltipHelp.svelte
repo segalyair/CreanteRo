@@ -49,7 +49,7 @@
   <span class="question-mark">?</span>
   {#if showHelp}
     <div transition:fade={{ duration: 200 }} class="message-container">
-      {message || 'No message given'}
+      {@html message || 'No message given'}
     </div>
   {/if}
 </div>

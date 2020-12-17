@@ -5,6 +5,8 @@ import List from "../views/List.svelte";
 import AccountSettings from "../views/AccountSettings.svelte";
 import NotFound from "../views/NotFound.svelte";
 import Forbidden from "../views/Forbidden.svelte";
+import Tutorial from "../views/Tutorial.svelte";
+import Contact from "../views/Contact.svelte";
 import { auth } from "../firebase/firebase";
 export const routes = [
     { href: '/', value: 'Home', component: Home },
@@ -15,7 +17,19 @@ export const routes = [
         }
     },
     {
-        href: '/settings', value: 'Settings', component: AccountSettings,
+        href: '/account', value: 'Settings', i18n: "routes.myaccount", component: AccountSettings,
+        guard: () => {
+            return auth.currentUser && !auth.currentUser.isAnonymous
+        }
+    },
+    {
+        href: '/tutorial', value: 'Tutorial', i18n: "routes.tutorial", component: Tutorial,
+        guard: () => {
+            return auth.currentUser && !auth.currentUser.isAnonymous
+        }
+    },
+    {
+        href: '/contact', value: 'Contact', i18n: "routes.contact", component: Contact,
         guard: () => {
             return auth.currentUser && !auth.currentUser.isAnonymous
         }

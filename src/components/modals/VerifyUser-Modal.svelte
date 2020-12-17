@@ -6,7 +6,7 @@
   import VerifyUserForm from "../../components/forms/VerifyUser-Form.svelte";
   import Modal from "../../components/common/Modal.svelte";
   import Toast from "../../components/common/Toast.svelte";
-    import { _ } from "../../i18n";
+  import { _ } from "../../i18n";
   let modal,
     form,
     toast,
@@ -69,17 +69,23 @@
 
 <style>
   .form {
-    width: 28vw;
+    width: 400px;
+  }
+  .explanations {
+    padding: 20px 20px 40px 0;
   }
   .form p {
     font-size: 1.25em;
-    padding: 20px 20px 20px 0;
+    padding: 10px 0;
   }
 </style>
 
 <Modal bind:this={modal}>
   <div slot="content" class="form">
-    <p>{$_("verifyAccount.verifyAccountFirst")}</p>
+    <div class="explanations">
+      <p>{$_('verifyAccount.explanation1')}</p>
+      <p>{$_('verifyAccount.explanation2')}</p>
+    </div>
     <VerifyUserForm on:mount={e => (form = e.detail)} on:input={isValid} />
   </div>
   <div slot="actions">
@@ -88,9 +94,9 @@
       disabled={!canVerify}
       on:click={submit}
       type="button">
-      {$_("verifyAccount.submit")}
+      {$_('verifyAccount.submit')}
     </button>
-    <button on:click={close} type="button">{$_("verifyAccount.cancel")}</button>
+    <button on:click={close} type="button">{$_('verifyAccount.cancel')}</button>
   </div>
 </Modal>
 <Toast bind:this={toast} />
